@@ -1,0 +1,122 @@
+// This is your Prisma schema file, docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Institution {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String
+  tel      String?
+  location String?
+  logoUrl  String?
+
+  userIDs String[] @db.ObjectId
+  users   User[]   @relation(fields: [userIDs], references: [id])
+
+  roles  Role[]
+  Assets Asset[]
+
+  @@map("institutions")
+}
+
+enum Title {
+  user
+  supervisor
+  admin
+  sudo
+}
+
+model Role {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title Title  @unique @default(admin)
+  name  String @unique
+
+  institutionID String      @db.ObjectId
+  institution   Institution @relation(fields: [institutionID], references: [id])
+
+  userIDs String[] @db.ObjectId
+  users   User[]   @relation(fields: [userIDs], references: [id])
+
+  // compound index
+  // @@index([institutionID, title])
+  @@unique([institutionID, title])
+  @@map("roles")
+}
+
+model User {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String    @unique
+  password         String?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  photoUrl         String?
+
+  roleIDs String[] @db.ObjectId
+  roles   Role[]   @relation(fields: [roleIDs], references: [id])
+
+  institutionIDs String[]      @db.ObjectId
+  Institutions   Institution[] @relation(fields: [institutionIDs], references: [id])
+
+  assets Asset[]
+  outbox Message[] @relation("sender")
+  inbox  Message[] @relation("receipient")
+
+  @@map("users")
+}
+
+model AssetType {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String @unique
+  Description String
+
+  assets Asset[]
+
+  @@map("assetTypes")
+}
+
+enum assetStatus {
+  pending
+  closed
+  open
+}
+
+model Asset {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  type        String
+  name        String
+  status      assetStatus @default(pending)
+  description String?
+  imageUrl    String?
+
+  assetTypeID String    @db.ObjectId
+  assetType   AssetType @relation(fields: [assetTypeID], references: [id])
+
+  institutionID String?      @db.ObjectId
+  institution   Institution? @relation(fields: [institutionID], references: [id])
+
+  adminID       String? @db.ObjectId
+  administrator User?   @relation(fields: [adminID], references: [id])
+
+  @@map("assets")
+}
+
+model Message {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  message      String
+  sendTime     DateTime
+  senderID     String   @db.ObjectId
+  sender       User     @relation("sender", fields: [senderID], references: [id])
+  receipientID String   @db.ObjectId
+  receipient   User     @relation("receipient", fields: [receipientID], references: [id])
+
+  @@map("messages")
+}
