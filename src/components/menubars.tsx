@@ -46,7 +46,7 @@ export const routes = {
 export default function Sidebar() {
   const pathname = usePathname();
   return (
-    <aside className="absolute inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <aside className="absolute inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex max-h-screen">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         {(pathname.includes("/user") ? routes.auth : routes.unauth).map(
           ({ label, link, icon: Icon }) => (
@@ -66,7 +66,9 @@ export default function Sidebar() {
                   <span className="sr-only">{label}</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">{label}</TooltipContent>
+              <TooltipContent side="right" className="bg-muted z-40">
+                {label}
+              </TooltipContent>
             </Tooltip>
           )
         )}
