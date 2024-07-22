@@ -131,7 +131,7 @@ export function UserDropDown() {
         >
           {
             <Image
-              src="/placeholder-user.jpg"
+              src="/avatar-african-afro.jpg"
               width={36}
               height={36}
               alt="Avatar"

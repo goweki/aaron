@@ -1,4 +1,7 @@
 "use client";
+
+import { useContext, useEffect, useState } from "react";
+import { DataContext } from "@/components/providers";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,8 +48,14 @@ import { useDate } from "@/lib/hooks";
 import { useSession } from "next-auth/react";
 import LoaderHourglass from "@/components/loader";
 import { titleCase } from "@/lib/utils";
+import { Legislation, Mp } from "@/lib/prisma/types";
 
 export default function UserHomePage() {
+  const { mps, legislations } = useContext<{
+    mps: Mp[];
+    legislations: Legislation[];
+  }>(DataContext);
+
   const { date, time, wish } = useDate();
   const { data: userSession, status: authStatus } = useSession();
 
@@ -72,7 +81,7 @@ export default function UserHomePage() {
           <Card x-chunk="dashboard-05-chunk-1">
             <CardHeader className="pb-2">
               <CardDescription>Assets</CardDescription>
-              <CardTitle className="text-4xl">1,329</CardTitle>
+              <CardTitle className="text-4xl">{mps.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xs text-muted-foreground">
@@ -86,7 +95,7 @@ export default function UserHomePage() {
           <Card x-chunk="dashboard-05-chunk-2">
             <CardHeader className="pb-2">
               <CardDescription>Detections</CardDescription>
-              <CardTitle className="text-4xl">5,329</CardTitle>
+              <CardTitle className="text-4xl">{legislations.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xs text-muted-foreground">

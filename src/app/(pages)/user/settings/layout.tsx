@@ -35,7 +35,7 @@ interface SettingsPageProps {
 
 export default function SettingsLayout({ children }: SettingsPageProps) {
   return (
-    <div className="block space-y-6 px-8 py-4 md:py-0 pb-16">
+    <main className="block space-y-6 px-8 py-4 pb-16">
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
         <p className="text-muted-foreground hidden sm:block">
@@ -49,6 +49,6 @@ export default function SettingsLayout({ children }: SettingsPageProps) {
         </aside>
         <div className="flex-1 lg:max-w-2xl">{children}</div>
       </div>
-    </div>
+    </main>
   );
 }
