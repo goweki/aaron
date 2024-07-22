@@ -42,7 +42,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { DataContext } from "@/components/providers";
-import Sidebar, { Hamburger } from "@/components/menubars";
+import Sidebar, { HamburgerMenu } from "@/components/menubars";
 import toast from "react-hot-toast";
 import { camelCase, titleCase, truncateStr } from "@/lib/utils";
 
@@ -229,7 +229,7 @@ export function TableViewLayout({
               ) : null}
             </BreadcrumbList>
           </Breadcrumb>
-          <Hamburger />
+          <HamburgerMenu />
 
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader className="flex flex-col md:flex-row md:space-x-8 md:justify-between">
@@ -504,7 +504,7 @@ export function DashboardLayout() {
       <Sidebar />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-lg px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Hamburger />
+          <HamburgerMenu />
 
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
