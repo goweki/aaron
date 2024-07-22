@@ -40,7 +40,7 @@ export function RootProviders({
   useEffect(() => {
     setTimeout(() => {
       setLoadingObg((prev) => ({ ...prev, splash: false }));
-    }, 7000);
+    }, 4000);
   }, []);
 
   // fetch data
