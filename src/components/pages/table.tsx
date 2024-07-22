@@ -194,7 +194,7 @@ export function TableViewLayout({
   // Table headers and keys from the first object in the array
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-muted/10">
+    <div className="relative flex flex-col min-h-screen w-full max-w-[1400px] bg-muted/10">
       <Sidebar />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid my-8 flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 overflow-x-auto">
