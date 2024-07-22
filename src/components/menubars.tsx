@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { BookOpen, FileInput, Home, Menu, Users } from "lucide-react";
+import { BookOpen, FileInput, Home, Menu, Users, Settings } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { Button } from "./ui/button";
 import ThemeToggle from "./mols/themeToggle";
 import {
@@ -13,6 +14,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import LoaderHourglass from "./loader";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "./ui/button";
 
 export const routes = {
   unauth: [
@@ -24,6 +39,7 @@ export const routes = {
     { label: "home", link: "/user", icon: Home },
     { label: "mps", link: "/user/mps", icon: Users },
     { label: "legislations", link: "/user/legislations", icon: BookOpen },
+    { label: "Settings", link: "/user/settings", icon: Settings },
   ],
 };
 
@@ -39,7 +55,10 @@ export default function Sidebar() {
                 <Link
                   href={link}
                   className={`${
-                    pathname === link ? " bg-accent !text-foreground" : ""
+                    pathname === link ||
+                    (link.length > 12 && pathname.includes(link))
+                      ? " bg-accent !text-foreground"
+                      : ""
                   } flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
                   // text-accent-foreground
                 >
@@ -92,5 +111,51 @@ export function Hamburger() {
         </nav>
       </SheetContent>
     </Sheet>
+  );
+}
+
+export function UserDropDown() {
+  const { data: userSession, status: authStatus } = useSession();
+  const pathname = usePathname();
+  //
+  //
+  return authStatus === "loading" ? (
+    <LoaderHourglass isLoading={authStatus === "loading"} />
+  ) : userSession?.user ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="overflow-hidden rounded-full"
+        >
+          {
+            <Image
+              src="/placeholder-user.jpg"
+              width={36}
+              height={36}
+              alt="Avatar"
+              className="overflow-hidden rounded-full"
+            />
+          }
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel className="-mx-1 -my-1 bg-muted/50 text-muted-foreground">
+          {userSession?.user.name}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link href="/user/settings">Settings</Link>{" "}
+        </DropdownMenuItem>
+        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <></>
   );
 }

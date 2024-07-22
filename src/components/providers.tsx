@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState, createContext } from "react";
 import { ThemeProvider } from "next-themes";
-import { Toaster } from "react-hot-toast";
+import { Toaster as ReactHotToaster } from "react-hot-toast";
+import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import LoaderHourglass from "./loader";
 import { TooltipProvider } from "./ui/tooltip";
@@ -109,8 +110,9 @@ export function RootProviders({
                 {children}
               </DataContext.Provider>
             )}
-            <Toaster />
           </TooltipProvider>
+          <ReactHotToaster />
+          <Toaster />
         </SessionProvider>
       </ThemeProvider>
     </React.StrictMode>
