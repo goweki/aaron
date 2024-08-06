@@ -156,24 +156,26 @@ export default function LandingPage() {
           <span className="absolute top-0 left-0 mt-2 ml-2 flex h-3 w-3">
             <span
               className={`${
-                listen ? "animate-ping bg-sky-400" : "bg-gray-500"
+                listen ? "animate-ping bg-sky-400" : "bg-transparent"
               } absolute inline-flex h-full w-full rounded-full  opacity-75`}
             ></span>
             <span
               className={`${
-                listen ? "bg-sky-500" : "bg-gray-500"
+                listen ? "bg-sky-500" : "bg-transparent"
               } relative inline-flex rounded-full h-3 w-3`}
             ></span>
           </span>
-          <h2 className="ml-4 mb-3 text-2xl font-semibold">
-            listen
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Activate aaron ears
-          </p>
+          <div className="md:pl-4">
+            <h2 className="mb-3 text-2xl font-semibold">
+              listen
+              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                -&gt;
+              </span>
+            </h2>
+            <p className="m-0 max-w-[30ch] text-sm opacity-50">
+              Activate aaron ears
+            </p>
+          </div>
         </div>
 
         {options.map(({ name, desc, link }) => (
