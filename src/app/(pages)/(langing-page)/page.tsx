@@ -275,7 +275,7 @@ export default function LandingPage() {
               </span>
             </h2>
             <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Activate Aaron's voice recognition functionality
+              Activate Aaron&apos;s voice recognition functionality
             </p>
           </div>
         </div>
