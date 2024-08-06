@@ -2,7 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import prisma from "@/lib/prisma/prisma";
 import { compareHash, isDatePassed } from "@/lib/utils";
-import { userRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 // interface User {
 //   id: string
@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
       // Append role,institution to properties sent to the client
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as userRole;
+        session.user.role = token.role as UserRole;
         session.user.avatar = token.avatar as string;
         session.user.tel = token.tel as string;
       }
