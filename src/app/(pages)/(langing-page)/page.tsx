@@ -220,6 +220,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 /**
  * ts types
@@ -276,6 +277,10 @@ export default function LandingPage() {
   const [listen, setListen] = useState<boolean>(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     const SpeechRecognition = ((window as any).SpeechRecognition ||
@@ -303,18 +308,23 @@ export default function LandingPage() {
 
     recognition.onerror = (event: Event & { error: string }) => {
       console.error("Speech recognition error:", event.error);
+      setListen(false);
       if (event.error === "network") {
-        console.error("Network error: Please check your internet connection.");
+        toast.error(
+          "Network error: You may not have internet connection; try using CHROME browser."
+        );
       } else if (event.error === "not-allowed") {
-        console.error("Permission error: Microphone access is not allowed.");
+        toast.error("Permission error: Microphone access is not allowed.");
       } else if (event.error === "service-not-allowed") {
-        console.error(
+        toast.error(
           "Permission error: Speech recognition service is not allowed."
         );
+      } else if (event.error === "no-speech") {
+        toast.error("No speech detected.");
       } else if (event.error === "aborted") {
-        console.error("Speech recognition aborted.");
+        toast.error("Speech recognition aborted.");
       } else {
-        console.error("An unknown error occurred:", event.error);
+        toast.error(`An unknown error occurred: ${event.error}`);
       }
     };
 
@@ -330,6 +340,100 @@ export default function LandingPage() {
       }
     }
   }, [listen]);
+
+  useEffect(() => {
+    if (listen) {
+      const audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        analyser.fftSize = 2048;
+        dataArrayRef.current = dataArray;
+        analyserRef.current = analyser;
+        audioContextRef.current = audioContext;
+        drawWaveform();
+      });
+
+      return () => {
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+        }
+      };
+    }
+  }, [listen]);
+
+  //Handle wave form
+  const drawWaveform = () => {
+    if (!canvasRef.current || !analyserRef.current || !dataArrayRef.current) {
+      return;
+    }
+    const canvas = canvasRef.current;
+    const canvasCtx = canvas.getContext("2d");
+    const analyser = analyserRef.current;
+    const dataArray = dataArrayRef.current;
+    const bufferLength = analyser.frequencyBinCount;
+
+    // const draw = () => {
+    //   if (!canvasCtx) return;
+    //   requestAnimationFrame(draw);
+    //   analyser.getByteTimeDomainData(dataArray);
+    //   canvasCtx.fillStyle = "rgb(200, 200, 200)";
+    //   canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    //   canvasCtx.lineWidth = 2;
+    //   canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+    //   canvasCtx.beginPath();
+    //   const sliceWidth = (canvas.width * 1.0) / bufferLength;
+    //   let x = 0;
+    //   for (let i = 0; i < bufferLength; i++) {
+    //     const v = dataArray[i] / 128.0;
+    //     const y = (v * canvas.height) / 2;
+    //     if (i === 0) {
+    //       canvasCtx.moveTo(x, y);
+    //     } else {
+    //       canvasCtx.lineTo(x, y);
+    //     }
+    //     x += sliceWidth;
+    //   }
+    //   canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    //   canvasCtx.stroke();
+    // };
+    // draw();
+    const draw = () => {
+      if (!canvasCtx) return;
+      requestAnimationFrame(draw);
+      analyser.getByteTimeDomainData(dataArray);
+
+      // Clear the canvas by setting the alpha to 0
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+      canvasCtx.lineWidth = 2;
+      canvasCtx.strokeStyle = "rgb(0, 255, 0)"; // Green color for the waveform
+      canvasCtx.beginPath();
+
+      const sliceWidth = (canvas.width * 1.0) / bufferLength;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = (v * canvas.height) / 2;
+
+        if (i === 0) {
+          canvasCtx.moveTo(x, y);
+        } else {
+          canvasCtx.lineTo(x, y);
+        }
+        x += sliceWidth;
+      }
+
+      canvasCtx.lineTo(canvas.width, canvas.height / 2);
+      canvasCtx.stroke();
+    };
+    draw();
+  };
 
   // render
   return (
@@ -355,6 +459,7 @@ export default function LandingPage() {
         <p className="italic text-primary text-center mt-8 lg:mt-4">
           {transcript}
         </p>
+        <canvas ref={canvasRef} className="h-32 w-96 m-4" />
       </section>
       <Link
         className="lg:hidden font-mono mb-12 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
@@ -372,12 +477,12 @@ export default function LandingPage() {
           <span className="absolute top-0 left-0 mt-2 ml-2 flex h-3 w-3">
             <span
               className={`${
-                listen ? "animate-ping bg-sky-400" : "bg-transparent"
+                listen ? "animate-ping bg-red-400" : "bg-transparent"
               } absolute inline-flex h-full w-full rounded-full  opacity-75`}
             ></span>
             <span
               className={`${
-                listen ? "bg-sky-500" : "bg-transparent"
+                listen ? "bg-red-500" : "bg-transparent"
               } relative inline-flex rounded-full h-3 w-3`}
             ></span>
           </span>
@@ -389,7 +494,7 @@ export default function LandingPage() {
               </span>
             </h2>
             <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Activate aaron ears
+              Activate Aaron's voice recognition functionality
             </p>
           </div>
         </div>
