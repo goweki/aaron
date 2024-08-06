@@ -5,18 +5,22 @@ const prisma = new PrismaClient();
 // view seeded
 async function retrieveDBdata() {
   // Queries
-  const mps = await prisma.mp.findMany();
-  const legislations = await prisma.legislation.findMany();
-  // MPs
-  console.log(`Total MPs: ${mps.length}`);
-  for (const mp of mps) {
-    console.log(`Mp: ${mp.lastName}`);
+  const users = await prisma.user.findMany({
+    include: {
+      assets: true,
+    },
+  });
+  console.log("Users: ", users);
+  const assets = await prisma.asset.findMany();
+  // Users
+  console.log(`Users: ${users.length}`);
+  for (const user of users) {
+    console.log(`  > ${user.name}`);
   }
-  console.log(`....................`);
-  // Legislations
-  console.log(`Total legislations: ${legislations.length}`);
-  for (const legislation of legislations) {
-    console.log(`Legislation: ${legislation.title}`);
+  // Assets
+  console.log(`Assets: ${assets.length}`);
+  for (const asset of assets) {
+    console.log(`  > ${asset.title}`);
   }
 }
 

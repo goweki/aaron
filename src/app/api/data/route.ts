@@ -2,10 +2,7 @@ import prisma from "@/lib/prisma/prisma";
 import { compareHash } from "@/lib/utils";
 // import { seed as seedDB } from "@/scripts/seed"; // PS:removed seeding from route, now done running /script/seed.js
 // export const dynamic = "auto"; // 'auto' | 'force-dynamic' | 'error' | 'force-static'
-export const revalidate = 604800; //after 7 days // false | 0 | number
-
-//seed key, used at POST
-const seedAuth = process.env.TOKEN;
+export const revalidate = 3600; //after 1 hr // false | 0 | number
 
 // PS:removed seeding from route, now done running /script/seed.js
 // // POST seed data
@@ -53,18 +50,21 @@ const getHandler = async (request: Request) => {
   try {
     // console.log(`GET REQUEST: UI data: `);
 
-    //  API call
-    const allMps = await prisma.mp.findMany({
+    //  Query db
+    const allUsers = await prisma.user.findMany({
+      // include: {
+      //   assets: true,
+      // },
       include: {
-        constituency: true,
+        assets: true,
       },
     });
-    const allLegislations = await prisma.legislation.findMany();
+    const allAssets = await prisma.asset.findMany();
 
     return Response.json({
-      success: { mps: allMps, legislations: allLegislations },
+      success: { users: allUsers, assets: allAssets },
     });
-    //return Response.json({ failed: 'action NOT performed' });
+    //
   } catch (err: any) {
     console.error("ERROR in route: api/data - GET \n > ", err);
     return Response.json({ error: "SERVER ERROR" });

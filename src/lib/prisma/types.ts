@@ -1,51 +1,16 @@
 import {
-  Mp as _Mp,
-  Legislation as _Legislation,
-  Constituency as _Constituency,
-  Vote as _Vote,
-  Contribution as _Contribution,
+  User as _User,
+  Asset as _Asset,
+  AudioFingerprint as _AudioFingerprint,
 } from "@prisma/client";
 
-// extends the Mp type to include the constituency relation
-export type Mp = _Mp & {
-  constituency?: _Constituency;
+// extends the User to include the assets relation
+export type User = _User & {
+  assets?: _Asset[];
 };
 
-export function isMp(obj: any): obj is Mp {
-  return (
-    // typeof obj === 'object' &&
-    // obj !== null &&
-    // typeof obj.id === 'number' &&
-    // typeof obj.name === 'string' &&
-    // typeof obj.constituencyId === 'string' &&
-    // typeof obj.party === 'string'
-    // Add other property checks as needed
-
-    obj !== null &&
-    typeof obj === "object" &&
-    obj.hasOwnProperty("constituency") &&
-    obj.hasOwnProperty("lastName")
-  );
-}
-
-export function isLegislation(obj: any): obj is Mp {
-  return (
-    // typeof obj === 'object' &&
-    // obj !== null &&
-    // typeof obj.id === 'number' &&
-    // typeof obj.name === 'string' &&
-    // typeof obj.constituencyId === 'string' &&
-    // typeof obj.party === 'string'
-    // Add other property checks as needed
-
-    obj !== null &&
-    typeof obj === "object" &&
-    obj.hasOwnProperty("title") &&
-    obj.hasOwnProperty("Debate")
-  );
-}
-
-export type Legislation = _Legislation & {
-  votes?: _Vote[];
-  Debate?: _Contribution[];
+export type Asset = _Asset & {
+  administrator?: User;
+  interestedUsers?: User[];
+  fingerprint?: _AudioFingerprint;
 };

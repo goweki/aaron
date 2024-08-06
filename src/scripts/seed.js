@@ -1,86 +1,64 @@
-// import prisma from "@/lib/prisma/prisma";
-// import mps from "@/data/mps.json";
-// import counties from "@/data/counties.json";
-
+// seed.js
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const mps = require("../data/mps.json");
-const counties = require("../data/counties.json");
-const legislations = require("../data/legislations.json");
 
-// funtion definition
+const seedData = require("../data/seed.json"); // Import JSON data
+const { users, assets, fingerprints } = seedData;
+
 async function seed() {
-  console.log("SEEDING Constituencies & MPs....");
+  // Clear existing data
+  await prisma.audioFingerprint.deleteMany();
+  await prisma.asset.deleteMany();
+  await prisma.user.deleteMany();
 
-  for (const mp of mps) {
-    const { constituency, county, ...mp_ } = mp;
-    const refCounty = counties.find(({ name }) => name === county);
-    if (!county) {
-      if (mp_.appointment === "nominated") {
-        await prisma.mp.upsert({
-          where: {
-            firstName_lastName_party: {
-              firstName: mp_.firstName || "",
-              lastName: mp_.lastName,
-              party: mp_.party || "",
-            },
-          },
-          update: { ...mp_ },
-          create: { ...mp_ },
-        });
-      } else {
-        console.error("DATA ERROR: !county && !'nominated': ", mp_);
-        // return;
-      }
-    } else if (county && !refCounty) {
-      console.error(
-        "NO REF COUNTY FOUND: \n > county: ",
-        county,
-        " for MP: ",
-        mp_
-      );
-    } else {
-      const resConstituency = await prisma.constituency.upsert({
-        where: { name: constituency },
-        update: { county },
-        create: { name: constituency, county },
-      });
-      await prisma.mp.upsert({
-        where: { constituencyId: resConstituency.id },
-        update: { ...mp_ },
-        create: { constituencyId: resConstituency.id, ...mp_ },
-      });
-    }
-  }
+  // Create users
+  await prisma.user.createMany({
+    data: users,
+  });
 
-  console.log("SEEDING legislations....");
+  // Fetch users to get their IDs
+  const _users = await prisma.user.findMany();
+  // console.log("users in db: ", _users);
 
-  for (const legislation of legislations) {
-    const { title, ...legislation_ } = legislation;
+  // Store assets,embedding adminId in each asset doc
+  for (const asset of assets) {
+    // console.log("saving asset: ", asset.title);
+    const { adminContact, fingerprint, ...asset_ } = asset;
 
-    await prisma.legislation.upsert({
-      where: { title },
-      update: { ...legislation_ },
-      create: { title, ...legislation_ },
+    const _admin = users.find(({ email }) => email === adminContact);
+    // console.log("ADMIN1: ", _admin);
+    const admin = _users.find(({ email }) => email === _admin.email);
+    // console.log("ADMIN2: ", admin);
+
+    console.log("saving asset: ", asset_);
+
+    const savedAsset = await prisma.asset.create({
+      data: {
+        ...asset_,
+        adminId: admin.id,
+      },
+    });
+
+    // save fingerprint
+    await prisma.audioFingerprint.create({
+      data: {
+        fingerprint,
+        assetId: savedAsset.id,
+      },
     });
   }
 
-  console.log(
-    "CONSTITUENCIES initialized: ",
-    await prisma.constituency.count()
-  );
-  console.log("MPS initialized: ", await prisma.mp.count());
-  console.log("LEGISLATIONS initialized: ", await prisma.legislation.count());
+  console.log("assets: ", await prisma.asset.count());
+  console.log("fingerprints: ", await prisma.audioFingerprint.count());
+  console.log("SEED COMPLETE");
 }
 
-//function call
+// Run the seed function
 seed()
-  .then(async () => {
-    console.log("SEEDING COMPLETE");
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

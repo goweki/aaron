@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "bunge-scope",
-  description: "A portal into the activities and bills in Kenyan parliament",
+  title: "aaron",
+  description: "Automatic Audio Recognition",
 };
 
 export default function RootLayout({

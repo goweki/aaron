@@ -6,14 +6,20 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import LoaderHourglass from "./loader";
 import { TooltipProvider } from "./ui/tooltip";
-import { Legislation, Mp } from "@/lib/prisma/types";
+import { User, Asset } from "@/lib/prisma/types";
 import { httpCodes } from "@/lib/refDictionary";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export const DataContext = createContext<{
-  mps: Mp[];
-  legislations: Legislation[];
-}>({ mps: [], legislations: [] });
+
+interface DataContext {
+  users: User[];
+  assets: Asset[];
+}
+
+export const DataContext = createContext<DataContext>({
+  users: [],
+  assets: [],
+});
 
 const _def_isLoadingObg = {
   splash: true,
@@ -27,13 +33,7 @@ export function RootProviders({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [data, setData] = useState<{
-    mps: Mp[];
-    legislations: Legislation[];
-  }>({
-    mps: [],
-    legislations: [],
-  });
+  const [data, setData] = useState<DataContext>({ users: [], assets: [] });
   const [isLoading, setLoadingObg] = useState(_def_isLoadingObg);
 
   // onMount
@@ -60,12 +60,7 @@ export function RootProviders({
             }
           }
         );
-        if (
-          res_UIdata?.success as {
-            mps: Mp[];
-            legislations: Legislation[];
-          }
-        ) {
+        if (res_UIdata?.success as DataContext) {
           setData(res_UIdata.success);
         } else {
           // add error to isLoading, ie- UIstate
