@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 /**
  * ts types
@@ -53,14 +55,15 @@ interface SpeechRecognitionAlternative {
  *
  */
 
-const Recog = () => {
-  const [listen, setListen] = useState(false);
+export default function LandingPage() {
+  const [listen, setListen] = useState<boolean>(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     const SpeechRecognition = ((window as any).SpeechRecognition ||
@@ -73,70 +76,104 @@ const Recog = () => {
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.interimResults = true;
+    recognition.interimResults = false;
     recognition.lang = "en-US";
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let interimTranscript = "";
+      let finalTranscript = "";
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          setTranscript(
-            (prevTranscript) => prevTranscript + event.results[i][0].transcript
-          );
-        } else {
-          interimTranscript += event.results[i][0].transcript;
+          finalTranscript += event.results[i][0].transcript;
         }
       }
-      setTranscript((prevTranscript) => prevTranscript + interimTranscript);
+      setTranscript((prevTranscript) => prevTranscript + finalTranscript);
     };
 
     recognition.onerror = (event: Event & { error: string }) => {
       console.error("Speech recognition error:", event.error);
+      setListen(false);
+      if (event.error === "network") {
+        toast.error(
+          "Network error: You may not have internet connection; try using CHROME browser."
+        );
+      } else if (event.error === "not-allowed") {
+        toast.error("Permission error: Microphone access is not allowed.");
+      } else if (event.error === "service-not-allowed") {
+        toast.error(
+          "Permission error: Speech recognition service is not allowed."
+        );
+      } else if (event.error === "no-speech") {
+        toast.error("No speech detected.");
+      } else if (event.error === "aborted") {
+        toast.error("Speech recognition aborted.");
+      } else {
+        toast.error(`An unknown error occurred: ${event.error}`);
+      }
     };
 
     recognitionRef.current = recognition;
 
-    const audioContext = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
-    audioContextRef.current = audioContext;
-    analyserRef.current = analyser;
-    dataArrayRef.current = dataArray;
+  useEffect(() => {
+    if (!recognitionRef.current) return;
+    if (listen) {
+      recognitionRef.current.start();
+    } else {
+      recognitionRef.current.stop();
+    }
+  }, [listen]);
 
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  useEffect(() => {
+    if (listen) {
+      const audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
           const source = audioContext.createMediaStreamSource(stream);
           source.connect(analyser);
+          analyser.fftSize = 2048;
+
+          // Store stream and source to stop them later
+          streamRef.current = stream;
+          dataArrayRef.current = dataArray;
+          analyserRef.current = analyser;
+          audioContextRef.current = audioContext;
           drawWaveform();
         })
         .catch((error) => {
-          console.error("Error accessing microphone:", error);
+          console.error("Error accessing media devices.", error);
+          setListen(false);
         });
+    } else {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
     }
 
     return () => {
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (recognitionRef.current) {
-      if (listen) {
-        recognitionRef.current.start();
-      } else {
-        recognitionRef.current.stop();
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
       }
-    }
+    };
   }, [listen]);
 
+  // Handle waveform drawing
   const drawWaveform = () => {
     if (!canvasRef.current || !analyserRef.current || !dataArrayRef.current) {
       return;
@@ -148,22 +185,23 @@ const Recog = () => {
     const bufferLength = analyser.frequencyBinCount;
 
     const draw = () => {
+      if (!canvasCtx) return;
       requestAnimationFrame(draw);
-      if (!canvasCtx) {
-        console.log("No canvas context");
-        return;
-      }
       analyser.getByteTimeDomainData(dataArray);
-      canvasCtx.fillStyle = "rgb(200, 200, 200)";
-      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
       canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+      canvasCtx.strokeStyle = "rgb(0, 255, 0)"; // Green color for the waveform
       canvasCtx.beginPath();
+
       const sliceWidth = (canvas.width * 1.0) / bufferLength;
       let x = 0;
+
       for (let i = 0; i < bufferLength; i++) {
         const v = dataArray[i] / 128.0;
         const y = (v * canvas.height) / 2;
+
         if (i === 0) {
           canvasCtx.moveTo(x, y);
         } else {
@@ -171,30 +209,55 @@ const Recog = () => {
         }
         x += sliceWidth;
       }
+
       canvasCtx.lineTo(canvas.width, canvas.height / 2);
       canvasCtx.stroke();
     };
     draw();
   };
 
-  const handleSwitchChange = () => {
-    setListen((prevListen) => !prevListen);
-  };
-
+  // Render
   return (
-    <div>
-      <h1>Speech to Text with Waveform Visualization</h1>
-      <label>
-        <input type="checkbox" checked={listen} onChange={handleSwitchChange} />
-        Activate Microphone
-      </label>
-      <div>
-        <h2>Transcript:</h2>
-        <p>{transcript}</p>
-      </div>
-      <canvas ref={canvasRef} width="600" height="200"></canvas>
-    </div>
+    <main className="flex flex-col items-center justify-between p-8 lg:p-16 max-h-[800px] w-full">
+      <header className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex md:flex-row flex-col">
+        <p className="fixed left-0 top-0 w-full text-center border-b pb-6 pt-8 px-4 backdrop-blur-lg border-border bg-background/80 lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4">
+          Autonomous Audio Recognition System&nbsp;
+          <code className="font-mono font-bold">(A.A.R.O.N)</code>
+        </p>
+        <div className="fixed bottom-0 left-0 hidden lg:flex h-48 w-full items-end justify-center lg:static lg:size-auto lg:bg-none">
+          <Link
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            href="/sign-in"
+          >
+            Sign In
+          </Link>
+        </div>
+      </header>
+      <section className="lg:my-16 relative z-0 flex flex-col place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:top-[calc(100%-13rem)] after:top-[calc(100%-8rem)] after:rotate-[30deg]">
+        <h1 className="text-center text-4xl font-extrabold leading-tight tracking-tighter md:text-5xl lg:text-6xl">
+          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Speech-to-Text
+          </span>{" "}
+          and Audio Recognition
+        </h1>
+        <div className="my-6 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-8">
+          <button
+            onClick={() => setListen((prev) => !prev)}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            {listen ? "Stop Listening" : "Start Listening"}
+          </button>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-4 mt-6">
+          <canvas
+            ref={canvasRef}
+            width="600"
+            height="200"
+            style={{ border: "1px solid #ccc" }}
+          ></canvas>
+          <p className="text-center text-xl font-semibold">{transcript}</p>
+        </div>
+      </section>
+    </main>
   );
-};
-
-export default Recog;
+}
