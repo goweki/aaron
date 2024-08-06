@@ -151,7 +151,7 @@ export default function LandingPage() {
           onClick={() => setListen((prev) => !prev)}
           className={`${
             listen ? "border-secondary bg-primary/10" : ""
-          } relative group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20`}
+          } cursor-pointer relative group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20`}
         >
           <span className="absolute top-0 left-0 mt-2 ml-2 flex h-3 w-3">
             <span
