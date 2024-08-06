@@ -2,13 +2,10 @@
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "@/components/providers";
 import { TableViewLayout } from "@/components/pages/table";
-import { Legislation, Mp } from "@/lib/prisma/types";
+import { Asset, User } from "@/lib/prisma/types";
 
 export default function LegislationsPage() {
-  const { legislations } = useContext<{
-    mps: Mp[];
-    legislations: Legislation[];
-  }>(DataContext);
+  const { assets } = useContext(DataContext);
 
   // render
   return (
@@ -16,16 +13,13 @@ export default function LegislationsPage() {
       title="Legislations"
       link="Legislations"
       desc="Bills and Acts of Kenyan Parliament"
-      items={legislations.map(
-        ({ id, title, description, status, type, Debate }) => ({
-          id,
-          title,
-          description,
-          status,
-          type,
-          Debate,
-        })
-      )}
+      items={assets.map(({ id, title, description, status, type }) => ({
+        id,
+        title,
+        description,
+        status,
+        type,
+      }))}
       headers={[
         "Icon",
         "Legislation",

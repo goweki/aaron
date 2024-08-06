@@ -1,11 +1,11 @@
 "use client";
 
 import fs from "fs";
-import {
-  createAudioContext,
-  OfflineAudioContext,
-  AudioBuffer,
-} from "web-audio-api";
+// import {
+//   createAudioContext,
+//   OfflineAudioContext,
+//   AudioBuffer,
+// } from "web-audio-api";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -16,7 +16,9 @@ async function embedWatermark(
   outputFilePath: string,
   watermarkText: string
 ): Promise<void> {
-  const audioContext = new createAudioContext();
+  // Create an AudioContext, checking for webkitAudioContext for compatibility
+  const audioContext = new (window.AudioContext ||
+    (window as any).webkitAudioContext)();
 
   // Load the audio file
   const audioBuffer = await loadAudioFile(audioContext, inputFilePath);
@@ -73,11 +75,13 @@ function embedWatermarkInBuffer(
   const numChannels = audioBuffer.numberOfChannels;
   const sampleRate = audioBuffer.sampleRate;
   const length = audioBuffer.length;
-  const newBuffer = audioBuffer.context.createBuffer(
-    numChannels,
-    length,
-    sampleRate
-  );
+
+  // Create an AudioContext, checking for webkitAudioContext for compatibility
+  const audioContext = new (window.AudioContext ||
+    (window as any).webkitAudioContext)();
+
+  // Create a new buffer using the AudioContext
+  const newBuffer = audioContext.createBuffer(numChannels, length, sampleRate);
 
   for (let channel = 0; channel < numChannels; channel++) {
     const inputData = audioBuffer.getChannelData(channel);

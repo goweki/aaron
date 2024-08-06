@@ -123,18 +123,12 @@ export default function LandingPage() {
         </div>
       </header>
       <section className="lg:my-16 relative z-[-1] flex flex-col place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mt-16 lg:mt-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mt-16 lg:mt-8 text-green-400">
           Automatic Audio Recognition
         </h1>
         <text className="italic text-primary text-center mt-8 lg:mt-4">
           {transcript}
         </text>
-        {listen && (
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-          </span>
-        )}
       </section>
       <Link
         className="lg:hidden font-mono mb-12 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
@@ -144,15 +138,44 @@ export default function LandingPage() {
       >
         Sign In
       </Link>
-      <section className="grid text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
-        <div className="flex items-center justify-center space-x-2 my-8">
+      <section className="grid text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left space-x-4">
+        {/* <div className="flex items-center justify-center space-x-2 my-8">
           <Switch
             id="toggle-listen"
             checked={listen}
             onCheckedChange={setListen}
           />
           <Label htmlFor="toggle-listen">Activate microphone</Label>
+        </div> */}
+        <div
+          onClick={() => setListen((prev) => !prev)}
+          className={`${
+            listen ? "border-secondary bg-primary/10" : ""
+          } relative group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20`}
+        >
+          <span className="absolute top-0 left-0 mt-2 ml-2 flex h-3 w-3">
+            <span
+              className={`${
+                listen ? "animate-ping bg-sky-400" : "bg-gray-500"
+              } absolute inline-flex h-full w-full rounded-full  opacity-75`}
+            ></span>
+            <span
+              className={`${
+                listen ? "bg-sky-500" : "bg-gray-500"
+              } relative inline-flex rounded-full h-3 w-3`}
+            ></span>
+          </span>
+          <h2 className="ml-4 mb-3 text-2xl font-semibold">
+            listen
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              -&gt;
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            Activate aaron ears
+          </p>
         </div>
+
         {options.map(({ name, desc, link }) => (
           <Link
             key={name}
@@ -182,13 +205,13 @@ const options = [
   //   link: "/legislations?legType=BILL",
   // },
   {
-    name: "Add Streams",
+    name: "Assets",
     desc: "Bills that have passed Parliament and are law.",
-    link: "/legislations?legType=ACT",
+    link: "/assets",
   },
   {
-    name: "Logs",
-    desc: "Select and view activities by individual Members of Parliament.",
-    link: "/mps",
+    name: "Users",
+    desc: "view logs of monitored audio streams ",
+    link: "/users",
   },
 ];
