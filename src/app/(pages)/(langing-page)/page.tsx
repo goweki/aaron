@@ -121,8 +121,15 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
+    if (transcript) {
+      setListen(false);
+    }
+  }, [transcript]);
+
+  useEffect(() => {
     if (!recognitionRef.current) return;
     if (listen) {
+      setTranscript("");
       recognitionRef.current.start();
     } else {
       recognitionRef.current.stop();

@@ -19,6 +19,7 @@ model User {
     tel              String?   @unique
     email            String?   @unique
     password         String?
+    voiceSign        String?
     role             UserRole  @default(user)
     avatar           String?
     resetToken       String?
