@@ -119,14 +119,12 @@ node ./src/scripts/seed.js
 
 ```plaintext
 |-- /components     # Reusable React components
-|-- /pages          # Next.js pages for routing
+|-- /app            # Next.js router directory
+|-- /app/api            # API routes for server-side functionality
 |-- /public         # Static assets (images, fonts, etc.)
-|-- /prisma         # Prisma schema and migrations
-|-- /styles         # Global styles and theme settings
+|-- /lib/prisma     # Prisma schema and migrations
 |-- /utils          # Utility functions and helpers
-|-- /models         # Database models and types
-|-- /api            # API routes for server-side functionality
-|-- .env.example    # Example environment variables file
+|-- .env.template    # environment variables to be populated in .env
 |-- next.config.js  # Next.js configuration file
 |-- tsconfig.json   # TypeScript configuration file
 |-- package.json    # Project metadata and scripts
