@@ -13,8 +13,8 @@
 /.next/
 /out/
 
-# db backup
-/src/db-backup/
+# local working files
+/local/
 
 # production
 /build
