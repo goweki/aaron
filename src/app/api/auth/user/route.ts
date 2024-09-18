@@ -117,9 +117,21 @@ async function putHandler(request: Request) {
     const doc = await request.json();
     const { email, name, password, token } = doc;
     console.log(`PUT REQUEST: update user data: \n > `, doc);
+    // check if user exists
+    const _user = await prisma.user.findFirst({
+      where: {
+        email: email,
+        resetToken: token,
+      },
+    });
+    if (!_user) {
+      throw new Error("User not found or invalid token");
+    }
     // update doc
     const updateUser = await prisma.user.update({
-      where: { email, resetToken: token },
+      where: {
+        id: _user.id, // id of user found to exist
+      },
       data: {
         name,
         password: await hash(password),
