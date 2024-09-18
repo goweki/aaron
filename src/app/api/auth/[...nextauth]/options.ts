@@ -62,12 +62,15 @@ export const authOptions: NextAuthOptions = {
           where: { email, status: { not: Status.DELETED } },
         });
         //check
-        // console.log(user);
+        console.log("POSITIVE: user found - ", user);
         // ifCredentialsValid
         if (
           user &&
           (await compareHash(password as string, user.password || ""))
         ) {
+          //check
+          console.log("POSITIVE: user found - ", user);
+
           return {
             id: user.id,
             name: user.name,
