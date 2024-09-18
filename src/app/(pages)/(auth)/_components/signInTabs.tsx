@@ -144,7 +144,7 @@ export function SignInTabs() {
   async function handleSignUp(e: React.MouseEvent<HTMLElement>) {
     e.preventDefault();
     // if (!fData.email) {
-    //   toast.error("confirm email entered");
+    //   toast.error("no email entered");
     // }
     const email = fData.email;
     // validate inputs: email & password
@@ -273,99 +273,6 @@ export function SignInTabs() {
         </Card>
       </TabsContent>
 
-      {/* <TabsContent
-        value="otp"
-        className={!(activeTab === "otp") ? "hidden" : ""}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>
-              Get a One-Time-PIN sent to your phone to access the portal for
-              FREE!
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="tel">Phone No.</Label>
-              <div className="grid grid-cols-3 gap-8">
-                <Input
-                  id="tel"
-                  type="tel"
-                  value={fData.tel}
-                  onChange={(e) =>
-                    setFData((prev) => ({ ...prev, tel: e.target.value }))
-                  }
-                  className="col-span-2 gap-4"
-                />
-                <Button
-                  variant="secondary"
-                  disabled={!fData.tel || fData.tel.length < 5}
-                >
-                  send OTP
-                </Button>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="pin">PIN</Label>
-              <div id="pin" className="flex flex-row space-x-4">
-                <Input
-                  type="text"
-                  value={fData.pin[1]}
-                  maxLength={1}
-                  data-focus-input-init
-                  data-focus-input-next="pin-2"
-                  id="pin-1"
-                  className={pin_css_classes}
-                  onChange={(e) => handlePinChange(e, 1)}
-                />
-                <Input
-                  type="text"
-                  value={fData.pin[2]}
-                  maxLength={1}
-                  data-focus-input-init
-                  data-focus-input-prev="pin-1"
-                  data-focus-input-next="pin-3"
-                  id="pin-2"
-                  className={pin_css_classes}
-                  onChange={(e) => handlePinChange(e, 2)}
-                />
-                <Input
-                  type="text"
-                  value={fData.pin[3]}
-                  maxLength={1}
-                  data-focus-input-init
-                  data-focus-input-prev="pin-2"
-                  data-focus-input-next="pin-4"
-                  id="pin-3"
-                  className={pin_css_classes}
-                  onChange={(e) => handlePinChange(e, 3)}
-                />
-                <Input
-                  type="text"
-                  value={fData.pin[4]}
-                  maxLength={1}
-                  data-focus-input-init
-                  data-focus-input-prev="pin-3"
-                  id="pin-4"
-                  className={pin_css_classes}
-                  onChange={(e) => handlePinChange(e, 4)}
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button
-              disabled={
-                !fData.pin[1] || !fData.pin[2] || !fData.pin[3] || !fData.pin[4]
-              }
-              className=""
-            >
-              Sign Up
-            </Button>
-          </CardFooter>
-        </Card>
-      </TabsContent> */}
       <TabsContent
         value="sign-up"
         className={!(activeTab === "sign-up") ? "hidden" : ""}
@@ -380,11 +287,11 @@ export function SignInTabs() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-1">
-              <Label htmlFor="tel">
+              <Label htmlFor="new-email">
                 Email Address <span className="text-foreground/50">*</span>
               </Label>
               <Input
-                id="email"
+                id="new-email"
                 type="email"
                 value={fData.email}
                 placeholder="email@example.com"
