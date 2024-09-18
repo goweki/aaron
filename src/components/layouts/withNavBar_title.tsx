@@ -14,7 +14,7 @@ export default function WithTitleLayout({
     <WithNavLayout>
       <div className="sm:hidden w-full h-full flex">
         <div className="flex flex-col flex-1 my-8">
-          <span className="inline-block m-auto italic text-sm">
+          <span className="inline-block m-auto italic text-sm text-center">
             Please use a wider screen for better viewing
           </span>
         </div>
