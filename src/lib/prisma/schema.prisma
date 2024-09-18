@@ -7,10 +7,18 @@ datasource db {
     url      = env("MONGODB_URL")
 }
 
+enum Status {
+    ACTIVE
+    DOMANT
+    CLOSED
+    DELETED
+}
+
 // Users for AUTH
 enum UserRole {
-    user
-    admin
+    USER
+    ADMIN
+    SYSTEM
 }
 
 model User {
@@ -20,10 +28,11 @@ model User {
     email            String?   @unique
     password         String?
     voiceSign        String?
-    role             UserRole  @default(user)
+    role             UserRole  @default(USER)
     avatar           String?
     resetToken       String?
     resetTokenExpiry DateTime?
+    status           Status    @default(DOMANT)
 
     assets Asset[] @relation("admin")
 
@@ -35,22 +44,16 @@ model User {
 
 // Assets
 
-enum Status {
-    live
-    dormant
-    closed
-}
-
 enum AssetType {
-    music
+    MUSIC
 }
 
 model Asset {
     id          String    @id @default(auto()) @map("_id") @db.ObjectId
     title       String
     description String
-    type        AssetType @default(music)
-    status      Status    @default(dormant)
+    type        AssetType @default(MUSIC)
+    status      Status    @default(DOMANT)
 
     adminId       String? @db.ObjectId
     administrator User?   @relation("admin", fields: [adminId], references: [id])
@@ -64,7 +67,7 @@ model Asset {
     @@map("assets")
 }
 
-// Fingerprint
+// Identifiers
 
 model AudioFingerprint {
     id          String @id @default(auto()) @map("_id") @db.ObjectId

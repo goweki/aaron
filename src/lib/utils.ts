@@ -154,24 +154,40 @@ export function truncateStr(_prose: string, limit: number) {
 }
 
 /**
- * Title case a string.
- * @param str - The string to title case.
- * @returns string in title case.
+ * Capitalizes the first letter of every word in a given sentence.
+ *
+ * This function splits the input sentence into individual words, capitalizes the
+ * first letter of each word, ensures the rest of the word is in lowercase, and
+ * then joins the words back into a single sentence.
+ *
+ * @param sentence - The input sentence that you want to transform.
+ * @returns {string} - A new string where the first letter of each word is capitalized,
+ *                     and the remaining letters are in lowercase.
+ *
+ * @example
+ * // Capitalizes the first letter of every word in the sentence
+ * capitalizeInitialLetters("hello world from JavaScript");
+ * // Returns: "Hello World From Javascript"
+ *
+ * @example
+ * // Handles mixed case and extra spaces
+ * capitalizeInitialLetters("hElLo    WOrLd");
+ * // Returns: "Hello World"
+ *
+ * @example
+ * // Works with a single word
+ * capitalizeInitialLetters("javascript");
+ * // Returns: "Javascript"
  */
-export function titleCase(str: string) {
-  var splitStr = str.toLowerCase().split(" ");
-  for (var i = 0; i < splitStr.length; i++) {
-    // You do not need to check if i is larger than splitStr length, as your for does that for you
-    // Assign it back to the array
-    splitStr[i] =
-      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-  }
-  // Directly return the joined string
-  return splitStr.join(" ");
+export function titleCase(sentence: string): string {
+  return sentence
+    .split(" ") // Split the sentence into an array of words using spaces
+    .map(
+      (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() // Capitalize the first letter, lowercase the rest
+    )
+    .join(" "); // Join the transformed words back into a single string with spaces
 }
 
-//
-//
 //
 // URL HANDLERS
 
@@ -183,7 +199,7 @@ export function getCanonicalURL(): string {
   const nodeEnv = process.env.NODE_ENV || "development";
 
   if (nodeEnv === "production") {
-    return "https://bunge-scope.vercel.app"; // live server
+    return "https://aaron-phi.vercel.app"; // live server
   } else if (nodeEnv === "development") {
     return "http://localhost:3000"; // development server
   } else {

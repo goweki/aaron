@@ -14,7 +14,7 @@ export default function LandingLayout({
   // AUTH check
   // router memoized
   const routeToUserCB = useCallback(() => {
-    router.push("/user");
+    router.push("/dashboard");
   }, []);
   //if AUTHENTICATED
   useEffect(() => {

@@ -1,5 +1,5 @@
 import styles from "./loader.module.css";
-import "./styles.css";
+import "./loaderStyles.css";
 import { useRef } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 export default function LoaderHourglass({

@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import prisma from "@/lib/prisma/prisma";
+import { Status } from "@prisma/client";
 import { compareHash, isDatePassed } from "@/lib/utils";
 import { UserRole } from "@prisma/client";
 
@@ -58,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         // run query on db
         // check if user exists
         let user = await prisma.user.findUnique({
-          where: { email },
+          where: { email, status: { not: Status.DELETED } },
         });
         //check
         // console.log(user);

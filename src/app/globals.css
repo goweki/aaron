@@ -96,6 +96,11 @@
     --input: 145 30% 80%;
     --ring: 222.2 84% 4.9%;
 
+    --chart-1: 140 70% 35%; /* Forest green */
+    --chart-2: 210 80% 40%; /* Slate blue */
+    --chart-3: 30 100% 50%; /* Amber */
+    --chart-4: 10 90% 45%; /* Burnt orange */
+
     --radius: 0.5rem;
   }
 
@@ -127,14 +132,43 @@
     --border: 145 40% 20%;
     --input: 145 40% 20%;
     --ring: 212.7 26.8% 83.9%;
+
+    --chart-1: 134 61% 49%; /* Light green */
+    --chart-2: 220 90% 56%; /* Light blue */
+    --chart-3: 54 100% 70%; /* Light yellow */
+    --chart-4: 14 83% 58%; /* Light orange */
+
+    --radius: 0.5rem;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border/50;
   }
+  html,
   body {
-    @apply bg-background text-foreground min-h-screen w-full container min-w-fit flex;
+    /* @apply bg-background text-foreground min-h-screen; */
+    @apply bg-background text-foreground h-full !p-0 container flex flex-col;
+    /* @apply bg-background text-foreground min-h-screen w-full container min-w-fit flex; */
+  }
+  h1 {
+    @apply text-3xl lg:text-4xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+  main {
+    @apply bg-primary/5;
   }
 }
+
+/* components */
+/* @layer components {
+  .card {
+    @apply bg-primary;
+  }
+} */

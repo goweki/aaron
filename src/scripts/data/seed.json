@@ -1,43 +1,50 @@
 {
-    "users": [
-      {
-        "name": "Alice",
-        "tel": "1234567890",
-        "email": "alice@goweki.com",
-        "password": "password1234",
-        "role": "admin"
-      },
-      {
-        "name": "Bob",
-        "tel": "0987654321",
-        "email": "bob@goweki.com",
-        "password": "password1234"
-      }
-    ],
-    "assets": [
-      {
-        "title": "Sample Music Track Alice",
-        "description": "A sample music track by Alice",
-        "type": "music",
-        "status": "live",
-        "adminContact":"alice@goweki.com",
-        "fingerprint": [[0.7, 0.8, 0.9], [1.0, 1.1, 1.2]]
-      },
-      {
-        "title": "Another Alice Music Track",
-        "description": "Another Alice music track.",
-        "type": "music",
-        "adminContact":"alice@goweki.com",
-        "fingerprint": [[0.7, 0.8, 0.9], [1.0, 1.1, 1.2]]
-      },
-      {
-        "title": "Sample Music Track Bob",
-        "description": "Bob's sample music track.",
-        "type": "music",
-        "status": "dormant",
-        "adminContact":"bob@goweki.com",
-        "fingerprint": [[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]]
-      }
-    ]
-  }
-  
+  "users": [
+    {
+      "name": "Alice",
+      "tel": "1234567890",
+      "email": "antonio@goweki.com",
+      "password": "password1234",
+      "role": "SYSTEM"
+    },
+    {
+      "name": "Bob",
+      "tel": "0987654321",
+      "email": "bob@goweki.com",
+      "password": "password1234"
+    }
+  ],
+  "assets": [
+    {
+      "title": "Sample Music Track Alice",
+      "description": "A sample music track by Alice",
+      "type": "MUSIC",
+      "status": "ACTIVE",
+      "adminContact": "antonio@goweki.com",
+      "fingerprint": [
+        [0.7, 0.8, 0.9],
+        [1.0, 1.1, 1.2]
+      ]
+    },
+    {
+      "title": "Another Alice Music Track",
+      "description": "Another Alice music track.",
+      "type": "MUSIC",
+      "adminContact": "antonio@goweki.com",
+      "fingerprint": [
+        [0.7, 0.8, 0.9],
+        [1.0, 1.1, 1.2]
+      ]
+    },
+    {
+      "title": "Sample Music Track Bob",
+      "description": "Bob's sample music track.",
+      "type": "MUSIC",
+      "adminContact": "bob@goweki.com",
+      "fingerprint": [
+        [0.1, 0.2, 0.3],
+        [0.4, 0.5, 0.6]
+      ]
+    }
+  ]
+}

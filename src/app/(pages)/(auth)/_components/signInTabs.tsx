@@ -127,7 +127,7 @@ export function SignInTabs() {
     });
     // signIn Response
     if (res?.ok && !res.error) {
-      router.push("/user");
+      router.push("/dashboard");
     } else {
       console.log(
         `........................\n > FAILED: user not validated\n > ${JSON.stringify(
@@ -165,7 +165,7 @@ export function SignInTabs() {
       body: JSON.stringify({ email, action: "signUp" }),
     };
 
-    const response = await fetch("/api/auth/reset-password", fetchOptions).then(
+    const response = await fetch("/api/auth/user", fetchOptions).then(
       async (res_) => {
         if (res_.ok) {
           return await res_.json();
