@@ -44,7 +44,7 @@ export function ResetPasswordPage() {
       body: JSON.stringify({ email, action: "reset" }),
     };
 
-    const response = await fetch("/api/auth/reset-password", fetchOptions).then(
+    const response = await fetch("/api/auth/user", fetchOptions).then(
       async (res_) => {
         if (res_.ok) {
           return await res_.json();

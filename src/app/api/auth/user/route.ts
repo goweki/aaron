@@ -3,6 +3,8 @@ import sendEmail, { generateEmail } from "@/lib/emailService";
 import { type NextRequest } from "next/server";
 import crypto from "crypto";
 import { dateShort, getCanonicalURL, hash } from "@/lib/utils";
+import { Status } from "@prisma/client";
+import { withAuthAdmin } from "@/lib/authRouteWrappers";
 
 export const dynamic = "auto"; // 'auto' | 'force-dynamic' | 'error' | 'force-static'
 
@@ -14,17 +16,12 @@ const maxUsers = Number(process.env.USER_COUNT_CHECKPOINT) || 100;
  * @param request API call
  * @returns
  */
-const postHandler = async (request: Request) => {
+async function postHandler(request: Request) {
   try {
     // request body
     const { email, action } = await request.json();
 
-    console.log(
-      "POST REQUEST: to /api/auth/reset-password: \n > : ",
-      action,
-      " ",
-      email
-    );
+    console.log("POST REQUEST: to /api/auth/user: \n > : ", action, " ", email);
     let userExists = await prisma.user.findUnique({
       where: { email },
     });
@@ -96,7 +93,7 @@ const postHandler = async (request: Request) => {
     }
     const { html, text } = res_generateEmail;
     const res_sendEmail = await sendEmail(
-      "Reset Password - (bunge-scope)",
+      "Reset Password - (AARON)",
       html,
       text,
       email
@@ -108,13 +105,13 @@ const postHandler = async (request: Request) => {
       failed: "Failed to send the link, try again later",
     });
   } catch (err) {
-    console.error("ERROR in route: api/auth/reset-password - POST \n > ", err);
+    console.error("ERROR in route: api/auth/user - POST \n > ", err);
     return Response.json({ error: "SERVER ERROR" });
   }
-};
+}
 
 // PUT
-const putHandler = async (request: Request) => {
+async function putHandler(request: Request) {
   try {
     // request body
     const doc = await request.json();
@@ -135,13 +132,13 @@ const putHandler = async (request: Request) => {
     console.log("SUCCESS: Password updated\n >", updateUser);
     return Response.json({ success: "Password updated" });
   } catch (err) {
-    console.error("ERROR in route: api/auth/reset-password - PUT \n > ", err);
+    console.error("ERROR in route: api/auth/user - PUT \n > ", err);
     return Response.json({ error: "SERVER ERROR" });
   }
-};
+}
 
-// GET
-const getHandler = async (request: NextRequest) => {
+// GET validates email & token
+async function getHandler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get("email") as string;
@@ -169,27 +166,32 @@ const getHandler = async (request: NextRequest) => {
     }
     //
   } catch (err: any) {
-    console.log("ERROR in route: api/auth/reset-password >", err);
+    console.log("ERROR in route: api/auth/user >", err);
     return Response.json({ error: err.message });
   }
-};
+}
 
 // DELETE
-const deleteHandler = async (request: Request) => {
+async function deleteHandler(req: NextRequest) {
+  // searchParam
+  const searchParams = req.nextUrl.searchParams;
+  const email = searchParams.get("email") as string;
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-    console.log(`PUT REQUEST: item data: `, id);
-    //return Response.json({ success: 'action performed' });
-    //return Response.json({ failed: 'action NOT performed' });
-  } catch (err: any) {
-    console.error(
-      "ERROR in route: api/auth/reset-password - DELETE \n > ",
-      err
-    );
+    // delete user (update status to DELETED)
+    const deletedUser = await prisma.user.update({
+      where: {
+        email: email,
+      },
+      data: { status: Status.DELETED },
+    });
+    console.log(`SUCCESS: user deleted.\n..........`);
+    // HTTP response
+    return Response.json({ success: deletedUser });
+  } catch (err) {
+    console.error(" > ERROR: user deletion failed.", err, "\n..........");
     return Response.json({ error: "SERVER ERROR" });
   }
-};
+}
 
 // export const POST = withAuthAdmin(postHandler);
 // export const PUT = withAuthAdmin(putHandler);
@@ -198,6 +200,4 @@ const deleteHandler = async (request: Request) => {
 export const POST = postHandler;
 export const PUT = putHandler;
 export const GET = getHandler;
-export const DELETE = deleteHandler;
-
-type Action = "signUp" | "reset";
+export const DELETE = withAuthAdmin(deleteHandler);

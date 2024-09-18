@@ -1,60 +1,22 @@
+import { withAuthAdmin } from "@/lib/authRouteWrappers";
 import prisma from "@/lib/prisma/prisma";
 import { compareHash } from "@/lib/utils";
-// import { seed as seedDB } from "@/scripts/seed"; // PS:removed seeding from route, now done running /script/seed.js
-// export const dynamic = "auto"; // 'auto' | 'force-dynamic' | 'error' | 'force-static'
+import { Status } from "@prisma/client";
 export const revalidate = 3600; //after 1 hr // false | 0 | number
 
-// PS:removed seeding from route, now done running /script/seed.js
-// // POST seed data
-// const postHandler = async (request: Request) => {
-//   try {
-//     // request body
-//     const doc = await request.json();
-//     console.log("POST REQUEST: to seed: ", doc);
-//     if (!doc.key) {
-//       console.error("No key provided by client: ", doc);
-//       return Response.json({ failed: "no key provided" });
-//     }
-//     if (!seedAuth) {
-//       console.error("No seeding auth ENV variable provided");
-//       return Response.json({ error: "missing .env AUTH_SEEDING" });
-//     }
-//     if (seedAuth === doc.key) {
-//       seedDB()
-//         .then(async () => {
-//           await prisma.$disconnect();
-//         })
-//         .catch(async (e) => {
-//           console.error(e);
-//           await prisma.$disconnect();
-//           process.exit(1);
-//         });
-//     } else {
-//       return await new Promise<Response>((resolve) =>
-//         setTimeout(() => resolve(Response.json({ failed: "zi !" })), 2000)
-//       );
-//     }
-//     return await new Promise<Response>((resolve) =>
-//       setTimeout(() => resolve(Response.json({ success: "wazi !" })), 2000)
-//     );
-
-//     //return Response.json({ failed: 'action NOT performed' });
-//   } catch (err) {
-//     console.error("ERROR in route: api/data - POST \n > ", err);
-//     return Response.json({ error: "SERVER ERROR" });
-//   }
-// };
+// export const POST = withAuthAdmin(postHandler);
+// export const PUT = withAuthAdmin(putHandler);
+// export const DELETE = withAuthAdmin(deleteHandler);
 
 // GET ui data
 const getHandler = async (request: Request) => {
   try {
     // console.log(`GET REQUEST: UI data: `);
-
     //  Query db
     const allUsers = await prisma.user.findMany({
-      // include: {
-      //   assets: true,
-      // },
+      where: {
+        status: { not: Status.DELETED },
+      },
       include: {
         assets: true,
       },
@@ -108,14 +70,4 @@ const getHandler = async (request: Request) => {
 //   }
 // };
 
-// export const POST = withAuthAdmin(postHandler);
-// export const PUT = withAuthAdmin(putHandler);
-// export const GET = withAuthAdmin(getHandler);
-// export const DELETE = withAuthAdmin(deleteHandler);
-
-// PS:removed seeding from route, now done running /script/seed.js
-// export const POST = postHandler;
-
 export const GET = getHandler;
-// export const DELETE = deleteHandler;
-// export const PUT = putHandler;

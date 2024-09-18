@@ -2,7 +2,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const seedData = require("../data/seed.json"); // Import JSON data
+const seedData = require("./data/seed.json"); // Import JSON data
 const { users, assets, fingerprints } = seedData;
 
 async function seed() {
@@ -18,19 +18,30 @@ async function seed() {
 
   // Fetch users to get their IDs
   const _users = await prisma.user.findMany();
-  // console.log("users in db: ", _users);
+  console.log("users in db: ", _users);
 
   // Store assets,embedding adminId in each asset doc
   for (const asset of assets) {
-    // console.log("saving asset: ", asset.title);
+    console.log("saving asset: ", asset);
     const { adminContact, fingerprint, ...asset_ } = asset;
+    console.log("ADMIN_CONTACT: ", adminContact);
 
-    const _admin = users.find(({ email }) => email === adminContact);
-    // console.log("ADMIN1: ", _admin);
-    const admin = _users.find(({ email }) => email === _admin.email);
-    // console.log("ADMIN2: ", admin);
+    // Find the admin user by email
+    const admin = _users.find(({ email }) => email === adminContact);
 
-    console.log("saving asset: ", asset_);
+    // Log the admin information
+    if (admin) {
+      console.log("ADMIN: ", admin);
+
+      // Here you can use the `admin` object to embed `adminId` in `asset_`
+      // For example:
+      // await prisma.asset.update({
+      //   where: { id: asset_.id },
+      //   data: { adminId: admin.id, ...asset_ },
+      // });
+    } else {
+      console.error(`Admin with contact ${adminContact} not found.`);
+    }
 
     const savedAsset = await prisma.asset.create({
       data: {

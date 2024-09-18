@@ -91,7 +91,7 @@ type EmailConfig = {
 
 const config: Record<string, EmailConfig> = {
   signUp: {
-    desc: "Sign Up (bunge-scope)",
+    desc: "Sign Up (AARON)",
     title: "Set New Password",
     parA_html:
       "Welcome! Click the button below to complete your sign-up process; or alternatively use the link: ",
@@ -101,7 +101,7 @@ const config: Record<string, EmailConfig> = {
     links: [{ label: "github", href: "https://github.com/goweki" }],
   },
   reset: {
-    desc: "Set New Password (bunge-scope)",
+    desc: "Set New Password (AARON)",
     title: "Password Reset Info",
     parA_html:
       "We received a request to reset your password. Click the button below to set a new password; or alternatively use the link: ",
@@ -642,7 +642,7 @@ const templateHTML = (
       
                                       <!--light mode logo-->
                                       <a href="https://scope.goweki.com" target="_blank" rel="noopener noreferrer">
-                                          <h2 style="color: #ffffff; text-decoration: none;" >BUNGE SCOPE</h2>
+                                          <h2 style="color: #ffffff; text-decoration: none;" >AARON</h2>
                                       </a>
                                   </td>
                               </tr>
@@ -753,8 +753,8 @@ const templatePlaintext = (_name: string, _parA: string, _url: string) => {
       ${_url}
       
       
-      BUNGE-SCOPE
-      https://scope.goweki.com
+      AARON
+      https://aaron.goweki.com
       
       `;
 };

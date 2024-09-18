@@ -51,7 +51,7 @@ export default function ResetPassword({
         };
 
         const response = await fetch(
-          `/api/auth/reset-password?email=${email}&token=${token}`,
+          `/api/auth/user?email=${email}&token=${token}`,
           fetchOptions
         ).then(async (res_) => {
           if (res_.ok) {
@@ -122,21 +122,20 @@ export default function ResetPassword({
         }),
       };
 
-      const response = await fetch(
-        "/api/auth/reset-password",
-        fetchOptions
-      ).then(async (res_) => {
-        if (res_.ok) {
-          return await res_.json();
-        } else {
-          console.log(`ERROR: ` + JSON.stringify(res_));
-          if (res_.status && res_.status in httpCodes) {
-            return { error: httpCodes[res_.status] };
+      const response = await fetch("/api/auth/user", fetchOptions).then(
+        async (res_) => {
+          if (res_.ok) {
+            return await res_.json();
           } else {
-            return { error: "Unknown Error, try again later" }; // unknown errors
+            console.log(`ERROR: ` + JSON.stringify(res_));
+            if (res_.status && res_.status in httpCodes) {
+              return { error: httpCodes[res_.status] };
+            } else {
+              return { error: "Unknown Error, try again later" }; // unknown errors
+            }
           }
         }
-      });
+      );
       //validate reseting password
       if (response?.success) {
         toast.success(response.success);
