@@ -115,18 +115,18 @@ async function putHandler(request: Request) {
   try {
     // request body
     const doc = await request.json();
-    const { email, name, password, token } = doc;
+    const { email, fullName: name, password, token } = doc;
     console.log(`PUT REQUEST: update user data: \n > `, doc);
     // check if user exists
     const _user = await prisma.user.findFirst({
       where: {
         email: email,
-        resetToken: token,
+        resetToken: crypto.createHash("sha256").update(token).digest("hex"),
       },
     });
-    if (!_user) {
-      throw new Error("User not found or invalid token");
-    }
+
+    if (!_user) return Response.json({ error: "Invalid user / token" });
+
     // update doc
     const updateUser = await prisma.user.update({
       where: {
@@ -139,7 +139,7 @@ async function putHandler(request: Request) {
         resetTokenExpiry: null,
       },
     });
-    if (!updateUser) return Response.json({ failed: "Database error" });
+    if (!updateUser) return Response.json({ error: "DATABASE ERROR" });
     //success
     console.log("SUCCESS: Password updated\n >", updateUser);
     return Response.json({ success: "Password updated" });

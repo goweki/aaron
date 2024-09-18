@@ -19,7 +19,8 @@ import { Label } from "@/components/ui/label";
 
 const default_fData = {
   oldName: "",
-  name: "",
+  newName: "",
+  email: "",
   newPassword: "",
   confirmPassword: "",
 };
@@ -34,7 +35,7 @@ export default function ResetPassword({
   const { token } = params;
   const { email } = searchParams; // /token?email=email@mail.com
   const router = useRouter();
-  const [fData, setfData] = useState(default_fData);
+  const [fData, setfData] = useState({ ...default_fData, email });
 
   // onMount
   useEffect(() => {
@@ -94,7 +95,7 @@ export default function ResetPassword({
 
     // if name error
     if (!fData.oldName) {
-      const nameError_ = nameValidator(fData.name);
+      const nameError_ = nameValidator(fData.newName);
       if (nameError_) {
         toast.error(nameError_);
         return;
@@ -117,7 +118,7 @@ export default function ResetPassword({
         body: JSON.stringify({
           email,
           token,
-          name: fData.oldName || fData.name,
+          fullName: fData.newName || fData.oldName,
           password: fData.newPassword,
         }),
       };
@@ -167,23 +168,35 @@ export default function ResetPassword({
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="name">
+          <div id="email-input-group" className="grid gap-2">
+            <Label htmlFor="email">
+              Email
+              {/* <span className="text-foreground/50">*</span> */}
+            </Label>
+            <Input
+              id="email"
+              value={fData.email}
+              disabled={true}
+              className="placeholder:italic"
+            />
+          </div>
+
+          <div id="fullName-input-group" className="grid gap-2">
+            <Label htmlFor="new-name">
               Prefered Name <span className="text-foreground/50">*</span>
             </Label>
             <Input
-              id="name"
+              id="new-name"
               placeholder="Your name"
-              value={fData.oldName || fData.name}
-              disabled={!!fData.oldName}
+              value={fData.newName || fData.oldName}
               onChange={(e) =>
-                setfData((prev) => ({ ...prev, name: e.target.value }))
+                setfData((prev) => ({ ...prev, newName: e.target.value }))
               }
               className="placeholder:italic"
             />
           </div>
 
-          <div className="grid gap-2">
+          <div id="new-password-input-group" className="grid gap-2">
             <Label htmlFor="new-password">
               New Password <span className="text-foreground/50">*</span>
             </Label>
@@ -197,7 +210,7 @@ export default function ResetPassword({
               }
             />
           </div>
-          <div className="grid gap-2">
+          <div id="confirm-password-input-group" className="grid gap-2">
             <Label htmlFor="password">
               Re-type Password <span className="text-foreground/50">*</span>
             </Label>
