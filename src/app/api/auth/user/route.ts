@@ -119,7 +119,7 @@ async function putHandler(request: Request) {
     console.log(`PUT REQUEST: update user data: \n > `, doc);
     // update doc
     const updateUser = await prisma.user.update({
-      where: { email },
+      where: { email, resetToken: token },
       data: {
         name,
         password: await hash(password),

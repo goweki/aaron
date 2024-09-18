@@ -1,14 +1,14 @@
 {
   "users": [
     {
-      "name": "Alice",
+      "name": "Antonio Gorb",
       "tel": "1234567890",
       "email": "antonio@goweki.com",
       "password": "password1234",
       "role": "SYSTEM"
     },
     {
-      "name": "Bob",
+      "name": "Bob Marley",
       "tel": "0987654321",
       "email": "bob@goweki.com",
       "password": "password1234"
