@@ -13,20 +13,25 @@ import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { httpCodes } from "@/lib/refDictionary";
 import SelectAsync from "@/components/mols/selectAsync";
 import { InputImage } from "@/components/mols/InputImage";
 import AssetForm from "./_assets_form";
 import { Asset } from "@/lib/prisma/types";
+import { DashboardContext } from "@/components/providers";
 
 export default function AssetsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const {
+    data: { assets },
+    refreshData,
+  } = useContext(DashboardContext);
   const pathname = usePathname();
-  const [assets, setAssets] = useState<Asset[]>(dummyAssets);
+  // const [assets, setAssets] = useState<Asset[]>(dummyAssets);
   const [selectedAsset, setAsset] = useState<Asset>();
 
   return (

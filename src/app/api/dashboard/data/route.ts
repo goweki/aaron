@@ -8,12 +8,16 @@ export const revalidate = 3600; //after 1 hr // false | 0 | number
 const getHandler = async (request: Request, user: Partial<User>) => {
   try {
     // console.log(`GET REQUEST: UI data: `);
+    const q: any = user.role?.includes("ADMIN")
+      ? {}
+      : {
+          where: {
+            adminId: user.id,
+          },
+        };
+
     //  Query db
-    const userAssets = await prisma.asset.findMany({
-      where: {
-        adminId: user.id,
-      },
-    });
+    const userAssets = await prisma.asset.findMany(q);
 
     return Response.json({
       success: { assets: userAssets },

@@ -19,7 +19,8 @@ import { Button } from "@/components/ui/button";
 import { httpCodes } from "@/lib/refDictionary";
 import SelectAsync from "@/components/mols/selectAsync";
 import { Music } from "lucide-react";
-import { AssetType, Asset, Status } from "@prisma/client";
+import { AssetType, Status } from "@prisma/client";
+import { Asset } from "@/lib/prisma/types";
 import {
   Form,
   FormControl,

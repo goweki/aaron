@@ -65,6 +65,7 @@ model Asset {
 
     fingerprint AudioFingerprint?
     watermark   Watermark?
+    Detections  Detections[]
 
     @@map("assets")
 }
@@ -89,4 +90,24 @@ model Watermark {
     asset Asset @relation(fields: [assetId], references: [id])
 
     @@map("watermarks")
+}
+
+model Detections {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    assetId String @db.ObjectId
+    Asset   Asset  @relation(fields: [assetId], references: [id])
+
+    time DateTime
+
+    broadcasterId String      @db.ObjectId
+    Broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id])
+}
+
+model Broadcaster {
+    id          String       @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    link        String
+    description String
+    Detections  Detections[]
 }

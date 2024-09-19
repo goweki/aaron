@@ -157,6 +157,7 @@ export default function DashboardProviders({
 
       // console.log("RESPONSE", json_);
       if (response?.success) {
+        // console.log("DASHBOARD DATA:", response.success);
         setData(response.success);
       } else {
         console.error(

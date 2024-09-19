@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useEdgeStore } from "@/lib/edgestore";
-import { Asset } from "@prisma/client";
+import { Asset } from "@/lib/prisma/types";
 import { DashboardContext } from "@/components/providers";
 import AssetForm from "../_assets_form";
 
