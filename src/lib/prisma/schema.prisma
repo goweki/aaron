@@ -18,7 +18,7 @@ enum Status {
 enum UserRole {
     USER
     ADMIN
-    SYSTEM
+    SYSTEM_ADMIN
 }
 
 model User {
@@ -54,6 +54,7 @@ model Asset {
     description String
     type        AssetType @default(MUSIC)
     status      Status    @default(DOMANT)
+    image       String?
 
     adminId       String? @db.ObjectId
     administrator User?   @relation("admin", fields: [adminId], references: [id])

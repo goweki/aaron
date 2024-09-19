@@ -100,15 +100,17 @@ async function getHandler(req: NextRequest) {
   if (search) {
     q.AND.push({
       OR: [
-        { id: { contains: search } }, // Partial match for id
-        { email: { contains: search } }, // Partial match for email
+        { name: { contains: search, mode: "insensitive" } }, // Partial match for name
+        // { email: { contains: search } }, // Partial match for email
       ],
     });
   }
 
   try {
     // retrieve doc
+    console.log("Query Object: ", q);
     const res_ = await prisma.user.findMany({ where: q });
+    if (res_) console.log("Returning: ", { success: res_ });
     if (res_) return Response.json({ success: res_ });
     else return Response.json({ error: "no user found" });
   } catch (err) {

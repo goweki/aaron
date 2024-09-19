@@ -5,7 +5,7 @@
       "tel": "1234567890",
       "email": "antonio@goweki.com",
       "password": "password1234",
-      "role": "SYSTEM"
+      "role": "SYSTEM_ADMIN"
     },
     {
       "name": "Bob Marley",

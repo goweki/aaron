@@ -1,5 +1,4 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Tab from "./_tab";
 import WithTitleLayout from "@/components/layouts/withNavBar_title";
 import {
   Card,
@@ -19,9 +18,8 @@ export default function DashboardPage() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
-          <TabsTrigger value="reports" disabled>
-            Reports
-          </TabsTrigger>
+          <TabsTrigger value="livestreams">Livestreams</TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="notifications" disabled>
             Notifications
           </TabsTrigger>

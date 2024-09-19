@@ -11,6 +11,8 @@
     "postinstall": "prisma generate --schema=./src/lib/prisma/schema.prisma"
   },
   "dependencies": {
+    "@edgestore/react": "^0.2.2",
+    "@edgestore/server": "^0.2.2",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.17.0",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -47,6 +49,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
+    "react-image-file-resizer": "^0.4.8",
     "react-paystack": "^5.0.0",
     "react-select": "^5.8.0",
     "react-transition-group": "^4.4.5",

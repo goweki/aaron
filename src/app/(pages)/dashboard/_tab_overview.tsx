@@ -20,6 +20,9 @@ import {
   LibraryBig,
   Search,
   Users,
+  Radio,
+  SearchCheck,
+  Bell,
 } from "lucide-react";
 
 export default function OverviewTab() {
@@ -33,21 +36,22 @@ export default function OverviewTab() {
           description="+2 from last month "
         />
         <SummaryCard
-          title="Asset Detections"
-          Icon={Activity}
+          title="Livestreams"
+          Icon={Radio}
           value={3}
-          description="+1 from last month"
-        />
-        <SummaryCard
-          title="Leads"
-          Icon={LibraryBig}
-          value={12}
           description="Possible detections"
         />
         <SummaryCard
+          title="Detections"
+          Icon={SearchCheck}
+          value={6}
+          description="+1 from last month"
+        />
+
+        <SummaryCard
           title="Notifications"
-          Icon={Activity}
-          value={3}
+          Icon={Bell}
+          value={1}
           description="2 new notifications"
         />
       </div>
@@ -92,7 +96,7 @@ const SummaryCard = ({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">12</div>
+        <div className="text-2xl font-bold">{value}</div>
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
