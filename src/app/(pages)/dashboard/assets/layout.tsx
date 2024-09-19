@@ -43,7 +43,7 @@ export default function AssetsLayout({
               href="/dashboard/assets"
               className={cn(
                 buttonVariants({ variant: "link" }),
-                !selectedAsset
+                pathname === "/dashboard/assets"
                   ? "font-bold underline text-foreground"
                   : "text-foreground/75",
                 "justify-start cursor-default italic"
@@ -57,7 +57,7 @@ export default function AssetsLayout({
                 key={asset.id}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  selectedAsset?.id === asset.id
+                  pathname === `/dashboard/assets/${asset.id}`
                     ? "font-bold underline text-foreground"
                     : "text-foreground/75",
                   "justify-start cursor-default"

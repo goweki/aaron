@@ -20,7 +20,10 @@ export default function DashboardLayout({
               key={label}
               href={link}
               className={`px-2 py-2 transition-colors border-2 border-transparent rounded-md ${
-                pathname === link ? "bg-background" : "hover:bg-background"
+                pathname === link ||
+                (pathname.startsWith(`${link}/`) && link !== "/dashboard")
+                  ? "bg-background"
+                  : "hover:bg-background"
               }`}
             >
               {label}
