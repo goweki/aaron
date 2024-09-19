@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { httpCodes } from "@/lib/refDictionary";
 import SelectAsync from "@/components/mols/selectAsync";
 import { Music } from "lucide-react";
-import { AssetType } from "@prisma/client";
+import { AssetType, Asset, Status } from "@prisma/client";
 import {
   Form,
   FormControl,
@@ -34,26 +34,37 @@ import { InputImage } from "@/components/mols/InputImage";
 import { useEdgeStore } from "@/lib/edgestore";
 
 // Define the Zod schema for form validation
+// const assetFormSchema = z.object({
+//   assetTitle: z.string().min(1, "required"),
+//   assetType: z.nativeEnum(AssetType, {
+//     errorMap: () => ({ message: "Invalid asset type" }),
+//   }),
+//   adminId: z.string().min(1, "required"),
+//   image: z.string().optional(),
+//   description: z.string().optional(),
+//   // .min(10, "must be at least 10 characters long"),
+// });
 const assetFormSchema = z.object({
-  assetTitle: z.string().min(1, "required"),
-  assetType: z.nativeEnum(AssetType, {
+  title: z.string(),
+  type: z.nativeEnum(AssetType, {
     errorMap: () => ({ message: "Invalid asset type" }),
   }),
-  adminId: z.string().min(1, "required"),
-  image: z.string().optional(),
-  description: z.string().optional(),
-  // .min(10, "must be at least 10 characters long"),
+  adminId: z.string(),
+  image: z.string().nullable(), // Nullable string for image
+  description: z.string().nullable(), // Nullable string for description
+  // interestedIds: z.array(z.string()) // Array of strings
 });
+
 // Infer the form data type from the Zod schema
 type AssetFormData = z.infer<typeof assetFormSchema>;
 
-const AssetForm: React.FC<{ asset?: Partial<AssetFormData> }> = ({ asset }) => {
+const AssetForm: React.FC<{ asset?: Asset }> = ({ asset }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof assetFormSchema>>({
     resolver: zodResolver(assetFormSchema),
     defaultValues: {
-      assetTitle: asset?.assetTitle || "",
-      assetType: asset?.assetType || AssetType.MUSIC,
+      title: asset?.title || "",
+      type: asset?.type || AssetType.MUSIC,
       adminId: asset?.adminId || "",
       description: asset?.description || "",
     },
@@ -78,7 +89,7 @@ const AssetForm: React.FC<{ asset?: Partial<AssetFormData> }> = ({ asset }) => {
           {/* TITLE input */}
           <FormField
             control={form.control}
-            name="assetTitle"
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -99,7 +110,7 @@ const AssetForm: React.FC<{ asset?: Partial<AssetFormData> }> = ({ asset }) => {
           {/* TYPE input */}
           <FormField
             control={form.control}
-            name="assetType"
+            name="type"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -196,6 +207,7 @@ const AssetForm: React.FC<{ asset?: Partial<AssetFormData> }> = ({ asset }) => {
                   <FormControl>
                     <Textarea
                       {...field}
+                      value={field.value ?? ""}
                       placeholder="Asset description..."
                       className="min-h-[9.5rem] placeholder:italic placeholder:opacity-50"
                     />

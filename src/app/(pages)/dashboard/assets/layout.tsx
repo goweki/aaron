@@ -1,18 +1,5 @@
 "use client";
 
-import { Bird, Music, Turtle } from "lucide-react";
-import AsyncSelect from "react-select/async";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AssetType } from "@prisma/client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -31,19 +18,24 @@ import { httpCodes } from "@/lib/refDictionary";
 import SelectAsync from "@/components/mols/selectAsync";
 import { InputImage } from "@/components/mols/InputImage";
 import AssetForm from "./_assets_form";
+import { Asset } from "@/lib/prisma/types";
 
-export default function AssetsPage() {
+export default function AssetsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
-  const [assets, setAssets] = useState<any[]>(dummyAssets);
-  const [selectedAsset, setAsset] = useState<any>();
+  const [assets, setAssets] = useState<Asset[]>(dummyAssets);
+  const [selectedAsset, setAsset] = useState<Asset>();
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
         <aside className="lg:w-1/5 pt-2">
           <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
-            <div
-              onClick={() => setAsset(null)}
+            <Link
+              href="/dashboard/assets"
               className={cn(
                 buttonVariants({ variant: "link" }),
                 !selectedAsset
@@ -53,10 +45,10 @@ export default function AssetsPage() {
               )}
             >
               +New Asset
-            </div>
+            </Link>
             {assets.map((asset) => (
-              <div
-                onClick={() => setAsset(asset)}
+              <Link
+                href={`/dashboard/assets/${asset.id}`}
                 key={asset.id}
                 className={cn(
                   buttonVariants({ variant: "link" }),
@@ -67,14 +59,14 @@ export default function AssetsPage() {
                 )}
               >
                 {asset.title}
-              </div>
+              </Link>
             ))}
           </nav>
         </aside>
         <Card className="w-full">
           <div className="space-y-6">
             <div className="relative hidden flex-col items-start gap-8 md:flex">
-              <AssetForm asset={selectedAsset} />
+              {children}
             </div>
           </div>
         </Card>
@@ -83,39 +75,48 @@ export default function AssetsPage() {
   );
 }
 
-const dummyAssets = [
+const dummyAssets: Asset[] = [
   {
     id: "64c8d6f91c9d440000a65a1d",
     title: "Summer Vibes",
     description: "A collection of summer-themed music tracks.",
-    type: "MUSIC",
-    status: "active",
+    type: "MUSIC", // Ensure this is a valid value of the AssetType enum
+    status: "ACTIVE", // Ensure this is a valid value of the Status enum
+    image: null, // Optional field; set if you have an image URL or path
+
     adminId: "64b8e6d41c2a000015a732ab",
     interestedIds: ["64b8e6d41c2a000015a732ac", "64b8e6d41c2a000015a732ad"],
     fingerprint: {
       id: "64c8d6f91c9d440000f82c3e",
-      hash: "d41d8cd98f00b204e9800998ecf8427e",
-      createdAt: "2024-09-01T12:34:56.000Z",
+      assetId: "64c8d6f91c9d440000a65a1d", // Reference to the asset ID
+      fingerprint: {
+        hash: "d41d8cd98f00b204e9800998ecf8427e",
+      },
     },
+
     watermark: {
       id: "64c8d6f91c9d440000d92c4a",
-      pattern: "xy123pattern",
-      createdAt: "2024-09-02T08:23:45.000Z",
+      assetId: "64c8d6f91c9d440000a65a1d", // Reference to the asset ID
+      watermark: "xy123pattern",
     },
   },
   {
     id: "64c8d6f91c9d440000b94a2f",
     title: "Corporate Presentation",
     description: "Background music and soundtracks for corporate videos.",
-    type: "VIDEO",
-    status: "dormant",
-    adminId: null,
+    type: "VIDEO", // Ensure this is a valid value of the AssetType enum
+    status: "DOMANT", // Ensure this is a valid value of the Status enum
+    image: null, // Optional field; set if you have an image URL or path
+
+    adminId: "64c8d6f91c9d440000b94a2f", // Optional field; set to null if no admin is assigned
     interestedIds: ["64b8e6d41c2a000015a732ae"],
-    fingerprint: null,
+
+    fingerprint: undefined, // Optional field; set to null if no fingerprint is assigned
+
     watermark: {
       id: "64c8d6f91c9d440000e72f6b",
-      pattern: "ab987watermark",
-      createdAt: "2024-09-05T10:15:30.000Z",
+      assetId: "64c8d6f91c9d440000b94a2f", // Reference to the asset ID
+      watermark: "ab987watermark",
     },
   },
   {
@@ -123,16 +124,22 @@ const dummyAssets = [
     title: "Podcast Jingles",
     description:
       "Custom-made jingles for podcast introductions and transitions.",
-    type: "MUSIC",
-    status: "dormant",
+    type: "MUSIC", // Ensure this is a valid value of the AssetType enum
+    status: "DOMANT", // Ensure this is a valid value of the Status enum
+    image: null, // Optional field; set if you have an image URL or path
+
     adminId: "64b8e6d41c2a000015a732af",
     interestedIds: [],
+
     fingerprint: {
       id: "64c8d6f91c9d440000f92d7e",
-      hash: "e99a18c428cb38d5f260853678922e03",
-      createdAt: "2024-08-28T09:12:11.000Z",
+      assetId: "64c8d6f91c9d440000c93a3e", // Reference to the asset ID
+      fingerprint: {
+        hash: "e99a18c428cb38d5f260853678922e03",
+      },
     },
-    watermark: null,
+
+    watermark: undefined, // Optional field; set to null if no watermark is assigned
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import WithTitleLayout from "@/components/layouts/withNavBar_title";
+import DashboardProviders, { DashboardContext } from "@/components/providers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -26,7 +27,7 @@ export default function DashboardLayout({
             </Link>
           ))}
         </div>
-        {children}
+        <DashboardProviders>{children}</DashboardProviders>
       </div>
     </WithTitleLayout>
   );

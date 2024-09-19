@@ -46,6 +46,7 @@ model User {
 
 enum AssetType {
     MUSIC
+    VIDEO
 }
 
 model Asset {
@@ -56,8 +57,8 @@ model Asset {
     status      Status    @default(DOMANT)
     image       String?
 
-    adminId       String? @db.ObjectId
-    administrator User?   @relation("admin", fields: [adminId], references: [id])
+    adminId       String @db.ObjectId
+    administrator User   @relation("admin", fields: [adminId], references: [id])
 
     interestedIds   String[] @db.ObjectId
     interestedUsers User[]   @relation("interests", fields: [interestedIds], references: [id])

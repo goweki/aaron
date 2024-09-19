@@ -3,64 +3,78 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const seedData = require("./data/seed.json"); // Import JSON data
-const { users, assets, fingerprints } = seedData;
+const { users, assets } = seedData;
 
 async function seed() {
   // Clear existing data
-  await prisma.audioFingerprint.deleteMany();
-  await prisma.asset.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.$transaction([
+    prisma.asset.deleteMany({}),
+    prisma.user.deleteMany({}),
+  ]);
 
-  // Create users
-  await prisma.user.createMany({
-    data: users,
+  // Insert users
+  const userPromises = users.map(async (_user) => {
+    const { assets, ...user } = _user;
+    const createdUser = await prisma.user.create({
+      data: {
+        email: user.email || "",
+        name: user.name || "",
+        role: user.role || "USER", // Default to 'USER'
+        tel: user.tel || "",
+        email: user.email || "",
+        avatar: user.avatar || "",
+        status: user.status || "DOMANT", // Default to 'USER'
+      },
+    });
+
+    // Insert related fingerprints
+    if (assets && assets.length > 0) {
+      const assetPromises = assets.map(async (_asset) => {
+        const { fingerprint, watermark, ...asset } = _asset;
+        const assetCreated = await prisma.asset.create({
+          data: {
+            ...asset,
+            adminId: createdUser.id,
+          },
+        });
+        if (fingerprint) {
+          await prisma.audioFingerprint.upsert({
+            where: { assetId: assetCreated.id },
+            update: {
+              fingerprint,
+            },
+            create: {
+              assetId: assetCreated.id,
+              fingerprint,
+            },
+          });
+        }
+        if (watermark) {
+          await prisma.watermark.upsert({
+            where: { assetId: assetCreated.id },
+            update: {
+              watermark,
+            },
+            create: {
+              assetId: assetCreated.id,
+              watermark,
+            },
+          });
+        }
+        return assetCreated;
+      });
+      await Promise.all(assetPromises);
+    }
   });
 
-  // Fetch users to get their IDs
-  const _users = await prisma.user.findMany();
-  console.log("users in db: ", _users);
+  await Promise.all(userPromises);
 
-  // Store assets,embedding adminId in each asset doc
-  for (const asset of assets) {
-    console.log("saving asset: ", asset);
-    const { adminContact, fingerprint, ...asset_ } = asset;
-    console.log("ADMIN_CONTACT: ", adminContact);
+  // Log counts
+  const assetCount = await prisma.asset.count();
+  const userCount = await prisma.user.count();
 
-    // Find the admin user by email
-    const admin = _users.find(({ email }) => email === adminContact);
-
-    // Log the admin information
-    if (admin) {
-      console.log("ADMIN: ", admin);
-
-      // Here you can use the `admin` object to embed `adminId` in `asset_`
-      // For example:
-      // await prisma.asset.update({
-      //   where: { id: asset_.id },
-      //   data: { adminId: admin.id, ...asset_ },
-      // });
-    } else {
-      console.error(`Admin with contact ${adminContact} not found.`);
-    }
-
-    const savedAsset = await prisma.asset.create({
-      data: {
-        ...asset_,
-        adminId: admin.id,
-      },
-    });
-
-    // save fingerprint
-    await prisma.audioFingerprint.create({
-      data: {
-        fingerprint,
-        assetId: savedAsset.id,
-      },
-    });
-  }
-
-  console.log("assets: ", await prisma.asset.count());
-  console.log("fingerprints: ", await prisma.audioFingerprint.count());
+  console.log("assets: ", assetCount);
+  console.log("users: ", userCount);
   console.log("SEED COMPLETE");
 }
 
