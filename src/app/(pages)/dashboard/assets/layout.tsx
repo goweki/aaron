@@ -30,15 +30,15 @@ import { useState } from "react";
 import { httpCodes } from "@/lib/refDictionary";
 import SelectAsync from "@/components/mols/selectAsync";
 import { InputImage } from "@/components/mols/InputImage";
-import AssetForm from "./_tab_assets_forms";
+import AssetForm from "./_assets_form";
 
-export default function AssetsTab() {
+export default function AssetsPage() {
   const pathname = usePathname();
   const [assets, setAssets] = useState<any[]>(dummyAssets);
   const [selectedAsset, setAsset] = useState<any>();
 
   return (
-    <TabsContent value="assets" className="space-y-4">
+    <div className="space-y-4">
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
         <aside className="lg:w-1/5 pt-2">
           <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
@@ -79,7 +79,7 @@ export default function AssetsTab() {
           </div>
         </Card>
       </div>
-    </TabsContent>
+    </div>
   );
 }
 

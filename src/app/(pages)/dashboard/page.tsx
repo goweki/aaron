@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import WithTitleLayout from "@/components/layouts/withNavBar_title";
+"use client";
+
 import {
   Card,
   CardContent,
@@ -7,28 +7,90 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import OverviewTab from "./_tab_overview";
-import AssetsTab from "./_tab_assets";
-// import { UserNav } from "@/app/(app)/examples/dashboard/components/user-nav";
+import {
+  Bell,
+  LibraryBig,
+  LucideProps,
+  Radio,
+  SearchCheck,
+} from "lucide-react";
+import SimpleLineChart from "@/components/mols/simpleLineChart";
+import { RecentDetections } from "@/components/mols/recent-detections";
 
-export default function DashboardPage() {
+export default function OverviewPage() {
   return (
-    <WithTitleLayout title="Dashboard">
-      <Tabs defaultValue="overview" className="space-y-4 ">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="assets">Assets</TabsTrigger>
-          <TabsTrigger value="livestreams">Livestreams</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="notifications" disabled>
-            Notifications
-          </TabsTrigger>
-        </TabsList>
-        <>
-          <OverviewTab />
-          <AssetsTab />
-        </>
-      </Tabs>
-    </WithTitleLayout>
+    <div className="space-y-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <SummaryCard
+          title="Total Assets"
+          Icon={LibraryBig}
+          value={12}
+          description="+2 from last month "
+        />
+        <SummaryCard
+          title="Livestreams"
+          Icon={Radio}
+          value={3}
+          description="Possible detections"
+        />
+        <SummaryCard
+          title="Detections"
+          Icon={SearchCheck}
+          value={6}
+          description="+1 from last month"
+        />
+
+        <SummaryCard
+          title="Notifications"
+          Icon={Bell}
+          value={1}
+          description="2 new notifications"
+        />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Trend</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2 h-full max-h-96">
+            <SimpleLineChart />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Detections</CardTitle>
+            <CardDescription>Your most recent detections</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RecentDetections />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }
+
+const SummaryCard = ({
+  title,
+  Icon,
+  value,
+  description,
+}: {
+  title: string;
+  Icon: React.FC<LucideProps>;
+  value: number;
+  description: string;
+}) => {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground">{description}</p>
+      </CardContent>
+    </Card>
+  );
+};
