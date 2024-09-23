@@ -71,3 +71,9 @@ export const httpCodes: { [key: number]: string } = {
   510: "Not Extended",
   511: "Network Authentication Required",
 };
+
+export enum executionStatus {
+  SUCCESS = "success",
+  FAILED = "failed",
+  ERROR = "error",
+}

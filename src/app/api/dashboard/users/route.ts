@@ -84,26 +84,30 @@ async function getHandler(req: NextRequest) {
   const email = url.searchParams.get("email");
   const search = url.searchParams.get("search");
 
-  let q = {
-    AND: [] as any[], // Array for 'AND' conditions
-  };
+  let q: {
+    AND?: any[];
+  } = {};
 
-  // Check for exact match with id or email if provided
-  if (id) {
-    q.AND.push({ id: id });
-  }
-  if (email) {
-    q.AND.push({ email: email });
-  }
+  if (id || email || search) {
+    q.AND = [];
 
-  // Always check if search is contained in either id or email
-  if (search) {
-    q.AND.push({
-      OR: [
-        { name: { contains: search, mode: "insensitive" } }, // Partial match for name
-        // { email: { contains: search } }, // Partial match for email
-      ],
-    });
+    // Check for exact match with id or email if provided
+    if (id) {
+      q.AND.push({ id: id });
+    }
+    if (email) {
+      q.AND.push({ email: email });
+    }
+
+    // Always check if search is contained in either id or email
+    if (search) {
+      q.AND.push({
+        OR: [
+          { name: { contains: search, mode: "insensitive" } }, // Partial match for name
+          // { email: { contains: search } }, // Partial match for email
+        ],
+      });
+    }
   }
 
   try {

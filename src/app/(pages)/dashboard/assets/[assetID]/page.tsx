@@ -8,9 +8,9 @@ import toast from "react-hot-toast";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Asset } from "@/lib/prisma/types";
 import { DashboardContext } from "@/components/providers";
-import AssetForm from "../_assets_form";
+import AssetForm from "../_asset_form";
 
-export default function InstitutionView({ params }: { params: any }) {
+export default function AssetFormPage({ params }: { params: any }) {
   const { assetID } = params;
   const {
     data: { assets },

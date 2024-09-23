@@ -158,3 +158,9 @@
     @apply bg-primary;
   }
 } */
+
+/* PLAIN CSS */
+.SelectTrigger[data-placeholder] span {
+  font-style: italic;
+  opacity: 0.5;
+}

@@ -63,6 +63,8 @@ model Asset {
     interestedIds   String[] @db.ObjectId
     interestedUsers User[]   @relation("interests", fields: [interestedIds], references: [id])
 
+    file String?
+
     fingerprint AudioFingerprint?
     watermark   Watermark?
     Detections  Detections[]
@@ -74,10 +76,10 @@ model Asset {
 
 model AudioFingerprint {
     id          String @id @default(auto()) @map("_id") @db.ObjectId
-    assetId     String @unique @db.ObjectId
     fingerprint Json // Store fingerprint as JSON
 
-    asset Asset @relation(fields: [assetId], references: [id])
+    assetId String @unique @db.ObjectId
+    asset   Asset  @relation(fields: [assetId], references: [id])
 
     @@map("signatures")
 }

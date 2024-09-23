@@ -9,10 +9,19 @@ const getHandler = async (request: Request, user: Partial<User>) => {
   try {
     // console.log(`GET REQUEST: UI data: `);
     const q: any = user.role?.includes("ADMIN")
-      ? {}
+      ? {
+          include: {
+            administrator: true,
+            fingerprint: true,
+          },
+        }
       : {
           where: {
             adminId: user.id,
+          },
+          include: {
+            administrator: true,
+            fingerprint: true,
           },
         };
 

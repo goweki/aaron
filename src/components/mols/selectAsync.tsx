@@ -9,6 +9,7 @@ const SelectAsync = ({
   onChange,
   defaultValue,
   defaultOptions,
+  placeholder,
 }: {
   loadOptions: (
     inputValue: string
@@ -16,6 +17,7 @@ const SelectAsync = ({
   onChange?: (newValue: any, actionMeta: any) => void;
   defaultValue?: any;
   defaultOptions?: any[];
+  placeholder?: string;
 }) => {
   return (
     <AsyncSelect
@@ -43,7 +45,7 @@ const SelectAsync = ({
       }}
       loadOptions={loadOptions}
       cacheOptions
-      placeholder="Select an administrator"
+      placeholder={placeholder}
       onChange={onChange} // Manually update the value
       defaultValue={defaultValue}
       defaultOptions={defaultOptions}
