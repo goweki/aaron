@@ -109,10 +109,10 @@ npm run start
 
 ### Seeding database
 
-The seed data reside in the respective .json files at `./src/data:` directory. To seed your database with this data, run
+The seed data is in `./src/scripts/data/seed.json`. To seed your database with this data, run
 
 ```bash
-node ./src/scripts/seed.js
+npm run seed
 ```
 
 ## Project Structure
@@ -122,7 +122,7 @@ node ./src/scripts/seed.js
 |-- /app            # Next.js router directory
 |-- /app/api        # API routes for server-side functionality
 |-- /public         # Static assets (images, fonts, etc.)
-|-- /lib/prisma     # Prisma schema and migrations
+|-- /lib            # Prisma schema and migrations
 |-- /utils          # Utility functions and helpers
 |-- .env.template   # environment variables to be populated in .env
 |-- next.config.js  # Next.js configuration file
