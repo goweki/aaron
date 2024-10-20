@@ -117,28 +117,30 @@ npm run seed
 
 ## Project Structure
 
+The main directories and files of the project are as follows:
+
 ```plaintext
-|-- /components     # Reusable React components
-|-- /app            # Next.js router directory
-|-- /app/api        # API routes for server-side functionality
-|-- /public         # Static assets (images, fonts, etc.)
-|-- /lib            # Prisma schema and migrations
-|-- /utils          # Utility functions and helpers
+|-- public/         # Static assets (images, fonts, etc.)
+|-- src/components/ # Reusable React components
+|-- src/app/        # Next.js router directory
+|-- src/app/api/    # API routes for server-side functionality
+|-- src/lib/        # Utility functions, helpers, enhancers
+|-- src/scripts     #  Scripts for automating repetitive tasks
 |-- .env.template   # environment variables to be populated in .env
 |-- next.config.js  # Next.js configuration file
 |-- tsconfig.json   # TypeScript configuration file
 |-- package.json    # Project metadata and scripts
 ```
 
-## Usage
+## Functionalities
 
-- **Audio Spectrum analysis & Transcription**: Lorem Ipsum.
+- **Audio Spectrum analysis & Transcription**
 
 - **Audio Fingerprinting**: Upload an audio file to generate its unique fingerprint. The fingerprint will be stored in the MongoDB database.
 
-- **Audio Watermarking**: An Object-Relational Mapping tool used for database management.
+- **Audio Watermarking**: embed a subtle message or data within an audio signal for identification or communication purposes.
 
-- **Broadcast Logging**: Monitor a broadcast stream and generate logs based on detected audio fingerprints.
+- **Broadcast Logging**: Monitor a broadcast stream and generate logs based on their audio fingerprints or embedded watermark.
 
 ## Contributing
 
