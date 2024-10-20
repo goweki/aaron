@@ -1,0 +1,116 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("MONGODB_URL")
+}
+
+enum Status {
+    ACTIVE
+    DOMANT
+    CLOSED
+    DELETED
+}
+
+// Users for AUTH
+enum UserRole {
+    USER
+    ADMIN
+    SYSTEM_ADMIN
+}
+
+model User {
+    id               String    @id @default(auto()) @map("_id") @db.ObjectId
+    name             String?
+    tel              String?   @unique
+    email            String?   @unique
+    password         String?
+    voiceSign        String?
+    role             UserRole  @default(USER)
+    avatar           String?
+    resetToken       String?
+    resetTokenExpiry DateTime?
+    status           Status    @default(DOMANT)
+
+    assets Asset[] @relation("admin")
+
+    interestIds String[] @db.ObjectId
+    interests   Asset[]  @relation("interests", fields: [interestIds], references: [id])
+
+    @@map("users")
+}
+
+// Assets
+
+enum AssetType {
+    MUSIC
+    VIDEO
+}
+
+model Asset {
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    description String
+    artist      String?
+    album       String?
+    filename    String?
+    type        AssetType @default(MUSIC)
+    status      Status    @default(DOMANT)
+    image       String?
+
+    adminId       String @db.ObjectId
+    administrator User   @relation("admin", fields: [adminId], references: [id])
+
+    interestedIds   String[] @db.ObjectId
+    interestedUsers User[]   @relation("interests", fields: [interestedIds], references: [id])
+
+    file String?
+
+    fingerprint AudioFingerprint?
+    watermark   Watermark?
+    Detections  Detections[]
+
+    @@map("assets")
+}
+
+model AudioFingerprint {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    fingerprint Json // Store fingerprint as JSON
+
+    assetId String @unique @db.ObjectId
+    asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    @@map("signatures")
+}
+
+model Watermark {
+    id        String @id @default(auto()) @map("_id") @db.ObjectId
+    assetId   String @unique @db.ObjectId
+    watermark String // Store the watermark text
+
+    asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    @@map("watermarks")
+}
+
+model Detections {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    assetId String @db.ObjectId
+    Asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    time DateTime
+
+    broadcasterId String      @db.ObjectId
+    Broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id])
+}
+
+model Broadcaster {
+    id          String       @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    link        String
+    description String
+    Detections  Detections[]
+}
