@@ -16,16 +16,23 @@ import {
 } from "lucide-react";
 import SimpleLineChart from "@/components/mols/simpleLineChart";
 import { RecentDetections } from "@/components/mols/recent-detections";
+import { DashboardContext } from "@/components/providers";
+import { useContext } from "react";
 
 export default function OverviewPage() {
+  const {
+    data: { assets },
+    refreshData,
+  } = useContext(DashboardContext);
+
   return (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <SummaryCard
           title="Total Assets"
           Icon={LibraryBig}
-          value={12}
-          description="+2 from last month "
+          value={assets.length}
+          description="+2 from last month"
         />
         <SummaryCard
           title="Livestreams"

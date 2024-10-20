@@ -96,7 +96,7 @@ export default function AssetsLayout({
         </aside>
         <Card className="w-full">
           <div className="space-y-6">
-            <div className="relative hidden flex-col items-start gap-8 md:flex">
+            <div className="relative hidden flex-col items-start gap-8 sm:flex">
               {children}
             </div>
           </div>
