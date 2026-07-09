@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -18,11 +19,9 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   onresult:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any)
-    | null;
+    ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
   onerror:
-    | ((this: SpeechRecognition, ev: Event & { error: string }) => any)
-    | null;
+    ((this: SpeechRecognition, ev: Event & { error: string }) => any) | null;
 }
 
 interface SpeechRecognitionStatic {
@@ -290,7 +289,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {options.map(({ name, desc, link }) => (
+        {/* {options.map(({ name, desc, link }) => (
           <Link
             key={name}
             href={link}
@@ -303,6 +302,20 @@ export default function LandingPage() {
               </span>
             </h2>
             <p className="m-0 max-w-[30ch] text-sm opacity-50">{desc}</p>
+          </Link>
+        ))} */}
+
+        {options.map(({ name, desc, link }) => (
+          <Link key={name} href={link} className="block group">
+            <Card className="rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20">
+              <h2 className="mb-3 text-2xl font-semibold">
+                {name}
+                <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                  -&gt;
+                </span>
+              </h2>
+              <p className="m-0 max-w-[30ch] text-sm opacity-50">{desc}</p>
+            </Card>
           </Link>
         ))}
       </section>

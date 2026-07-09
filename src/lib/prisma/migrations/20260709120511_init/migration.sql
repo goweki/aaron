@@ -14,14 +14,15 @@ CREATE TYPE "DetectionStatus" AS ENUM ('PENDING', 'VERIFIED', 'REJECTED');
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "tel" TEXT,
+    "phone" TEXT,
     "email" TEXT,
-    "password" TEXT,
+    "passwordHash" TEXT,
     "voiceSign" TEXT,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
-    "avatar" TEXT,
+    "image" TEXT,
     "resetToken" TEXT,
     "resetTokenExpiry" TIMESTAMP(3),
+    "apiKeyHash" TEXT,
     "status" "Status" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -126,10 +127,13 @@ CREATE TABLE "detections" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_tel_key" ON "users"("tel");
+CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE INDEX "users_apiKeyHash_idx" ON "users"("apiKeyHash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "assets_isrc_key" ON "assets"("isrc");
@@ -153,10 +157,25 @@ CREATE UNIQUE INDEX "audio_fingerprints_assetId_key" ON "audio_fingerprints"("as
 CREATE UNIQUE INDEX "watermarks_assetId_key" ON "watermarks"("assetId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "broadcasters_name_key" ON "broadcasters"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "broadcasters_streamUrl_key" ON "broadcasters"("streamUrl");
+
+-- CreateIndex
 CREATE INDEX "monitoring_sessions_broadcasterId_idx" ON "monitoring_sessions"("broadcasterId");
 
 -- CreateIndex
 CREATE INDEX "monitoring_sessions_startedAt_idx" ON "monitoring_sessions"("startedAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "monitoring_sessions_broadcasterId_startedAt_key" ON "monitoring_sessions"("broadcasterId", "startedAt");
+
+-- CreateIndex
+CREATE INDEX "detections_broadcasterId_status_broadcastAt_idx" ON "detections"("broadcasterId", "status", "broadcastAt");
+
+-- CreateIndex
+CREATE INDEX "detections_status_idx" ON "detections"("status");
 
 -- CreateIndex
 CREATE INDEX "detections_assetId_idx" ON "detections"("assetId");
@@ -175,6 +194,9 @@ CREATE INDEX "detections_assetId_broadcastAt_idx" ON "detections"("assetId", "br
 
 -- CreateIndex
 CREATE INDEX "detections_broadcasterId_broadcastAt_idx" ON "detections"("broadcasterId", "broadcastAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "detections_assetId_broadcasterId_broadcastAt_key" ON "detections"("assetId", "broadcasterId", "broadcastAt");
 
 -- AddForeignKey
 ALTER TABLE "assets" ADD CONSTRAINT "assets_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

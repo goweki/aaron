@@ -38,7 +38,9 @@ const USERS: SeedUser[] = [
 export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   console.log("👤 Seeding users...");
 
-  const encRounds = process.env.BCRYPT_SALTROUNDS;
+  const encRounds = process.env.BCRYPT_SALTROUNDS
+    ? Number(process.env.BCRYPT_SALTROUNDS)
+    : 6;
 
   if (!encRounds) {
     throw new Error("Missing env BCRYPT_SALTROUNDS");
