@@ -1,5 +1,6 @@
 "use client";
 
+import ThemeToggle from "@/components/mols/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -227,19 +228,20 @@ export default function LandingPage() {
 
   // render
   return (
-    <main className="flex flex-col items-center justify-between p-8 lg:p-16 max-h-[800px] w-full">
+    <main className="flex flex-col items-center justify-between p-8 lg:p-16 min-h-200 w-full">
       <header className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex md:flex-row flex-col">
         <p className="fixed left-0 top-0 w-full text-center border-b pb-6 pt-8 px-4 backdrop-blur-lg border-border bg-background/80 lg:static lg:w-auto  lg:rounded-xl lg:border lg:p-4">
           Autonomous Audio Recognition System&nbsp;
           <code className="font-mono font-bold">(A.A.R.O.N)</code>
         </p>
-        <div className="fixed bottom-0 left-0 hidden lg:flex h-48 w-full items-end justify-center lg:static lg:size-auto lg:bg-none">
+        <div className="fixed bottom-0 left-0 hidden lg:flex h-48 w-full items-end justify-center lg:static lg:size-auto lg:bg-none gap-4">
           <Link
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            className={cn(buttonVariants({ variant: "default" }))}
             href="/sign-in"
           >
             Sign In
           </Link>
+          <ThemeToggle />
         </div>
       </header>
       <section className="lg:my-16 relative flex flex-col place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
@@ -257,65 +259,62 @@ export default function LandingPage() {
       >
         Sign In
       </Link>
-      <section className="grid text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left space-x-4">
-        <div
+
+      <section className="grid gap-4 text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
+        {/* Voice Recognition Button Card */}
+        <button
           onClick={() => setListen((prev) => !prev)}
-          className={`${
-            listen ? "border-secondary bg-primary/10" : ""
-          } cursor-pointer relative group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20`}
+          className={`group relative block w-full rounded-lg border text-left px-5 py-4 transition-colors text-inherit bg-transparent cursor-pointer
+      ${
+        listen
+          ? "border-secondary bg-primary/10"
+          : "border-transparent hover:border-secondary hover:bg-primary/20"
+      }`}
         >
-          <span className="absolute top-0 left-0 mt-2 ml-2 flex h-3 w-3">
+          {/* Status Indicator Dot */}
+          <span className="absolute top-4 left-4 flex h-3 w-3">
             <span
-              className={`${
-                listen ? "animate-ping bg-red-400" : "bg-transparent"
-              } absolute inline-flex h-full w-full rounded-full  opacity-75`}
-            ></span>
+              className={`absolute inline-flex h-full w-full rounded-full opacity-75 
+          ${listen ? "animate-ping bg-red-400" : "bg-transparent"}`}
+            />
             <span
-              className={`${
-                listen ? "bg-red-500" : "bg-transparent"
-              } relative inline-flex rounded-full h-3 w-3`}
-            ></span>
+              className={`relative inline-flex rounded-full h-3 w-3 
+          ${listen ? "bg-red-500" : "bg-transparent"}`}
+            />
           </span>
-          <div className="md:pl-4">
-            <h2 className="mb-3 text-2xl font-semibold">
+
+          <div className="pl-4">
+            <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
               listen
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50">
               Activate Aaron&apos;s voice recognition functionality
             </p>
           </div>
-        </div>
+        </button>
 
-        {/* {options.map(({ name, desc, link }) => (
+        {/* Link Cards */}
+        {options.map(({ name, desc, link }) => (
           <Link
             key={name}
             href={link}
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
+            className="group block rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
           >
-            <h2 className="mb-3 text-2xl font-semibold">
-              {name}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">{desc}</p>
-          </Link>
-        ))} */}
-
-        {options.map(({ name, desc, link }) => (
-          <Link key={name} href={link} className="block group">
-            <Card className="rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20">
-              <h2 className="mb-3 text-2xl font-semibold">
+            {/* Pladded wrapper to align visually with the button which has the status dot */}
+            <div className="pl-4">
+              <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
                 {name}
                 <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                   -&gt;
                 </span>
               </h2>
-              <p className="m-0 max-w-[30ch] text-sm opacity-50">{desc}</p>
-            </Card>
+              <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50">
+                {desc}
+              </p>
+            </div>
           </Link>
         ))}
       </section>

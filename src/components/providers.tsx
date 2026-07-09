@@ -88,7 +88,7 @@ export function RootProviders({
   // render
   return (
     <React.StrictMode>
-      <ThemeProvider defaultTheme="system">
+      <ThemeProvider attribute="class" defaultTheme="system">
         <SessionProvider>
           <TooltipProvider>
             {isLoading.splashLag ? (
