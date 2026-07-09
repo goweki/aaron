@@ -287,15 +287,15 @@ export default function LandingPage() {
             />
           </span>
 
-          <div className="pl-4">
+          <div className={listen ? "ml-4" : undefined}>
             <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
               listen
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
-            <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50">
-              Activate Aaron&apos;s voice recognition functionality
+            <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50 w-fit">
+              Activate voice recognition
             </p>
           </div>
         </button>
@@ -308,14 +308,14 @@ export default function LandingPage() {
             className="group border block shadow rounded-lg px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
           >
             {/* Pladded wrapper to align visually with the button which has the status dot */}
-            <div className="pl-4">
+            <div>
               <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
                 {name}
                 <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                   -&gt;
                 </span>
               </h2>
-              <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50">
+              <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50 w-fit">
                 {desc}
               </p>
             </div>
@@ -329,7 +329,7 @@ export default function LandingPage() {
 const options = [
   {
     name: "Assets",
-    desc: "Bills that have passed Parliament and are law.",
+    desc: "Watermarked / fingerprinted assets",
     link: "/assets",
   },
   {
