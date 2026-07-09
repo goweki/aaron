@@ -1,0 +1,206 @@
+datasource db {
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "./generated"
+}
+
+enum Status {
+    PENDING
+    ACTIVE
+    INACTIVE
+    DELETED
+}
+
+enum UserRole {
+    USER
+    ADMINISTRATOR
+    SYSTEM
+}
+
+enum AssetType {
+    MUSIC
+    VIDEO
+}
+
+enum DetectionStatus {
+    PENDING
+    VERIFIED
+    REJECTED
+}
+
+model User {
+    id               String    @id @default(uuid()) @db.Uuid
+    name             String
+    phone            String?   @unique
+    email            String?   @unique
+    passwordHash     String?
+    voiceSign        String?
+    role             UserRole  @default(USER)
+    image            String?
+    resetToken       String?
+    resetTokenExpiry DateTime?
+    apiKeyHash       String?
+    status           Status    @default(PENDING)
+
+    assets Asset[] @relation("owner")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([apiKeyHash])
+    @@map("users")
+}
+
+model Asset {
+    id          String  @id @default(uuid()) @db.Uuid
+    title       String
+    description String
+    artist      String?
+    album       String?
+
+    isrc String? @unique
+
+    filename String?
+    file     String?
+    image    String?
+
+    type   AssetType @default(MUSIC)
+    status Status    @default(INACTIVE)
+
+    duration   Float?
+    sampleRate Int?
+    bitRate    Int?
+    channels   Int?
+    fileSize   Int?
+    checksum   String? @unique
+
+    ownerId String @db.Uuid
+    owner   User   @relation("owner", fields: [ownerId], references: [id])
+
+    fingerprint AudioFingerprint?
+    watermark   Watermark?
+    detections  Detection[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([ownerId])
+    @@index([status])
+    @@index([type])
+    @@map("assets")
+}
+
+model AudioFingerprint {
+    id String @id @default(uuid()) @db.Uuid
+
+    algorithm String
+    version   String
+
+    fingerprint Json
+
+    generatedAt DateTime @default(now())
+
+    assetId String @unique @db.Uuid
+    asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    @@map("audio_fingerprints")
+}
+
+model Watermark {
+    id String @id @default(uuid()) @db.Uuid
+
+    algorithm String
+    payload   String
+
+    embeddedAt DateTime @default(now())
+
+    assetId String @unique @db.Uuid
+    asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    @@map("watermarks")
+}
+
+model Broadcaster {
+    id String @id @default(uuid()) @db.Uuid
+
+    name        String  @unique
+    description String?
+
+    website   String?
+    streamUrl String? @unique
+    country   String?
+    frequency String?
+
+    status Status @default(ACTIVE)
+
+    monitoringSessions MonitoringSession[]
+    detections         Detection[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("broadcasters")
+}
+
+model MonitoringSession {
+    id String @id @default(uuid()) @db.Uuid
+
+    broadcasterId String      @db.Uuid
+    broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id], onDelete: Cascade)
+
+    startedAt DateTime
+    endedAt   DateTime?
+
+    status Status @default(ACTIVE)
+
+    detections Detection[]
+
+    createdAt DateTime @default(now())
+
+    @@unique([broadcasterId, startedAt])
+    @@index([broadcasterId])
+    @@index([startedAt])
+    @@map("monitoring_sessions")
+}
+
+model Detection {
+    id String @id @default(uuid()) @db.Uuid
+
+    assetId String @db.Uuid
+    asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+    broadcasterId String      @db.Uuid
+    broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id])
+
+    sessionId String?            @db.Uuid
+    session   MonitoringSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+    broadcastAt DateTime
+    detectedAt  DateTime @default(now())
+
+    confidence Float
+
+    startOffset Float?
+    endOffset   Float?
+    duration    Float?
+
+    engineVersion String
+
+    status DetectionStatus @default(PENDING)
+
+    createdAt DateTime @default(now())
+
+    @@unique([assetId, broadcasterId, broadcastAt])
+    @@index([broadcasterId, status, broadcastAt])
+    @@index([status])
+    @@index([assetId])
+    @@index([broadcasterId])
+    @@index([sessionId])
+    @@index([broadcastAt])
+    @@index([assetId, broadcastAt])
+    @@index([broadcasterId, broadcastAt])
+    @@map("detections")
+}
