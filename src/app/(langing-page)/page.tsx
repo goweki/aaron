@@ -228,7 +228,7 @@ export default function LandingPage() {
 
   // render
   return (
-    <main className="flex flex-col items-center justify-between p-8 lg:p-16 min-h-200 w-full">
+    <main className="flex flex-col items-center justify-between p-8 lg:p-16 w-full">
       <header className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex md:flex-row flex-col">
         <p className="fixed left-0 top-0 w-full text-center border-b pb-6 pt-8 px-4 backdrop-blur-lg border-border bg-background/80 lg:static lg:w-auto  lg:rounded-xl lg:border lg:p-4">
           Autonomous Audio Recognition System&nbsp;
@@ -253,22 +253,26 @@ export default function LandingPage() {
         </p>
         <canvas ref={canvasRef} className="h-32 w-96 m-4" />
       </section>
-      <Link
-        className={cn(buttonVariants({ variant: "default" }))}
-        href="/sign-in"
-      >
-        Sign In
-      </Link>
 
       <section className="grid gap-4 text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
+        <Link
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "lg:hidden mb-4",
+          )}
+          href="/sign-in"
+        >
+          Sign In
+        </Link>
+
         {/* Voice Recognition Button Card */}
         <button
           onClick={() => setListen((prev) => !prev)}
-          className={`group relative block w-full rounded-lg border text-left px-5 py-4 transition-colors text-inherit bg-transparent cursor-pointer
+          className={`group relative block w-full rounded-lg border text-left px-5 py-4 transition-colors text-inherit cursor-pointer
       ${
         listen
-          ? "border-secondary bg-primary/10"
-          : "border-transparent hover:border-secondary hover:bg-primary/20"
+          ? "border-secondary bg-primary/10 shadow-sm"
+          : "border shadow hover:border-secondary hover:bg-primary/20"
       }`}
         >
           {/* Status Indicator Dot */}
@@ -301,7 +305,7 @@ export default function LandingPage() {
           <Link
             key={name}
             href={link}
-            className="group block rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
+            className="group border block shadow rounded-lg px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
           >
             {/* Pladded wrapper to align visually with the button which has the status dot */}
             <div className="pl-4">
