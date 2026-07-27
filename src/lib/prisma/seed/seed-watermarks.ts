@@ -1,46 +1,18 @@
-import { Asset, PrismaClient } from "../generated";
-import crypto from "crypto";
-
-const ALGORITHM = "aaron-watermark";
-const VERSION = "1.0";
-
-/**
- * Builds a deterministic watermark payload for an asset.
- */
-function buildPayload(asset: Asset): string {
-  const hash = crypto
-    .createHash("sha256")
-    .update(`${asset.id}:${asset.isrc}:${asset.title}`)
-    .digest("hex")
-    .slice(0, 32);
-
-  return `AARON|${VERSION}|${hash}`;
-}
+import { PrismaClient, Asset } from "../generated";
 
 export async function seedWatermarks(
   prisma: PrismaClient,
   assets: Asset[],
 ): Promise<void> {
-  console.log("💧 Seeding watermarks...");
+  console.log("➡️ Seeding Watermarks...");
 
   for (const asset of assets) {
-    const payload = buildPayload(asset);
-
-    await prisma.watermark.upsert({
-      where: {
+    await prisma.watermark.create({
+      data: {
         assetId: asset.id,
-      },
-      update: {
-        algorithm: ALGORITHM,
-        payload: payload,
-      },
-      create: {
-        assetId: asset.id,
-        algorithm: ALGORITHM,
-        payload: payload,
+        algorithm: "spread-spectrum",
+        payload: `WM_OWNER_${asset.ownerId}_ISRC_${asset.isrc || "UNKNOWN"}`,
       },
     });
   }
-
-  console.log(`✅ ${assets.length} watermarks seeded.`);
 }

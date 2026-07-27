@@ -2,6 +2,7 @@
 
 import { spawn } from "child_process";
 import { Readable } from "stream";
+// @ts-ignore
 import { Codegen as AudioFingerprinter } from "stream-audio-fingerprint";
 
 import prisma from "@/lib/prisma";
@@ -10,14 +11,16 @@ import { Prisma } from "@/lib/prisma/generated";
 import { requireUser } from "@/lib/auth/auth-actions";
 import { getFriendlyErrorMessage } from "@/lib/utils/error-handlers";
 
-type FingerprintPoint = {
-  time: number;
-  fingerprint: number;
+type ExtractedHashPoint = {
+  tcode: number;
+  hcode: number;
 };
 
 export async function generateAudioFingerprint(
   formData: FormData,
 ): Promise<ActionResult<number>> {
+  await requireUser();
+
   try {
     const assetId = formData.get("assetId") as string | null;
     const audioFile = formData.get("file") as File | null;
@@ -44,100 +47,119 @@ export async function generateAudioFingerprint(
 
     console.log("Generating fingerprint for asset:", assetId);
 
-    // Read file once before starting the stream pipeline
+    // Read audio file buffer
     const audioBuffer = Buffer.from(await audioFile.arrayBuffer());
 
-    const fingerprintResult = await new Promise<{
-      ok: boolean;
-      count: number;
-    }>((resolve, reject) => {
-      const fingerprinter = new AudioFingerprinter();
+    // 1. Extract fingerprints from audio stream
+    const extractedPoints = await new Promise<ExtractedHashPoint[]>(
+      (resolve, reject) => {
+        const fingerprinter = new AudioFingerprinter();
 
-      const decoder = spawn(
-        "ffmpeg",
-        [
-          "-i",
-          "pipe:0",
-          "-acodec",
-          "pcm_s16le",
-          "-ar",
-          "22050",
-          "-ac",
-          "1",
-          "-f",
-          "wav",
-          "-v",
-          "fatal",
-          "pipe:1",
-        ],
-        {
-          stdio: ["pipe", "pipe", "inherit"],
-        },
-      );
+        const decoder = spawn(
+          "ffmpeg",
+          [
+            "-i",
+            "pipe:0",
+            "-acodec",
+            "pcm_s16le",
+            "-ar",
+            "22050",
+            "-ac",
+            "1",
+            "-f",
+            "wav",
+            "-v",
+            "fatal",
+            "pipe:1",
+          ],
+          {
+            stdio: ["pipe", "pipe", "inherit"],
+          },
+        );
 
-      const fingerprint: FingerprintPoint[] = [];
+        const points: ExtractedHashPoint[] = [];
 
-      decoder.stdout.pipe(fingerprinter);
+        decoder.stdout.pipe(fingerprinter);
+        Readable.from(audioBuffer).pipe(decoder.stdin);
 
-      Readable.from(audioBuffer).pipe(decoder.stdin);
+        decoder.once("error", reject);
 
-      decoder.once("error", reject);
+        decoder.once("close", (code) => {
+          if (code !== 0) {
+            reject(new Error(`FFmpeg process exited with code ${code}`));
+          }
+        });
 
-      decoder.once("close", (code) => {
-        if (code !== 0) {
-          reject(new Error(`ffmpeg exited with code ${code}`));
-        }
-      });
+        fingerprinter.on(
+          "data",
+          (data: { tcodes: number[]; hcodes: number[] }) => {
+            for (let i = 0; i < data.tcodes.length; i++) {
+              points.push({
+                tcode: data.tcodes[i],
+                hcode: data.hcodes[i],
+              });
+            }
+          },
+        );
 
-      fingerprinter.on("data", (data) => {
-        for (let i = 0; i < data.tcodes.length; i++) {
-          fingerprint.push({
-            time: data.tcodes[i],
-            fingerprint: data.hcodes[i],
-          });
-        }
-      });
-
-      fingerprinter.once("end", async () => {
-        try {
-          await prisma.audioFingerprint.upsert({
-            where: {
-              assetId,
-            },
-            update: {
-              fingerprint,
-              algorithm: "stream-audio-fingerprint",
-              version: "1.0-22050hz",
-            },
-            create: {
-              assetId,
-              fingerprint,
-              algorithm: "stream-audio-fingerprint",
-              version: "1.0-22050hz",
-            },
-          });
-
+        fingerprinter.once("end", () => {
           decoder.kill();
+          resolve(points);
+        });
 
-          resolve({
-            ok: true,
-            count: fingerprint.length,
-          });
-        } catch (error) {
+        fingerprinter.once("error", (error: Error) => {
           decoder.kill();
           reject(error);
-        }
+        });
+      },
+    );
+
+    if (extractedPoints.length === 0) {
+      return {
+        ok: false,
+        error:
+          "No audio landmark fingerprints could be generated from this file.",
+      };
+    }
+
+    // 2. Persist AudioFingerprint and individual FingerprintHashes in a transaction
+    await prisma.$transaction(async (tx) => {
+      // Create or update parent metadata record
+      const audioFingerprint = await tx.audioFingerprint.upsert({
+        where: { assetId },
+        update: {
+          algorithm: "landmark",
+          version: "1.0-22050hz",
+        },
+        create: {
+          assetId,
+          algorithm: "landmark",
+          version: "1.0-22050hz",
+        },
       });
 
-      fingerprinter.once("error", (error) => {
-        decoder.kill();
-        reject(error);
+      // Clear existing landmark hashes if re-fingerprinting
+      await tx.fingerprintHash.deleteMany({
+        where: { assetId },
+      });
+
+      // Prepare optimized batch insert
+      const hashData = extractedPoints.map((p) => ({
+        hash: BigInt(p.hcode),
+        offsetMs: p.tcode,
+        audioFingerprintId: audioFingerprint.id,
+        assetId,
+      }));
+
+      // High-speed bulk insertion
+      await tx.fingerprintHash.createMany({
+        data: hashData,
       });
     });
 
     return {
       ok: true,
-      data: fingerprintResult.count,
+      data: extractedPoints.length,
     };
   } catch (error) {
     console.error("Fingerprint generation failed:", error);
@@ -151,15 +173,21 @@ export async function generateAudioFingerprint(
 
 // Function to save the watermark to the database
 export async function saveWatermarkToDatabase(
-  filePath: string,
+  assetId: string,
   watermarkText: string,
   algorithm: string,
 ): Promise<ActionResult<Prisma.WatermarkGetPayload<{}>>> {
-  requireUser();
+  await requireUser();
+
   try {
-    const watermark = await prisma.watermark.create({
-      data: {
-        assetId: filePath,
+    const watermark = await prisma.watermark.upsert({
+      where: { assetId },
+      update: {
+        payload: watermarkText,
+        algorithm,
+      },
+      create: {
+        assetId,
         payload: watermarkText,
         algorithm,
       },

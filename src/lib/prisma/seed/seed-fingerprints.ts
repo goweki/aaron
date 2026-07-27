@@ -1,55 +1,48 @@
-import { Asset, PrismaClient } from "../generated";
-
-type FingerprintPoint = {
-  time: number;
-  fingerprint: number;
-};
-
-/**
- * Generates deterministic pseudo fingerprint data.
- *
- * The values are intentionally deterministic so that every
- * database seed produces identical fingerprints.
- */
-function buildFingerprint(assetId: string, points = 120): FingerprintPoint[] {
-  // create a deterministic integer from the UUID
-  const seed = assetId
-    .replace(/-/g, "")
-    .split("")
-    .reduce((sum, c) => sum + c.charCodeAt(0), 0);
-
-  return Array.from({ length: points }, (_, i) => ({
-    time: i * 3,
-    fingerprint: ((seed * 2654435761 + i * 7919) >>> 0) % 100000000,
-  }));
-}
+import { PrismaClient, Asset } from "../generated";
 
 export async function seedFingerprints(
   prisma: PrismaClient,
   assets: Asset[],
-): Promise<void> {
-  console.log("🎼 Seeding audio fingerprints...");
+): Promise<number> {
+  console.log("➡️ Seeding Audio Fingerprints & Hashes...");
+
+  let totalHashesSeeded = 0;
 
   for (const asset of assets) {
-    const fingerprint = buildFingerprint(asset.id);
-
-    await prisma.audioFingerprint.upsert({
-      where: {
+    // 1. Create parent AudioFingerprint metadata
+    const audioFingerprint = await prisma.audioFingerprint.create({
+      data: {
         assetId: asset.id,
-      },
-      update: {
-        algorithm: "stream-audio-fingerprint",
-        version: "1.0-22050hz",
-        fingerprint,
-      },
-      create: {
-        assetId: asset.id,
-        algorithm: "stream-audio-fingerprint",
-        version: "1.0-22050hz",
-        fingerprint,
+        algorithm: "landmark",
+        version: "1.0.4",
       },
     });
+
+    // 2. Generate ~300 mock landmark hashes (hcode/tcode pairs) for the track
+    const mockHashes = [];
+    const hashBase = Math.floor(Math.random() * 1000000);
+
+    for (
+      let offsetMs = 0;
+      offsetMs < (asset.duration || 180) * 1000;
+      offsetMs += 500
+    ) {
+      const hcode = hashBase + (offsetMs % 1337);
+      mockHashes.push({
+        hash: BigInt(hcode),
+        offsetMs,
+        audioFingerprintId: audioFingerprint.id,
+        assetId: asset.id,
+      });
+    }
+
+    // 3. Bulk insert granular landmark hashes
+    await prisma.fingerprintHash.createMany({
+      data: mockHashes,
+    });
+
+    totalHashesSeeded += mockHashes.length;
   }
 
-  console.log(`✅ ${assets.length} fingerprints seeded.`);
+  return totalHashesSeeded;
 }

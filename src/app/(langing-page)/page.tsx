@@ -289,7 +289,7 @@ export default function LandingPage() {
 
           <div className={listen ? "ml-4" : undefined}>
             <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
-              listen
+              Listen
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
@@ -330,11 +330,11 @@ const options = [
   {
     name: "Assets",
     desc: "Watermarked / fingerprinted assets",
-    link: "/assets",
+    link: "/dashboard/assets",
   },
   {
-    name: "Users",
+    name: "Monitor",
     desc: "view logs of monitored audio streams ",
-    link: "/dashboard",
+    link: "/dashboard/monitor",
   },
 ];

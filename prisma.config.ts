@@ -9,7 +9,6 @@ export default defineConfig({
   migrations: {
     path: "src/lib/prisma/migrations",
     seed: "tsx src/lib/prisma/seed",
-    // "seed": "node src/scripts/seed.mjs",
   },
   views: {
     path: "src/lib/prisma/views",

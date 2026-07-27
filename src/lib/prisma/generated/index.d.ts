@@ -29,6 +29,11 @@ export type Asset = $Result.DefaultSelection<Prisma.$AssetPayload>
  */
 export type AudioFingerprint = $Result.DefaultSelection<Prisma.$AudioFingerprintPayload>
 /**
+ * Model FingerprintHash
+ * 
+ */
+export type FingerprintHash = $Result.DefaultSelection<Prisma.$FingerprintHashPayload>
+/**
  * Model Watermark
  * 
  */
@@ -146,7 +151,7 @@ export class PrismaClient<
    * Read more in our [docs](https://pris.ly/d/client).
    */
 
-  constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
+  constructor(optionsArg ?: Prisma.PrismaClientConstructorArgs<ClientOptions>);
   $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
 
   /**
@@ -258,6 +263,16 @@ export class PrismaClient<
   get audioFingerprint(): Prisma.AudioFingerprintDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.fingerprintHash`: Exposes CRUD operations for the **FingerprintHash** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FingerprintHashes
+    * const fingerprintHashes = await prisma.fingerprintHash.findMany()
+    * ```
+    */
+  get fingerprintHash(): Prisma.FingerprintHashDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.watermark`: Exposes CRUD operations for the **Watermark** model.
     * Example usage:
     * ```ts
@@ -346,8 +361,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.8.0
-   * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
+   * Prisma Client JS version: 7.9.0
+   * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
    */
   export type PrismaVersion = {
     client: string
@@ -482,6 +497,19 @@ export namespace Prisma {
   };
 
   /**
+   * Resolved type of the argument passed to the `PrismaClient` constructor.
+   *
+   * When called without a narrower options type (the common case), this resolves
+   * to `PrismaClientOptions` directly, which produces a clear TypeScript error
+   * message (`not assignable to parameter of type 'PrismaClientOptions'`) when
+   * the argument is missing or incomplete. When the user supplies a narrower
+   * options type (e.g. via a literal), it falls back to `Subset` to keep
+   * filtering out unknown properties.
+   */
+  export type PrismaClientConstructorArgs<Options extends PrismaClientOptions> =
+    [PrismaClientOptions] extends [Options] ? PrismaClientOptions : Subset<Options, PrismaClientOptions>;
+
+  /**
    * SelectSubset
    * @desc From `T` pick properties that exist in `U`. Simple version of Intersection.
    * Additionally, it validates, if both select and include are present. If the case, it errors.
@@ -513,7 +541,7 @@ export namespace Prisma {
   type XOR<T, U> =
     T extends object ?
     U extends object ?
-      (Without<T, U> & U) | (Without<U, T> & T)
+      ((Without<T, U> & U) | (Without<U, T> & T)) & object
     : U : T
 
 
@@ -733,6 +761,7 @@ export namespace Prisma {
     User: 'User',
     Asset: 'Asset',
     AudioFingerprint: 'AudioFingerprint',
+    FingerprintHash: 'FingerprintHash',
     Watermark: 'Watermark',
     Broadcaster: 'Broadcaster',
     MonitoringSession: 'MonitoringSession',
@@ -752,7 +781,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "asset" | "audioFingerprint" | "watermark" | "broadcaster" | "monitoringSession" | "detection"
+      modelProps: "user" | "asset" | "audioFingerprint" | "fingerprintHash" | "watermark" | "broadcaster" | "monitoringSession" | "detection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -975,6 +1004,80 @@ export namespace Prisma {
           count: {
             args: Prisma.AudioFingerprintCountArgs<ExtArgs>
             result: $Utils.Optional<AudioFingerprintCountAggregateOutputType> | number
+          }
+        }
+      }
+      FingerprintHash: {
+        payload: Prisma.$FingerprintHashPayload<ExtArgs>
+        fields: Prisma.FingerprintHashFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FingerprintHashFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FingerprintHashFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          findFirst: {
+            args: Prisma.FingerprintHashFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FingerprintHashFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          findMany: {
+            args: Prisma.FingerprintHashFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>[]
+          }
+          create: {
+            args: Prisma.FingerprintHashCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          createMany: {
+            args: Prisma.FingerprintHashCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FingerprintHashCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>[]
+          }
+          delete: {
+            args: Prisma.FingerprintHashDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          update: {
+            args: Prisma.FingerprintHashUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          deleteMany: {
+            args: Prisma.FingerprintHashDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FingerprintHashUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FingerprintHashUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>[]
+          }
+          upsert: {
+            args: Prisma.FingerprintHashUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FingerprintHashPayload>
+          }
+          aggregate: {
+            args: Prisma.FingerprintHashAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFingerprintHash>
+          }
+          groupBy: {
+            args: Prisma.FingerprintHashGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FingerprintHashGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FingerprintHashCountArgs<ExtArgs>
+            result: $Utils.Optional<FingerprintHashCountAggregateOutputType> | number
           }
         }
       }
@@ -1342,11 +1445,26 @@ export namespace Prisma {
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
     /**
-     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     * A driver adapter that PrismaClient uses to connect to your database, such as the ones provided by `@prisma/adapter-pg`, `@prisma/adapter-libsql`, `@prisma/adapter-planetscale`, etc.
+     * 
+     * A driver adapter is **required** unless you connect to your database through Prisma Accelerate (in which case use `accelerateUrl` instead).
+     * 
+     * Learn more: https://pris.ly/d/driver-adapters
+     * 
+     * @example
+     * ```ts
+     * import { PrismaPg } from '@prisma/adapter-pg'
+     * import { PrismaClient } from './generated/prisma/client'
+     * 
+     * const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+     * const prisma = new PrismaClient({ adapter })
+     * ```
      */
     adapter?: runtime.SqlDriverAdapterFactory
     /**
-     * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
+     * The Prisma Accelerate connection URL. Use this option to connect to your database through Prisma Accelerate instead of using a driver adapter to connect directly.
+     * 
+     * Learn more: https://pris.ly/d/accelerate
      */
     accelerateUrl?: string
     /**
@@ -1385,6 +1503,7 @@ export namespace Prisma {
     user?: UserOmit
     asset?: AssetOmit
     audioFingerprint?: AudioFingerprintOmit
+    fingerprintHash?: FingerprintHashOmit
     watermark?: WatermarkOmit
     broadcaster?: BroadcasterOmit
     monitoringSession?: MonitoringSessionOmit
@@ -1500,10 +1619,12 @@ export namespace Prisma {
    */
 
   export type AssetCountOutputType = {
+    hashes: number
     detections: number
   }
 
   export type AssetCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    hashes?: boolean | AssetCountOutputTypeCountHashesArgs
     detections?: boolean | AssetCountOutputTypeCountDetectionsArgs
   }
 
@@ -1521,8 +1642,46 @@ export namespace Prisma {
   /**
    * AssetCountOutputType without action
    */
+  export type AssetCountOutputTypeCountHashesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FingerprintHashWhereInput
+  }
+
+  /**
+   * AssetCountOutputType without action
+   */
   export type AssetCountOutputTypeCountDetectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DetectionWhereInput
+  }
+
+
+  /**
+   * Count Type AudioFingerprintCountOutputType
+   */
+
+  export type AudioFingerprintCountOutputType = {
+    hashes: number
+  }
+
+  export type AudioFingerprintCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    hashes?: boolean | AudioFingerprintCountOutputTypeCountHashesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AudioFingerprintCountOutputType without action
+   */
+  export type AudioFingerprintCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AudioFingerprintCountOutputType
+     */
+    select?: AudioFingerprintCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AudioFingerprintCountOutputType without action
+   */
+  export type AudioFingerprintCountOutputTypeCountHashesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FingerprintHashWhereInput
   }
 
 
@@ -3067,7 +3226,7 @@ export namespace Prisma {
   export type AssetGroupByOutputType = {
     id: string
     title: string
-    description: string
+    description: string | null
     artist: string | null
     album: string | null
     isrc: string | null
@@ -3129,6 +3288,7 @@ export namespace Prisma {
     updatedAt?: boolean
     owner?: boolean | UserDefaultArgs<ExtArgs>
     fingerprint?: boolean | Asset$fingerprintArgs<ExtArgs>
+    hashes?: boolean | Asset$hashesArgs<ExtArgs>
     watermark?: boolean | Asset$watermarkArgs<ExtArgs>
     detections?: boolean | Asset$detectionsArgs<ExtArgs>
     _count?: boolean | AssetCountOutputTypeDefaultArgs<ExtArgs>
@@ -3209,6 +3369,7 @@ export namespace Prisma {
   export type AssetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     fingerprint?: boolean | Asset$fingerprintArgs<ExtArgs>
+    hashes?: boolean | Asset$hashesArgs<ExtArgs>
     watermark?: boolean | Asset$watermarkArgs<ExtArgs>
     detections?: boolean | Asset$detectionsArgs<ExtArgs>
     _count?: boolean | AssetCountOutputTypeDefaultArgs<ExtArgs>
@@ -3225,13 +3386,14 @@ export namespace Prisma {
     objects: {
       owner: Prisma.$UserPayload<ExtArgs>
       fingerprint: Prisma.$AudioFingerprintPayload<ExtArgs> | null
+      hashes: Prisma.$FingerprintHashPayload<ExtArgs>[]
       watermark: Prisma.$WatermarkPayload<ExtArgs> | null
       detections: Prisma.$DetectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
-      description: string
+      description: string | null
       artist: string | null
       album: string | null
       isrc: string | null
@@ -3645,6 +3807,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     fingerprint<T extends Asset$fingerprintArgs<ExtArgs> = {}>(args?: Subset<T, Asset$fingerprintArgs<ExtArgs>>): Prisma__AudioFingerprintClient<$Result.GetResult<Prisma.$AudioFingerprintPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    hashes<T extends Asset$hashesArgs<ExtArgs> = {}>(args?: Subset<T, Asset$hashesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     watermark<T extends Asset$watermarkArgs<ExtArgs> = {}>(args?: Subset<T, Asset$watermarkArgs<ExtArgs>>): Prisma__WatermarkClient<$Result.GetResult<Prisma.$WatermarkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     detections<T extends Asset$detectionsArgs<ExtArgs> = {}>(args?: Subset<T, Asset$detectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DetectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4116,6 +4279,30 @@ export namespace Prisma {
   }
 
   /**
+   * Asset.hashes
+   */
+  export type Asset$hashesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    where?: FingerprintHashWhereInput
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    cursor?: FingerprintHashWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FingerprintHashScalarFieldEnum | FingerprintHashScalarFieldEnum[]
+  }
+
+  /**
    * Asset.watermark
    */
   export type Asset$watermarkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4207,7 +4394,6 @@ export namespace Prisma {
     id: number
     algorithm: number
     version: number
-    fingerprint: number
     generatedAt: number
     assetId: number
     _all: number
@@ -4234,7 +4420,6 @@ export namespace Prisma {
     id?: true
     algorithm?: true
     version?: true
-    fingerprint?: true
     generatedAt?: true
     assetId?: true
     _all?: true
@@ -4316,7 +4501,6 @@ export namespace Prisma {
     id: string
     algorithm: string
     version: string
-    fingerprint: JsonValue
     generatedAt: Date
     assetId: string
     _count: AudioFingerprintCountAggregateOutputType | null
@@ -4342,17 +4526,17 @@ export namespace Prisma {
     id?: boolean
     algorithm?: boolean
     version?: boolean
-    fingerprint?: boolean
     generatedAt?: boolean
     assetId?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    hashes?: boolean | AudioFingerprint$hashesArgs<ExtArgs>
+    _count?: boolean | AudioFingerprintCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["audioFingerprint"]>
 
   export type AudioFingerprintSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     algorithm?: boolean
     version?: boolean
-    fingerprint?: boolean
     generatedAt?: boolean
     assetId?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
@@ -4362,7 +4546,6 @@ export namespace Prisma {
     id?: boolean
     algorithm?: boolean
     version?: boolean
-    fingerprint?: boolean
     generatedAt?: boolean
     assetId?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
@@ -4372,14 +4555,15 @@ export namespace Prisma {
     id?: boolean
     algorithm?: boolean
     version?: boolean
-    fingerprint?: boolean
     generatedAt?: boolean
     assetId?: boolean
   }
 
-  export type AudioFingerprintOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "algorithm" | "version" | "fingerprint" | "generatedAt" | "assetId", ExtArgs["result"]["audioFingerprint"]>
+  export type AudioFingerprintOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "algorithm" | "version" | "generatedAt" | "assetId", ExtArgs["result"]["audioFingerprint"]>
   export type AudioFingerprintInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asset?: boolean | AssetDefaultArgs<ExtArgs>
+    hashes?: boolean | AudioFingerprint$hashesArgs<ExtArgs>
+    _count?: boolean | AudioFingerprintCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AudioFingerprintIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asset?: boolean | AssetDefaultArgs<ExtArgs>
@@ -4392,12 +4576,12 @@ export namespace Prisma {
     name: "AudioFingerprint"
     objects: {
       asset: Prisma.$AssetPayload<ExtArgs>
+      hashes: Prisma.$FingerprintHashPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       algorithm: string
       version: string
-      fingerprint: Prisma.JsonValue
       generatedAt: Date
       assetId: string
     }, ExtArgs["result"]["audioFingerprint"]>
@@ -4795,6 +4979,7 @@ export namespace Prisma {
   export interface Prisma__AudioFingerprintClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     asset<T extends AssetDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AssetDefaultArgs<ExtArgs>>): Prisma__AssetClient<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    hashes<T extends AudioFingerprint$hashesArgs<ExtArgs> = {}>(args?: Subset<T, AudioFingerprint$hashesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4827,7 +5012,6 @@ export namespace Prisma {
     readonly id: FieldRef<"AudioFingerprint", 'String'>
     readonly algorithm: FieldRef<"AudioFingerprint", 'String'>
     readonly version: FieldRef<"AudioFingerprint", 'String'>
-    readonly fingerprint: FieldRef<"AudioFingerprint", 'Json'>
     readonly generatedAt: FieldRef<"AudioFingerprint", 'DateTime'>
     readonly assetId: FieldRef<"AudioFingerprint", 'String'>
   }
@@ -5231,6 +5415,30 @@ export namespace Prisma {
   }
 
   /**
+   * AudioFingerprint.hashes
+   */
+  export type AudioFingerprint$hashesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    where?: FingerprintHashWhereInput
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    cursor?: FingerprintHashWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FingerprintHashScalarFieldEnum | FingerprintHashScalarFieldEnum[]
+  }
+
+  /**
    * AudioFingerprint without action
    */
   export type AudioFingerprintDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5246,6 +5454,1119 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AudioFingerprintInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FingerprintHash
+   */
+
+  export type AggregateFingerprintHash = {
+    _count: FingerprintHashCountAggregateOutputType | null
+    _avg: FingerprintHashAvgAggregateOutputType | null
+    _sum: FingerprintHashSumAggregateOutputType | null
+    _min: FingerprintHashMinAggregateOutputType | null
+    _max: FingerprintHashMaxAggregateOutputType | null
+  }
+
+  export type FingerprintHashAvgAggregateOutputType = {
+    id: number | null
+    hash: number | null
+    offsetMs: number | null
+  }
+
+  export type FingerprintHashSumAggregateOutputType = {
+    id: bigint | null
+    hash: bigint | null
+    offsetMs: number | null
+  }
+
+  export type FingerprintHashMinAggregateOutputType = {
+    id: bigint | null
+    hash: bigint | null
+    offsetMs: number | null
+    audioFingerprintId: string | null
+    assetId: string | null
+  }
+
+  export type FingerprintHashMaxAggregateOutputType = {
+    id: bigint | null
+    hash: bigint | null
+    offsetMs: number | null
+    audioFingerprintId: string | null
+    assetId: string | null
+  }
+
+  export type FingerprintHashCountAggregateOutputType = {
+    id: number
+    hash: number
+    offsetMs: number
+    audioFingerprintId: number
+    assetId: number
+    _all: number
+  }
+
+
+  export type FingerprintHashAvgAggregateInputType = {
+    id?: true
+    hash?: true
+    offsetMs?: true
+  }
+
+  export type FingerprintHashSumAggregateInputType = {
+    id?: true
+    hash?: true
+    offsetMs?: true
+  }
+
+  export type FingerprintHashMinAggregateInputType = {
+    id?: true
+    hash?: true
+    offsetMs?: true
+    audioFingerprintId?: true
+    assetId?: true
+  }
+
+  export type FingerprintHashMaxAggregateInputType = {
+    id?: true
+    hash?: true
+    offsetMs?: true
+    audioFingerprintId?: true
+    assetId?: true
+  }
+
+  export type FingerprintHashCountAggregateInputType = {
+    id?: true
+    hash?: true
+    offsetMs?: true
+    audioFingerprintId?: true
+    assetId?: true
+    _all?: true
+  }
+
+  export type FingerprintHashAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FingerprintHash to aggregate.
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FingerprintHashes to fetch.
+     */
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FingerprintHashWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FingerprintHashes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FingerprintHashes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FingerprintHashes
+    **/
+    _count?: true | FingerprintHashCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FingerprintHashAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FingerprintHashSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FingerprintHashMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FingerprintHashMaxAggregateInputType
+  }
+
+  export type GetFingerprintHashAggregateType<T extends FingerprintHashAggregateArgs> = {
+        [P in keyof T & keyof AggregateFingerprintHash]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFingerprintHash[P]>
+      : GetScalarType<T[P], AggregateFingerprintHash[P]>
+  }
+
+
+
+
+  export type FingerprintHashGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FingerprintHashWhereInput
+    orderBy?: FingerprintHashOrderByWithAggregationInput | FingerprintHashOrderByWithAggregationInput[]
+    by: FingerprintHashScalarFieldEnum[] | FingerprintHashScalarFieldEnum
+    having?: FingerprintHashScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FingerprintHashCountAggregateInputType | true
+    _avg?: FingerprintHashAvgAggregateInputType
+    _sum?: FingerprintHashSumAggregateInputType
+    _min?: FingerprintHashMinAggregateInputType
+    _max?: FingerprintHashMaxAggregateInputType
+  }
+
+  export type FingerprintHashGroupByOutputType = {
+    id: bigint
+    hash: bigint
+    offsetMs: number
+    audioFingerprintId: string
+    assetId: string
+    _count: FingerprintHashCountAggregateOutputType | null
+    _avg: FingerprintHashAvgAggregateOutputType | null
+    _sum: FingerprintHashSumAggregateOutputType | null
+    _min: FingerprintHashMinAggregateOutputType | null
+    _max: FingerprintHashMaxAggregateOutputType | null
+  }
+
+  type GetFingerprintHashGroupByPayload<T extends FingerprintHashGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FingerprintHashGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FingerprintHashGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FingerprintHashGroupByOutputType[P]>
+            : GetScalarType<T[P], FingerprintHashGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FingerprintHashSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hash?: boolean
+    offsetMs?: boolean
+    audioFingerprintId?: boolean
+    assetId?: boolean
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["fingerprintHash"]>
+
+  export type FingerprintHashSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hash?: boolean
+    offsetMs?: boolean
+    audioFingerprintId?: boolean
+    assetId?: boolean
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["fingerprintHash"]>
+
+  export type FingerprintHashSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hash?: boolean
+    offsetMs?: boolean
+    audioFingerprintId?: boolean
+    assetId?: boolean
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["fingerprintHash"]>
+
+  export type FingerprintHashSelectScalar = {
+    id?: boolean
+    hash?: boolean
+    offsetMs?: boolean
+    audioFingerprintId?: boolean
+    assetId?: boolean
+  }
+
+  export type FingerprintHashOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "hash" | "offsetMs" | "audioFingerprintId" | "assetId", ExtArgs["result"]["fingerprintHash"]>
+  export type FingerprintHashInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }
+  export type FingerprintHashIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }
+  export type FingerprintHashIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audioFingerprint?: boolean | AudioFingerprintDefaultArgs<ExtArgs>
+    asset?: boolean | AssetDefaultArgs<ExtArgs>
+  }
+
+  export type $FingerprintHashPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FingerprintHash"
+    objects: {
+      audioFingerprint: Prisma.$AudioFingerprintPayload<ExtArgs>
+      asset: Prisma.$AssetPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      hash: bigint
+      offsetMs: number
+      audioFingerprintId: string
+      assetId: string
+    }, ExtArgs["result"]["fingerprintHash"]>
+    composites: {}
+  }
+
+  type FingerprintHashGetPayload<S extends boolean | null | undefined | FingerprintHashDefaultArgs> = $Result.GetResult<Prisma.$FingerprintHashPayload, S>
+
+  type FingerprintHashCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FingerprintHashFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FingerprintHashCountAggregateInputType | true
+    }
+
+  export interface FingerprintHashDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FingerprintHash'], meta: { name: 'FingerprintHash' } }
+    /**
+     * Find zero or one FingerprintHash that matches the filter.
+     * @param {FingerprintHashFindUniqueArgs} args - Arguments to find a FingerprintHash
+     * @example
+     * // Get one FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FingerprintHashFindUniqueArgs>(args: SelectSubset<T, FingerprintHashFindUniqueArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FingerprintHash that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FingerprintHashFindUniqueOrThrowArgs} args - Arguments to find a FingerprintHash
+     * @example
+     * // Get one FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FingerprintHashFindUniqueOrThrowArgs>(args: SelectSubset<T, FingerprintHashFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FingerprintHash that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashFindFirstArgs} args - Arguments to find a FingerprintHash
+     * @example
+     * // Get one FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FingerprintHashFindFirstArgs>(args?: SelectSubset<T, FingerprintHashFindFirstArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FingerprintHash that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashFindFirstOrThrowArgs} args - Arguments to find a FingerprintHash
+     * @example
+     * // Get one FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FingerprintHashFindFirstOrThrowArgs>(args?: SelectSubset<T, FingerprintHashFindFirstOrThrowArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FingerprintHashes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FingerprintHashes
+     * const fingerprintHashes = await prisma.fingerprintHash.findMany()
+     * 
+     * // Get first 10 FingerprintHashes
+     * const fingerprintHashes = await prisma.fingerprintHash.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fingerprintHashWithIdOnly = await prisma.fingerprintHash.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FingerprintHashFindManyArgs>(args?: SelectSubset<T, FingerprintHashFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FingerprintHash.
+     * @param {FingerprintHashCreateArgs} args - Arguments to create a FingerprintHash.
+     * @example
+     * // Create one FingerprintHash
+     * const FingerprintHash = await prisma.fingerprintHash.create({
+     *   data: {
+     *     // ... data to create a FingerprintHash
+     *   }
+     * })
+     * 
+     */
+    create<T extends FingerprintHashCreateArgs>(args: SelectSubset<T, FingerprintHashCreateArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FingerprintHashes.
+     * @param {FingerprintHashCreateManyArgs} args - Arguments to create many FingerprintHashes.
+     * @example
+     * // Create many FingerprintHashes
+     * const fingerprintHash = await prisma.fingerprintHash.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FingerprintHashCreateManyArgs>(args?: SelectSubset<T, FingerprintHashCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FingerprintHashes and returns the data saved in the database.
+     * @param {FingerprintHashCreateManyAndReturnArgs} args - Arguments to create many FingerprintHashes.
+     * @example
+     * // Create many FingerprintHashes
+     * const fingerprintHash = await prisma.fingerprintHash.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FingerprintHashes and only return the `id`
+     * const fingerprintHashWithIdOnly = await prisma.fingerprintHash.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FingerprintHashCreateManyAndReturnArgs>(args?: SelectSubset<T, FingerprintHashCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FingerprintHash.
+     * @param {FingerprintHashDeleteArgs} args - Arguments to delete one FingerprintHash.
+     * @example
+     * // Delete one FingerprintHash
+     * const FingerprintHash = await prisma.fingerprintHash.delete({
+     *   where: {
+     *     // ... filter to delete one FingerprintHash
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FingerprintHashDeleteArgs>(args: SelectSubset<T, FingerprintHashDeleteArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FingerprintHash.
+     * @param {FingerprintHashUpdateArgs} args - Arguments to update one FingerprintHash.
+     * @example
+     * // Update one FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FingerprintHashUpdateArgs>(args: SelectSubset<T, FingerprintHashUpdateArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FingerprintHashes.
+     * @param {FingerprintHashDeleteManyArgs} args - Arguments to filter FingerprintHashes to delete.
+     * @example
+     * // Delete a few FingerprintHashes
+     * const { count } = await prisma.fingerprintHash.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FingerprintHashDeleteManyArgs>(args?: SelectSubset<T, FingerprintHashDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FingerprintHashes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FingerprintHashes
+     * const fingerprintHash = await prisma.fingerprintHash.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FingerprintHashUpdateManyArgs>(args: SelectSubset<T, FingerprintHashUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FingerprintHashes and returns the data updated in the database.
+     * @param {FingerprintHashUpdateManyAndReturnArgs} args - Arguments to update many FingerprintHashes.
+     * @example
+     * // Update many FingerprintHashes
+     * const fingerprintHash = await prisma.fingerprintHash.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FingerprintHashes and only return the `id`
+     * const fingerprintHashWithIdOnly = await prisma.fingerprintHash.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FingerprintHashUpdateManyAndReturnArgs>(args: SelectSubset<T, FingerprintHashUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FingerprintHash.
+     * @param {FingerprintHashUpsertArgs} args - Arguments to update or create a FingerprintHash.
+     * @example
+     * // Update or create a FingerprintHash
+     * const fingerprintHash = await prisma.fingerprintHash.upsert({
+     *   create: {
+     *     // ... data to create a FingerprintHash
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FingerprintHash we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FingerprintHashUpsertArgs>(args: SelectSubset<T, FingerprintHashUpsertArgs<ExtArgs>>): Prisma__FingerprintHashClient<$Result.GetResult<Prisma.$FingerprintHashPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FingerprintHashes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashCountArgs} args - Arguments to filter FingerprintHashes to count.
+     * @example
+     * // Count the number of FingerprintHashes
+     * const count = await prisma.fingerprintHash.count({
+     *   where: {
+     *     // ... the filter for the FingerprintHashes we want to count
+     *   }
+     * })
+    **/
+    count<T extends FingerprintHashCountArgs>(
+      args?: Subset<T, FingerprintHashCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FingerprintHashCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FingerprintHash.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FingerprintHashAggregateArgs>(args: Subset<T, FingerprintHashAggregateArgs>): Prisma.PrismaPromise<GetFingerprintHashAggregateType<T>>
+
+    /**
+     * Group by FingerprintHash.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FingerprintHashGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FingerprintHashGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FingerprintHashGroupByArgs['orderBy'] }
+        : { orderBy?: FingerprintHashGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FingerprintHashGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFingerprintHashGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FingerprintHash model
+   */
+  readonly fields: FingerprintHashFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FingerprintHash.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FingerprintHashClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    audioFingerprint<T extends AudioFingerprintDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AudioFingerprintDefaultArgs<ExtArgs>>): Prisma__AudioFingerprintClient<$Result.GetResult<Prisma.$AudioFingerprintPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    asset<T extends AssetDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AssetDefaultArgs<ExtArgs>>): Prisma__AssetClient<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FingerprintHash model
+   */
+  interface FingerprintHashFieldRefs {
+    readonly id: FieldRef<"FingerprintHash", 'BigInt'>
+    readonly hash: FieldRef<"FingerprintHash", 'BigInt'>
+    readonly offsetMs: FieldRef<"FingerprintHash", 'Int'>
+    readonly audioFingerprintId: FieldRef<"FingerprintHash", 'String'>
+    readonly assetId: FieldRef<"FingerprintHash", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FingerprintHash findUnique
+   */
+  export type FingerprintHashFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter, which FingerprintHash to fetch.
+     */
+    where: FingerprintHashWhereUniqueInput
+  }
+
+  /**
+   * FingerprintHash findUniqueOrThrow
+   */
+  export type FingerprintHashFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter, which FingerprintHash to fetch.
+     */
+    where: FingerprintHashWhereUniqueInput
+  }
+
+  /**
+   * FingerprintHash findFirst
+   */
+  export type FingerprintHashFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter, which FingerprintHash to fetch.
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FingerprintHashes to fetch.
+     */
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FingerprintHashes.
+     */
+    cursor?: FingerprintHashWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FingerprintHashes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FingerprintHashes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FingerprintHashes.
+     */
+    distinct?: FingerprintHashScalarFieldEnum | FingerprintHashScalarFieldEnum[]
+  }
+
+  /**
+   * FingerprintHash findFirstOrThrow
+   */
+  export type FingerprintHashFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter, which FingerprintHash to fetch.
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FingerprintHashes to fetch.
+     */
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FingerprintHashes.
+     */
+    cursor?: FingerprintHashWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FingerprintHashes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FingerprintHashes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FingerprintHashes.
+     */
+    distinct?: FingerprintHashScalarFieldEnum | FingerprintHashScalarFieldEnum[]
+  }
+
+  /**
+   * FingerprintHash findMany
+   */
+  export type FingerprintHashFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter, which FingerprintHashes to fetch.
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FingerprintHashes to fetch.
+     */
+    orderBy?: FingerprintHashOrderByWithRelationInput | FingerprintHashOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FingerprintHashes.
+     */
+    cursor?: FingerprintHashWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FingerprintHashes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FingerprintHashes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FingerprintHashes.
+     */
+    distinct?: FingerprintHashScalarFieldEnum | FingerprintHashScalarFieldEnum[]
+  }
+
+  /**
+   * FingerprintHash create
+   */
+  export type FingerprintHashCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FingerprintHash.
+     */
+    data: XOR<FingerprintHashCreateInput, FingerprintHashUncheckedCreateInput>
+  }
+
+  /**
+   * FingerprintHash createMany
+   */
+  export type FingerprintHashCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FingerprintHashes.
+     */
+    data: FingerprintHashCreateManyInput | FingerprintHashCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FingerprintHash createManyAndReturn
+   */
+  export type FingerprintHashCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * The data used to create many FingerprintHashes.
+     */
+    data: FingerprintHashCreateManyInput | FingerprintHashCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FingerprintHash update
+   */
+  export type FingerprintHashUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FingerprintHash.
+     */
+    data: XOR<FingerprintHashUpdateInput, FingerprintHashUncheckedUpdateInput>
+    /**
+     * Choose, which FingerprintHash to update.
+     */
+    where: FingerprintHashWhereUniqueInput
+  }
+
+  /**
+   * FingerprintHash updateMany
+   */
+  export type FingerprintHashUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FingerprintHashes.
+     */
+    data: XOR<FingerprintHashUpdateManyMutationInput, FingerprintHashUncheckedUpdateManyInput>
+    /**
+     * Filter which FingerprintHashes to update
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * Limit how many FingerprintHashes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FingerprintHash updateManyAndReturn
+   */
+  export type FingerprintHashUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * The data used to update FingerprintHashes.
+     */
+    data: XOR<FingerprintHashUpdateManyMutationInput, FingerprintHashUncheckedUpdateManyInput>
+    /**
+     * Filter which FingerprintHashes to update
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * Limit how many FingerprintHashes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FingerprintHash upsert
+   */
+  export type FingerprintHashUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FingerprintHash to update in case it exists.
+     */
+    where: FingerprintHashWhereUniqueInput
+    /**
+     * In case the FingerprintHash found by the `where` argument doesn't exist, create a new FingerprintHash with this data.
+     */
+    create: XOR<FingerprintHashCreateInput, FingerprintHashUncheckedCreateInput>
+    /**
+     * In case the FingerprintHash was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FingerprintHashUpdateInput, FingerprintHashUncheckedUpdateInput>
+  }
+
+  /**
+   * FingerprintHash delete
+   */
+  export type FingerprintHashDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
+    /**
+     * Filter which FingerprintHash to delete.
+     */
+    where: FingerprintHashWhereUniqueInput
+  }
+
+  /**
+   * FingerprintHash deleteMany
+   */
+  export type FingerprintHashDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FingerprintHashes to delete
+     */
+    where?: FingerprintHashWhereInput
+    /**
+     * Limit how many FingerprintHashes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FingerprintHash without action
+   */
+  export type FingerprintHashDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FingerprintHash
+     */
+    select?: FingerprintHashSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FingerprintHash
+     */
+    omit?: FingerprintHashOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FingerprintHashInclude<ExtArgs> | null
   }
 
 
@@ -9898,12 +11219,22 @@ export namespace Prisma {
     id: 'id',
     algorithm: 'algorithm',
     version: 'version',
-    fingerprint: 'fingerprint',
     generatedAt: 'generatedAt',
     assetId: 'assetId'
   };
 
   export type AudioFingerprintScalarFieldEnum = (typeof AudioFingerprintScalarFieldEnum)[keyof typeof AudioFingerprintScalarFieldEnum]
+
+
+  export const FingerprintHashScalarFieldEnum: {
+    id: 'id',
+    hash: 'hash',
+    offsetMs: 'offsetMs',
+    audioFingerprintId: 'audioFingerprintId',
+    assetId: 'assetId'
+  };
+
+  export type FingerprintHashScalarFieldEnum = (typeof FingerprintHashScalarFieldEnum)[keyof typeof FingerprintHashScalarFieldEnum]
 
 
   export const WatermarkScalarFieldEnum: {
@@ -9972,13 +11303,6 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
-  };
-
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -9993,15 +11317,6 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -10108,16 +11423,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
+   * Reference to a field of type 'BigInt'
    */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
     
 
 
   /**
-   * Reference to a field of type 'QueryMode'
+   * Reference to a field of type 'BigInt[]'
    */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 
@@ -10244,7 +11559,7 @@ export namespace Prisma {
     NOT?: AssetWhereInput | AssetWhereInput[]
     id?: UuidFilter<"Asset"> | string
     title?: StringFilter<"Asset"> | string
-    description?: StringFilter<"Asset"> | string
+    description?: StringNullableFilter<"Asset"> | string | null
     artist?: StringNullableFilter<"Asset"> | string | null
     album?: StringNullableFilter<"Asset"> | string | null
     isrc?: StringNullableFilter<"Asset"> | string | null
@@ -10264,6 +11579,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     fingerprint?: XOR<AudioFingerprintNullableScalarRelationFilter, AudioFingerprintWhereInput> | null
+    hashes?: FingerprintHashListRelationFilter
     watermark?: XOR<WatermarkNullableScalarRelationFilter, WatermarkWhereInput> | null
     detections?: DetectionListRelationFilter
   }
@@ -10271,7 +11587,7 @@ export namespace Prisma {
   export type AssetOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
+    description?: SortOrderInput | SortOrder
     artist?: SortOrderInput | SortOrder
     album?: SortOrderInput | SortOrder
     isrc?: SortOrderInput | SortOrder
@@ -10291,6 +11607,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     owner?: UserOrderByWithRelationInput
     fingerprint?: AudioFingerprintOrderByWithRelationInput
+    hashes?: FingerprintHashOrderByRelationAggregateInput
     watermark?: WatermarkOrderByWithRelationInput
     detections?: DetectionOrderByRelationAggregateInput
   }
@@ -10303,7 +11620,7 @@ export namespace Prisma {
     OR?: AssetWhereInput[]
     NOT?: AssetWhereInput | AssetWhereInput[]
     title?: StringFilter<"Asset"> | string
-    description?: StringFilter<"Asset"> | string
+    description?: StringNullableFilter<"Asset"> | string | null
     artist?: StringNullableFilter<"Asset"> | string | null
     album?: StringNullableFilter<"Asset"> | string | null
     filename?: StringNullableFilter<"Asset"> | string | null
@@ -10321,6 +11638,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     fingerprint?: XOR<AudioFingerprintNullableScalarRelationFilter, AudioFingerprintWhereInput> | null
+    hashes?: FingerprintHashListRelationFilter
     watermark?: XOR<WatermarkNullableScalarRelationFilter, WatermarkWhereInput> | null
     detections?: DetectionListRelationFilter
   }, "id" | "isrc" | "checksum">
@@ -10328,7 +11646,7 @@ export namespace Prisma {
   export type AssetOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
+    description?: SortOrderInput | SortOrder
     artist?: SortOrderInput | SortOrder
     album?: SortOrderInput | SortOrder
     isrc?: SortOrderInput | SortOrder
@@ -10359,7 +11677,7 @@ export namespace Prisma {
     NOT?: AssetScalarWhereWithAggregatesInput | AssetScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Asset"> | string
     title?: StringWithAggregatesFilter<"Asset"> | string
-    description?: StringWithAggregatesFilter<"Asset"> | string
+    description?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     artist?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     album?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     isrc?: StringNullableWithAggregatesFilter<"Asset"> | string | null
@@ -10386,20 +11704,20 @@ export namespace Prisma {
     id?: UuidFilter<"AudioFingerprint"> | string
     algorithm?: StringFilter<"AudioFingerprint"> | string
     version?: StringFilter<"AudioFingerprint"> | string
-    fingerprint?: JsonFilter<"AudioFingerprint">
     generatedAt?: DateTimeFilter<"AudioFingerprint"> | Date | string
     assetId?: UuidFilter<"AudioFingerprint"> | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+    hashes?: FingerprintHashListRelationFilter
   }
 
   export type AudioFingerprintOrderByWithRelationInput = {
     id?: SortOrder
     algorithm?: SortOrder
     version?: SortOrder
-    fingerprint?: SortOrder
     generatedAt?: SortOrder
     assetId?: SortOrder
     asset?: AssetOrderByWithRelationInput
+    hashes?: FingerprintHashOrderByRelationAggregateInput
   }
 
   export type AudioFingerprintWhereUniqueInput = Prisma.AtLeast<{
@@ -10410,16 +11728,15 @@ export namespace Prisma {
     NOT?: AudioFingerprintWhereInput | AudioFingerprintWhereInput[]
     algorithm?: StringFilter<"AudioFingerprint"> | string
     version?: StringFilter<"AudioFingerprint"> | string
-    fingerprint?: JsonFilter<"AudioFingerprint">
     generatedAt?: DateTimeFilter<"AudioFingerprint"> | Date | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+    hashes?: FingerprintHashListRelationFilter
   }, "id" | "assetId">
 
   export type AudioFingerprintOrderByWithAggregationInput = {
     id?: SortOrder
     algorithm?: SortOrder
     version?: SortOrder
-    fingerprint?: SortOrder
     generatedAt?: SortOrder
     assetId?: SortOrder
     _count?: AudioFingerprintCountOrderByAggregateInput
@@ -10434,9 +11751,68 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"AudioFingerprint"> | string
     algorithm?: StringWithAggregatesFilter<"AudioFingerprint"> | string
     version?: StringWithAggregatesFilter<"AudioFingerprint"> | string
-    fingerprint?: JsonWithAggregatesFilter<"AudioFingerprint">
     generatedAt?: DateTimeWithAggregatesFilter<"AudioFingerprint"> | Date | string
     assetId?: UuidWithAggregatesFilter<"AudioFingerprint"> | string
+  }
+
+  export type FingerprintHashWhereInput = {
+    AND?: FingerprintHashWhereInput | FingerprintHashWhereInput[]
+    OR?: FingerprintHashWhereInput[]
+    NOT?: FingerprintHashWhereInput | FingerprintHashWhereInput[]
+    id?: BigIntFilter<"FingerprintHash"> | bigint | number
+    hash?: BigIntFilter<"FingerprintHash"> | bigint | number
+    offsetMs?: IntFilter<"FingerprintHash"> | number
+    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
+    assetId?: UuidFilter<"FingerprintHash"> | string
+    audioFingerprint?: XOR<AudioFingerprintScalarRelationFilter, AudioFingerprintWhereInput>
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+  }
+
+  export type FingerprintHashOrderByWithRelationInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+    audioFingerprintId?: SortOrder
+    assetId?: SortOrder
+    audioFingerprint?: AudioFingerprintOrderByWithRelationInput
+    asset?: AssetOrderByWithRelationInput
+  }
+
+  export type FingerprintHashWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: FingerprintHashWhereInput | FingerprintHashWhereInput[]
+    OR?: FingerprintHashWhereInput[]
+    NOT?: FingerprintHashWhereInput | FingerprintHashWhereInput[]
+    hash?: BigIntFilter<"FingerprintHash"> | bigint | number
+    offsetMs?: IntFilter<"FingerprintHash"> | number
+    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
+    assetId?: UuidFilter<"FingerprintHash"> | string
+    audioFingerprint?: XOR<AudioFingerprintScalarRelationFilter, AudioFingerprintWhereInput>
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
+  }, "id">
+
+  export type FingerprintHashOrderByWithAggregationInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+    audioFingerprintId?: SortOrder
+    assetId?: SortOrder
+    _count?: FingerprintHashCountOrderByAggregateInput
+    _avg?: FingerprintHashAvgOrderByAggregateInput
+    _max?: FingerprintHashMaxOrderByAggregateInput
+    _min?: FingerprintHashMinOrderByAggregateInput
+    _sum?: FingerprintHashSumOrderByAggregateInput
+  }
+
+  export type FingerprintHashScalarWhereWithAggregatesInput = {
+    AND?: FingerprintHashScalarWhereWithAggregatesInput | FingerprintHashScalarWhereWithAggregatesInput[]
+    OR?: FingerprintHashScalarWhereWithAggregatesInput[]
+    NOT?: FingerprintHashScalarWhereWithAggregatesInput | FingerprintHashScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"FingerprintHash"> | bigint | number
+    hash?: BigIntWithAggregatesFilter<"FingerprintHash"> | bigint | number
+    offsetMs?: IntWithAggregatesFilter<"FingerprintHash"> | number
+    audioFingerprintId?: UuidWithAggregatesFilter<"FingerprintHash"> | string
+    assetId?: UuidWithAggregatesFilter<"FingerprintHash"> | string
   }
 
   export type WatermarkWhereInput = {
@@ -10871,7 +12247,7 @@ export namespace Prisma {
   export type AssetCreateInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -10890,6 +12266,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutAssetsInput
     fingerprint?: AudioFingerprintCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAssetInput
     watermark?: WatermarkCreateNestedOneWithoutAssetInput
     detections?: DetectionCreateNestedManyWithoutAssetInput
   }
@@ -10897,7 +12274,7 @@ export namespace Prisma {
   export type AssetUncheckedCreateInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -10916,6 +12293,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fingerprint?: AudioFingerprintUncheckedCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAssetInput
     watermark?: WatermarkUncheckedCreateNestedOneWithoutAssetInput
     detections?: DetectionUncheckedCreateNestedManyWithoutAssetInput
   }
@@ -10923,7 +12301,7 @@ export namespace Prisma {
   export type AssetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10942,6 +12320,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutAssetsNestedInput
     fingerprint?: AudioFingerprintUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUpdateOneWithoutAssetNestedInput
     detections?: DetectionUpdateManyWithoutAssetNestedInput
   }
@@ -10949,7 +12328,7 @@ export namespace Prisma {
   export type AssetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10968,6 +12347,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fingerprint?: AudioFingerprintUncheckedUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUncheckedUpdateOneWithoutAssetNestedInput
     detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
   }
@@ -10975,7 +12355,7 @@ export namespace Prisma {
   export type AssetCreateManyInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -10998,7 +12378,7 @@ export namespace Prisma {
   export type AssetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11020,7 +12400,7 @@ export namespace Prisma {
   export type AssetUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11042,45 +12422,44 @@ export namespace Prisma {
 
   export type AudioFingerprintCreateInput = {
     id?: string
-    algorithm: string
-    version: string
-    fingerprint: JsonNullValueInput | InputJsonValue
+    algorithm?: string
+    version?: string
     generatedAt?: Date | string
     asset: AssetCreateNestedOneWithoutFingerprintInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAudioFingerprintInput
   }
 
   export type AudioFingerprintUncheckedCreateInput = {
     id?: string
-    algorithm: string
-    version: string
-    fingerprint: JsonNullValueInput | InputJsonValue
+    algorithm?: string
+    version?: string
     generatedAt?: Date | string
     assetId: string
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAudioFingerprintInput
   }
 
   export type AudioFingerprintUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     asset?: AssetUpdateOneRequiredWithoutFingerprintNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAudioFingerprintNestedInput
   }
 
   export type AudioFingerprintUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assetId?: StringFieldUpdateOperationsInput | string
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAudioFingerprintNestedInput
   }
 
   export type AudioFingerprintCreateManyInput = {
     id?: string
-    algorithm: string
-    version: string
-    fingerprint: JsonNullValueInput | InputJsonValue
+    algorithm?: string
+    version?: string
     generatedAt?: Date | string
     assetId: string
   }
@@ -11089,7 +12468,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11097,8 +12475,61 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assetId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FingerprintHashCreateInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprint: AudioFingerprintCreateNestedOneWithoutHashesInput
+    asset: AssetCreateNestedOneWithoutHashesInput
+  }
+
+  export type FingerprintHashUncheckedCreateInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprintId: string
+    assetId: string
+  }
+
+  export type FingerprintHashUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprint?: AudioFingerprintUpdateOneRequiredWithoutHashesNestedInput
+    asset?: AssetUpdateOneRequiredWithoutHashesNestedInput
+  }
+
+  export type FingerprintHashUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprintId?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FingerprintHashCreateManyInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprintId: string
+    assetId: string
+  }
+
+  export type FingerprintHashUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type FingerprintHashUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprintId?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -11713,6 +13144,12 @@ export namespace Prisma {
     isNot?: AudioFingerprintWhereInput | null
   }
 
+  export type FingerprintHashListRelationFilter = {
+    every?: FingerprintHashWhereInput
+    some?: FingerprintHashWhereInput
+    none?: FingerprintHashWhereInput
+  }
+
   export type WatermarkNullableScalarRelationFilter = {
     is?: WatermarkWhereInput | null
     isNot?: WatermarkWhereInput | null
@@ -11722,6 +13159,10 @@ export namespace Prisma {
     every?: DetectionWhereInput
     some?: DetectionWhereInput
     none?: DetectionWhereInput
+  }
+
+  export type FingerprintHashOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type DetectionOrderByRelationAggregateInput = {
@@ -11854,29 +13295,6 @@ export namespace Prisma {
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
-  export type JsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type AssetScalarRelationFilter = {
     is?: AssetWhereInput
@@ -11887,7 +13305,6 @@ export namespace Prisma {
     id?: SortOrder
     algorithm?: SortOrder
     version?: SortOrder
-    fingerprint?: SortOrder
     generatedAt?: SortOrder
     assetId?: SortOrder
   }
@@ -11907,31 +13324,100 @@ export namespace Prisma {
     generatedAt?: SortOrder
     assetId?: SortOrder
   }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type AudioFingerprintScalarRelationFilter = {
+    is?: AudioFingerprintWhereInput
+    isNot?: AudioFingerprintWhereInput
+  }
+
+  export type FingerprintHashCountOrderByAggregateInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+    audioFingerprintId?: SortOrder
+    assetId?: SortOrder
+  }
+
+  export type FingerprintHashAvgOrderByAggregateInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+  }
+
+  export type FingerprintHashMaxOrderByAggregateInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+    audioFingerprintId?: SortOrder
+    assetId?: SortOrder
+  }
+
+  export type FingerprintHashMinOrderByAggregateInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+    audioFingerprintId?: SortOrder
+    assetId?: SortOrder
+  }
+
+  export type FingerprintHashSumOrderByAggregateInput = {
+    id?: SortOrder
+    hash?: SortOrder
+    offsetMs?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type WatermarkCountOrderByAggregateInput = {
@@ -12266,6 +13752,13 @@ export namespace Prisma {
     connect?: AudioFingerprintWhereUniqueInput
   }
 
+  export type FingerprintHashCreateNestedManyWithoutAssetInput = {
+    create?: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput> | FingerprintHashCreateWithoutAssetInput[] | FingerprintHashUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAssetInput | FingerprintHashCreateOrConnectWithoutAssetInput[]
+    createMany?: FingerprintHashCreateManyAssetInputEnvelope
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+  }
+
   export type WatermarkCreateNestedOneWithoutAssetInput = {
     create?: XOR<WatermarkCreateWithoutAssetInput, WatermarkUncheckedCreateWithoutAssetInput>
     connectOrCreate?: WatermarkCreateOrConnectWithoutAssetInput
@@ -12283,6 +13776,13 @@ export namespace Prisma {
     create?: XOR<AudioFingerprintCreateWithoutAssetInput, AudioFingerprintUncheckedCreateWithoutAssetInput>
     connectOrCreate?: AudioFingerprintCreateOrConnectWithoutAssetInput
     connect?: AudioFingerprintWhereUniqueInput
+  }
+
+  export type FingerprintHashUncheckedCreateNestedManyWithoutAssetInput = {
+    create?: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput> | FingerprintHashCreateWithoutAssetInput[] | FingerprintHashUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAssetInput | FingerprintHashCreateOrConnectWithoutAssetInput[]
+    createMany?: FingerprintHashCreateManyAssetInputEnvelope
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
   }
 
   export type WatermarkUncheckedCreateNestedOneWithoutAssetInput = {
@@ -12336,6 +13836,20 @@ export namespace Prisma {
     update?: XOR<XOR<AudioFingerprintUpdateToOneWithWhereWithoutAssetInput, AudioFingerprintUpdateWithoutAssetInput>, AudioFingerprintUncheckedUpdateWithoutAssetInput>
   }
 
+  export type FingerprintHashUpdateManyWithoutAssetNestedInput = {
+    create?: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput> | FingerprintHashCreateWithoutAssetInput[] | FingerprintHashUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAssetInput | FingerprintHashCreateOrConnectWithoutAssetInput[]
+    upsert?: FingerprintHashUpsertWithWhereUniqueWithoutAssetInput | FingerprintHashUpsertWithWhereUniqueWithoutAssetInput[]
+    createMany?: FingerprintHashCreateManyAssetInputEnvelope
+    set?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    disconnect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    delete?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    update?: FingerprintHashUpdateWithWhereUniqueWithoutAssetInput | FingerprintHashUpdateWithWhereUniqueWithoutAssetInput[]
+    updateMany?: FingerprintHashUpdateManyWithWhereWithoutAssetInput | FingerprintHashUpdateManyWithWhereWithoutAssetInput[]
+    deleteMany?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+  }
+
   export type WatermarkUpdateOneWithoutAssetNestedInput = {
     create?: XOR<WatermarkCreateWithoutAssetInput, WatermarkUncheckedCreateWithoutAssetInput>
     connectOrCreate?: WatermarkCreateOrConnectWithoutAssetInput
@@ -12370,6 +13884,20 @@ export namespace Prisma {
     update?: XOR<XOR<AudioFingerprintUpdateToOneWithWhereWithoutAssetInput, AudioFingerprintUpdateWithoutAssetInput>, AudioFingerprintUncheckedUpdateWithoutAssetInput>
   }
 
+  export type FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput = {
+    create?: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput> | FingerprintHashCreateWithoutAssetInput[] | FingerprintHashUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAssetInput | FingerprintHashCreateOrConnectWithoutAssetInput[]
+    upsert?: FingerprintHashUpsertWithWhereUniqueWithoutAssetInput | FingerprintHashUpsertWithWhereUniqueWithoutAssetInput[]
+    createMany?: FingerprintHashCreateManyAssetInputEnvelope
+    set?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    disconnect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    delete?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    update?: FingerprintHashUpdateWithWhereUniqueWithoutAssetInput | FingerprintHashUpdateWithWhereUniqueWithoutAssetInput[]
+    updateMany?: FingerprintHashUpdateManyWithWhereWithoutAssetInput | FingerprintHashUpdateManyWithWhereWithoutAssetInput[]
+    deleteMany?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+  }
+
   export type WatermarkUncheckedUpdateOneWithoutAssetNestedInput = {
     create?: XOR<WatermarkCreateWithoutAssetInput, WatermarkUncheckedCreateWithoutAssetInput>
     connectOrCreate?: WatermarkCreateOrConnectWithoutAssetInput
@@ -12400,12 +13928,98 @@ export namespace Prisma {
     connect?: AssetWhereUniqueInput
   }
 
+  export type FingerprintHashCreateNestedManyWithoutAudioFingerprintInput = {
+    create?: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput> | FingerprintHashCreateWithoutAudioFingerprintInput[] | FingerprintHashUncheckedCreateWithoutAudioFingerprintInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAudioFingerprintInput | FingerprintHashCreateOrConnectWithoutAudioFingerprintInput[]
+    createMany?: FingerprintHashCreateManyAudioFingerprintInputEnvelope
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+  }
+
+  export type FingerprintHashUncheckedCreateNestedManyWithoutAudioFingerprintInput = {
+    create?: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput> | FingerprintHashCreateWithoutAudioFingerprintInput[] | FingerprintHashUncheckedCreateWithoutAudioFingerprintInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAudioFingerprintInput | FingerprintHashCreateOrConnectWithoutAudioFingerprintInput[]
+    createMany?: FingerprintHashCreateManyAudioFingerprintInputEnvelope
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+  }
+
   export type AssetUpdateOneRequiredWithoutFingerprintNestedInput = {
     create?: XOR<AssetCreateWithoutFingerprintInput, AssetUncheckedCreateWithoutFingerprintInput>
     connectOrCreate?: AssetCreateOrConnectWithoutFingerprintInput
     upsert?: AssetUpsertWithoutFingerprintInput
     connect?: AssetWhereUniqueInput
     update?: XOR<XOR<AssetUpdateToOneWithWhereWithoutFingerprintInput, AssetUpdateWithoutFingerprintInput>, AssetUncheckedUpdateWithoutFingerprintInput>
+  }
+
+  export type FingerprintHashUpdateManyWithoutAudioFingerprintNestedInput = {
+    create?: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput> | FingerprintHashCreateWithoutAudioFingerprintInput[] | FingerprintHashUncheckedCreateWithoutAudioFingerprintInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAudioFingerprintInput | FingerprintHashCreateOrConnectWithoutAudioFingerprintInput[]
+    upsert?: FingerprintHashUpsertWithWhereUniqueWithoutAudioFingerprintInput | FingerprintHashUpsertWithWhereUniqueWithoutAudioFingerprintInput[]
+    createMany?: FingerprintHashCreateManyAudioFingerprintInputEnvelope
+    set?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    disconnect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    delete?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    update?: FingerprintHashUpdateWithWhereUniqueWithoutAudioFingerprintInput | FingerprintHashUpdateWithWhereUniqueWithoutAudioFingerprintInput[]
+    updateMany?: FingerprintHashUpdateManyWithWhereWithoutAudioFingerprintInput | FingerprintHashUpdateManyWithWhereWithoutAudioFingerprintInput[]
+    deleteMany?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+  }
+
+  export type FingerprintHashUncheckedUpdateManyWithoutAudioFingerprintNestedInput = {
+    create?: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput> | FingerprintHashCreateWithoutAudioFingerprintInput[] | FingerprintHashUncheckedCreateWithoutAudioFingerprintInput[]
+    connectOrCreate?: FingerprintHashCreateOrConnectWithoutAudioFingerprintInput | FingerprintHashCreateOrConnectWithoutAudioFingerprintInput[]
+    upsert?: FingerprintHashUpsertWithWhereUniqueWithoutAudioFingerprintInput | FingerprintHashUpsertWithWhereUniqueWithoutAudioFingerprintInput[]
+    createMany?: FingerprintHashCreateManyAudioFingerprintInputEnvelope
+    set?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    disconnect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    delete?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    connect?: FingerprintHashWhereUniqueInput | FingerprintHashWhereUniqueInput[]
+    update?: FingerprintHashUpdateWithWhereUniqueWithoutAudioFingerprintInput | FingerprintHashUpdateWithWhereUniqueWithoutAudioFingerprintInput[]
+    updateMany?: FingerprintHashUpdateManyWithWhereWithoutAudioFingerprintInput | FingerprintHashUpdateManyWithWhereWithoutAudioFingerprintInput[]
+    deleteMany?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+  }
+
+  export type AudioFingerprintCreateNestedOneWithoutHashesInput = {
+    create?: XOR<AudioFingerprintCreateWithoutHashesInput, AudioFingerprintUncheckedCreateWithoutHashesInput>
+    connectOrCreate?: AudioFingerprintCreateOrConnectWithoutHashesInput
+    connect?: AudioFingerprintWhereUniqueInput
+  }
+
+  export type AssetCreateNestedOneWithoutHashesInput = {
+    create?: XOR<AssetCreateWithoutHashesInput, AssetUncheckedCreateWithoutHashesInput>
+    connectOrCreate?: AssetCreateOrConnectWithoutHashesInput
+    connect?: AssetWhereUniqueInput
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AudioFingerprintUpdateOneRequiredWithoutHashesNestedInput = {
+    create?: XOR<AudioFingerprintCreateWithoutHashesInput, AudioFingerprintUncheckedCreateWithoutHashesInput>
+    connectOrCreate?: AudioFingerprintCreateOrConnectWithoutHashesInput
+    upsert?: AudioFingerprintUpsertWithoutHashesInput
+    connect?: AudioFingerprintWhereUniqueInput
+    update?: XOR<XOR<AudioFingerprintUpdateToOneWithWhereWithoutHashesInput, AudioFingerprintUpdateWithoutHashesInput>, AudioFingerprintUncheckedUpdateWithoutHashesInput>
+  }
+
+  export type AssetUpdateOneRequiredWithoutHashesNestedInput = {
+    create?: XOR<AssetCreateWithoutHashesInput, AssetUncheckedCreateWithoutHashesInput>
+    connectOrCreate?: AssetCreateOrConnectWithoutHashesInput
+    upsert?: AssetUpsertWithoutHashesInput
+    connect?: AssetWhereUniqueInput
+    update?: XOR<XOR<AssetUpdateToOneWithWhereWithoutHashesInput, AssetUpdateWithoutHashesInput>, AssetUncheckedUpdateWithoutHashesInput>
   }
 
   export type AssetCreateNestedOneWithoutWatermarkInput = {
@@ -12870,39 +14484,32 @@ export namespace Prisma {
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
-  export type NestedJsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type NestedFloatFilter<$PrismaModel = never> = {
@@ -12914,6 +14521,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedEnumDetectionStatusFilter<$PrismaModel = never> = {
@@ -12966,7 +14600,7 @@ export namespace Prisma {
   export type AssetCreateWithoutOwnerInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -12984,6 +14618,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fingerprint?: AudioFingerprintCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAssetInput
     watermark?: WatermarkCreateNestedOneWithoutAssetInput
     detections?: DetectionCreateNestedManyWithoutAssetInput
   }
@@ -12991,7 +14626,7 @@ export namespace Prisma {
   export type AssetUncheckedCreateWithoutOwnerInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13009,6 +14644,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fingerprint?: AudioFingerprintUncheckedCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAssetInput
     watermark?: WatermarkUncheckedCreateNestedOneWithoutAssetInput
     detections?: DetectionUncheckedCreateNestedManyWithoutAssetInput
   }
@@ -13045,7 +14681,7 @@ export namespace Prisma {
     NOT?: AssetScalarWhereInput | AssetScalarWhereInput[]
     id?: UuidFilter<"Asset"> | string
     title?: StringFilter<"Asset"> | string
-    description?: StringFilter<"Asset"> | string
+    description?: StringNullableFilter<"Asset"> | string | null
     artist?: StringNullableFilter<"Asset"> | string | null
     album?: StringNullableFilter<"Asset"> | string | null
     isrc?: StringNullableFilter<"Asset"> | string | null
@@ -13106,23 +14742,47 @@ export namespace Prisma {
 
   export type AudioFingerprintCreateWithoutAssetInput = {
     id?: string
-    algorithm: string
-    version: string
-    fingerprint: JsonNullValueInput | InputJsonValue
+    algorithm?: string
+    version?: string
     generatedAt?: Date | string
+    hashes?: FingerprintHashCreateNestedManyWithoutAudioFingerprintInput
   }
 
   export type AudioFingerprintUncheckedCreateWithoutAssetInput = {
     id?: string
-    algorithm: string
-    version: string
-    fingerprint: JsonNullValueInput | InputJsonValue
+    algorithm?: string
+    version?: string
     generatedAt?: Date | string
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAudioFingerprintInput
   }
 
   export type AudioFingerprintCreateOrConnectWithoutAssetInput = {
     where: AudioFingerprintWhereUniqueInput
     create: XOR<AudioFingerprintCreateWithoutAssetInput, AudioFingerprintUncheckedCreateWithoutAssetInput>
+  }
+
+  export type FingerprintHashCreateWithoutAssetInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprint: AudioFingerprintCreateNestedOneWithoutHashesInput
+  }
+
+  export type FingerprintHashUncheckedCreateWithoutAssetInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprintId: string
+  }
+
+  export type FingerprintHashCreateOrConnectWithoutAssetInput = {
+    where: FingerprintHashWhereUniqueInput
+    create: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput>
+  }
+
+  export type FingerprintHashCreateManyAssetInputEnvelope = {
+    data: FingerprintHashCreateManyAssetInput | FingerprintHashCreateManyAssetInput[]
+    skipDuplicates?: boolean
   }
 
   export type WatermarkCreateWithoutAssetInput = {
@@ -13244,16 +14904,43 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashes?: FingerprintHashUpdateManyWithoutAudioFingerprintNestedInput
   }
 
   export type AudioFingerprintUncheckedUpdateWithoutAssetInput = {
     id?: StringFieldUpdateOperationsInput | string
     algorithm?: StringFieldUpdateOperationsInput | string
     version?: StringFieldUpdateOperationsInput | string
-    fingerprint?: JsonNullValueInput | InputJsonValue
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAudioFingerprintNestedInput
+  }
+
+  export type FingerprintHashUpsertWithWhereUniqueWithoutAssetInput = {
+    where: FingerprintHashWhereUniqueInput
+    update: XOR<FingerprintHashUpdateWithoutAssetInput, FingerprintHashUncheckedUpdateWithoutAssetInput>
+    create: XOR<FingerprintHashCreateWithoutAssetInput, FingerprintHashUncheckedCreateWithoutAssetInput>
+  }
+
+  export type FingerprintHashUpdateWithWhereUniqueWithoutAssetInput = {
+    where: FingerprintHashWhereUniqueInput
+    data: XOR<FingerprintHashUpdateWithoutAssetInput, FingerprintHashUncheckedUpdateWithoutAssetInput>
+  }
+
+  export type FingerprintHashUpdateManyWithWhereWithoutAssetInput = {
+    where: FingerprintHashScalarWhereInput
+    data: XOR<FingerprintHashUpdateManyMutationInput, FingerprintHashUncheckedUpdateManyWithoutAssetInput>
+  }
+
+  export type FingerprintHashScalarWhereInput = {
+    AND?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+    OR?: FingerprintHashScalarWhereInput[]
+    NOT?: FingerprintHashScalarWhereInput | FingerprintHashScalarWhereInput[]
+    id?: BigIntFilter<"FingerprintHash"> | bigint | number
+    hash?: BigIntFilter<"FingerprintHash"> | bigint | number
+    offsetMs?: IntFilter<"FingerprintHash"> | number
+    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
+    assetId?: UuidFilter<"FingerprintHash"> | string
   }
 
   export type WatermarkUpsertWithoutAssetInput = {
@@ -13319,7 +15006,7 @@ export namespace Prisma {
   export type AssetCreateWithoutFingerprintInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13337,6 +15024,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutAssetsInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAssetInput
     watermark?: WatermarkCreateNestedOneWithoutAssetInput
     detections?: DetectionCreateNestedManyWithoutAssetInput
   }
@@ -13344,7 +15032,7 @@ export namespace Prisma {
   export type AssetUncheckedCreateWithoutFingerprintInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13362,6 +15050,7 @@ export namespace Prisma {
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAssetInput
     watermark?: WatermarkUncheckedCreateNestedOneWithoutAssetInput
     detections?: DetectionUncheckedCreateNestedManyWithoutAssetInput
   }
@@ -13369,6 +15058,30 @@ export namespace Prisma {
   export type AssetCreateOrConnectWithoutFingerprintInput = {
     where: AssetWhereUniqueInput
     create: XOR<AssetCreateWithoutFingerprintInput, AssetUncheckedCreateWithoutFingerprintInput>
+  }
+
+  export type FingerprintHashCreateWithoutAudioFingerprintInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    asset: AssetCreateNestedOneWithoutHashesInput
+  }
+
+  export type FingerprintHashUncheckedCreateWithoutAudioFingerprintInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    assetId: string
+  }
+
+  export type FingerprintHashCreateOrConnectWithoutAudioFingerprintInput = {
+    where: FingerprintHashWhereUniqueInput
+    create: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput>
+  }
+
+  export type FingerprintHashCreateManyAudioFingerprintInputEnvelope = {
+    data: FingerprintHashCreateManyAudioFingerprintInput | FingerprintHashCreateManyAudioFingerprintInput[]
+    skipDuplicates?: boolean
   }
 
   export type AssetUpsertWithoutFingerprintInput = {
@@ -13385,7 +15098,7 @@ export namespace Prisma {
   export type AssetUpdateWithoutFingerprintInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13403,6 +15116,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutAssetsNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUpdateOneWithoutAssetNestedInput
     detections?: DetectionUpdateManyWithoutAssetNestedInput
   }
@@ -13410,7 +15124,7 @@ export namespace Prisma {
   export type AssetUncheckedUpdateWithoutFingerprintInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13428,14 +15142,52 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUncheckedUpdateOneWithoutAssetNestedInput
     detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
   }
 
-  export type AssetCreateWithoutWatermarkInput = {
+  export type FingerprintHashUpsertWithWhereUniqueWithoutAudioFingerprintInput = {
+    where: FingerprintHashWhereUniqueInput
+    update: XOR<FingerprintHashUpdateWithoutAudioFingerprintInput, FingerprintHashUncheckedUpdateWithoutAudioFingerprintInput>
+    create: XOR<FingerprintHashCreateWithoutAudioFingerprintInput, FingerprintHashUncheckedCreateWithoutAudioFingerprintInput>
+  }
+
+  export type FingerprintHashUpdateWithWhereUniqueWithoutAudioFingerprintInput = {
+    where: FingerprintHashWhereUniqueInput
+    data: XOR<FingerprintHashUpdateWithoutAudioFingerprintInput, FingerprintHashUncheckedUpdateWithoutAudioFingerprintInput>
+  }
+
+  export type FingerprintHashUpdateManyWithWhereWithoutAudioFingerprintInput = {
+    where: FingerprintHashScalarWhereInput
+    data: XOR<FingerprintHashUpdateManyMutationInput, FingerprintHashUncheckedUpdateManyWithoutAudioFingerprintInput>
+  }
+
+  export type AudioFingerprintCreateWithoutHashesInput = {
+    id?: string
+    algorithm?: string
+    version?: string
+    generatedAt?: Date | string
+    asset: AssetCreateNestedOneWithoutFingerprintInput
+  }
+
+  export type AudioFingerprintUncheckedCreateWithoutHashesInput = {
+    id?: string
+    algorithm?: string
+    version?: string
+    generatedAt?: Date | string
+    assetId: string
+  }
+
+  export type AudioFingerprintCreateOrConnectWithoutHashesInput = {
+    where: AudioFingerprintWhereUniqueInput
+    create: XOR<AudioFingerprintCreateWithoutHashesInput, AudioFingerprintUncheckedCreateWithoutHashesInput>
+  }
+
+  export type AssetCreateWithoutHashesInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13454,13 +15206,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutAssetsInput
     fingerprint?: AudioFingerprintCreateNestedOneWithoutAssetInput
+    watermark?: WatermarkCreateNestedOneWithoutAssetInput
     detections?: DetectionCreateNestedManyWithoutAssetInput
   }
 
-  export type AssetUncheckedCreateWithoutWatermarkInput = {
+  export type AssetUncheckedCreateWithoutHashesInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13479,6 +15232,154 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fingerprint?: AudioFingerprintUncheckedCreateNestedOneWithoutAssetInput
+    watermark?: WatermarkUncheckedCreateNestedOneWithoutAssetInput
+    detections?: DetectionUncheckedCreateNestedManyWithoutAssetInput
+  }
+
+  export type AssetCreateOrConnectWithoutHashesInput = {
+    where: AssetWhereUniqueInput
+    create: XOR<AssetCreateWithoutHashesInput, AssetUncheckedCreateWithoutHashesInput>
+  }
+
+  export type AudioFingerprintUpsertWithoutHashesInput = {
+    update: XOR<AudioFingerprintUpdateWithoutHashesInput, AudioFingerprintUncheckedUpdateWithoutHashesInput>
+    create: XOR<AudioFingerprintCreateWithoutHashesInput, AudioFingerprintUncheckedCreateWithoutHashesInput>
+    where?: AudioFingerprintWhereInput
+  }
+
+  export type AudioFingerprintUpdateToOneWithWhereWithoutHashesInput = {
+    where?: AudioFingerprintWhereInput
+    data: XOR<AudioFingerprintUpdateWithoutHashesInput, AudioFingerprintUncheckedUpdateWithoutHashesInput>
+  }
+
+  export type AudioFingerprintUpdateWithoutHashesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    algorithm?: StringFieldUpdateOperationsInput | string
+    version?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    asset?: AssetUpdateOneRequiredWithoutFingerprintNestedInput
+  }
+
+  export type AudioFingerprintUncheckedUpdateWithoutHashesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    algorithm?: StringFieldUpdateOperationsInput | string
+    version?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assetId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AssetUpsertWithoutHashesInput = {
+    update: XOR<AssetUpdateWithoutHashesInput, AssetUncheckedUpdateWithoutHashesInput>
+    create: XOR<AssetCreateWithoutHashesInput, AssetUncheckedCreateWithoutHashesInput>
+    where?: AssetWhereInput
+  }
+
+  export type AssetUpdateToOneWithWhereWithoutHashesInput = {
+    where?: AssetWhereInput
+    data: XOR<AssetUpdateWithoutHashesInput, AssetUncheckedUpdateWithoutHashesInput>
+  }
+
+  export type AssetUpdateWithoutHashesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    album?: NullableStringFieldUpdateOperationsInput | string | null
+    isrc?: NullableStringFieldUpdateOperationsInput | string | null
+    filename?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    bitRate?: NullableIntFieldUpdateOperationsInput | number | null
+    channels?: NullableIntFieldUpdateOperationsInput | number | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    checksum?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutAssetsNestedInput
+    fingerprint?: AudioFingerprintUpdateOneWithoutAssetNestedInput
+    watermark?: WatermarkUpdateOneWithoutAssetNestedInput
+    detections?: DetectionUpdateManyWithoutAssetNestedInput
+  }
+
+  export type AssetUncheckedUpdateWithoutHashesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    artist?: NullableStringFieldUpdateOperationsInput | string | null
+    album?: NullableStringFieldUpdateOperationsInput | string | null
+    isrc?: NullableStringFieldUpdateOperationsInput | string | null
+    filename?: NullableStringFieldUpdateOperationsInput | string | null
+    file?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    duration?: NullableFloatFieldUpdateOperationsInput | number | null
+    sampleRate?: NullableIntFieldUpdateOperationsInput | number | null
+    bitRate?: NullableIntFieldUpdateOperationsInput | number | null
+    channels?: NullableIntFieldUpdateOperationsInput | number | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    checksum?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fingerprint?: AudioFingerprintUncheckedUpdateOneWithoutAssetNestedInput
+    watermark?: WatermarkUncheckedUpdateOneWithoutAssetNestedInput
+    detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
+  }
+
+  export type AssetCreateWithoutWatermarkInput = {
+    id?: string
+    title: string
+    description?: string | null
+    artist?: string | null
+    album?: string | null
+    isrc?: string | null
+    filename?: string | null
+    file?: string | null
+    image?: string | null
+    type?: $Enums.AssetType
+    status?: $Enums.Status
+    duration?: number | null
+    sampleRate?: number | null
+    bitRate?: number | null
+    channels?: number | null
+    fileSize?: number | null
+    checksum?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutAssetsInput
+    fingerprint?: AudioFingerprintCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAssetInput
+    detections?: DetectionCreateNestedManyWithoutAssetInput
+  }
+
+  export type AssetUncheckedCreateWithoutWatermarkInput = {
+    id?: string
+    title: string
+    description?: string | null
+    artist?: string | null
+    album?: string | null
+    isrc?: string | null
+    filename?: string | null
+    file?: string | null
+    image?: string | null
+    type?: $Enums.AssetType
+    status?: $Enums.Status
+    duration?: number | null
+    sampleRate?: number | null
+    bitRate?: number | null
+    channels?: number | null
+    fileSize?: number | null
+    checksum?: string | null
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fingerprint?: AudioFingerprintUncheckedCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAssetInput
     detections?: DetectionUncheckedCreateNestedManyWithoutAssetInput
   }
 
@@ -13501,7 +15402,7 @@ export namespace Prisma {
   export type AssetUpdateWithoutWatermarkInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13520,13 +15421,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutAssetsNestedInput
     fingerprint?: AudioFingerprintUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAssetNestedInput
     detections?: DetectionUpdateManyWithoutAssetNestedInput
   }
 
   export type AssetUncheckedUpdateWithoutWatermarkInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13545,6 +15447,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fingerprint?: AudioFingerprintUncheckedUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput
     detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
   }
 
@@ -13791,7 +15694,7 @@ export namespace Prisma {
   export type AssetCreateWithoutDetectionsInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13810,13 +15713,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutAssetsInput
     fingerprint?: AudioFingerprintCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashCreateNestedManyWithoutAssetInput
     watermark?: WatermarkCreateNestedOneWithoutAssetInput
   }
 
   export type AssetUncheckedCreateWithoutDetectionsInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -13835,6 +15739,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fingerprint?: AudioFingerprintUncheckedCreateNestedOneWithoutAssetInput
+    hashes?: FingerprintHashUncheckedCreateNestedManyWithoutAssetInput
     watermark?: WatermarkUncheckedCreateNestedOneWithoutAssetInput
   }
 
@@ -13913,7 +15818,7 @@ export namespace Prisma {
   export type AssetUpdateWithoutDetectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13932,13 +15837,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutAssetsNestedInput
     fingerprint?: AudioFingerprintUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUpdateOneWithoutAssetNestedInput
   }
 
   export type AssetUncheckedUpdateWithoutDetectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13957,6 +15863,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fingerprint?: AudioFingerprintUncheckedUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUncheckedUpdateOneWithoutAssetNestedInput
   }
 
@@ -14031,7 +15938,7 @@ export namespace Prisma {
   export type AssetCreateManyOwnerInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     artist?: string | null
     album?: string | null
     isrc?: string | null
@@ -14053,7 +15960,7 @@ export namespace Prisma {
   export type AssetUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14071,6 +15978,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fingerprint?: AudioFingerprintUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUpdateOneWithoutAssetNestedInput
     detections?: DetectionUpdateManyWithoutAssetNestedInput
   }
@@ -14078,7 +15986,7 @@ export namespace Prisma {
   export type AssetUncheckedUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14096,6 +16004,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fingerprint?: AudioFingerprintUncheckedUpdateOneWithoutAssetNestedInput
+    hashes?: FingerprintHashUncheckedUpdateManyWithoutAssetNestedInput
     watermark?: WatermarkUncheckedUpdateOneWithoutAssetNestedInput
     detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
   }
@@ -14103,7 +16012,7 @@ export namespace Prisma {
   export type AssetUncheckedUpdateManyWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     artist?: NullableStringFieldUpdateOperationsInput | string | null
     album?: NullableStringFieldUpdateOperationsInput | string | null
     isrc?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14122,6 +16031,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FingerprintHashCreateManyAssetInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    audioFingerprintId: string
+  }
+
   export type DetectionCreateManyAssetInput = {
     id?: string
     broadcasterId: string
@@ -14135,6 +16051,27 @@ export namespace Prisma {
     engineVersion: string
     status?: $Enums.DetectionStatus
     createdAt?: Date | string
+  }
+
+  export type FingerprintHashUpdateWithoutAssetInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprint?: AudioFingerprintUpdateOneRequiredWithoutHashesNestedInput
+  }
+
+  export type FingerprintHashUncheckedUpdateWithoutAssetInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprintId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FingerprintHashUncheckedUpdateManyWithoutAssetInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    audioFingerprintId?: StringFieldUpdateOperationsInput | string
   }
 
   export type DetectionUpdateWithoutAssetInput = {
@@ -14180,6 +16117,34 @@ export namespace Prisma {
     engineVersion?: StringFieldUpdateOperationsInput | string
     status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FingerprintHashCreateManyAudioFingerprintInput = {
+    id?: bigint | number
+    hash: bigint | number
+    offsetMs: number
+    assetId: string
+  }
+
+  export type FingerprintHashUpdateWithoutAudioFingerprintInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    asset?: AssetUpdateOneRequiredWithoutHashesNestedInput
+  }
+
+  export type FingerprintHashUncheckedUpdateWithoutAudioFingerprintInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    assetId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FingerprintHashUncheckedUpdateManyWithoutAudioFingerprintInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    hash?: BigIntFieldUpdateOperationsInput | bigint | number
+    offsetMs?: IntFieldUpdateOperationsInput | number
+    assetId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MonitoringSessionCreateManyBroadcasterInput = {

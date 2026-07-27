@@ -1,45 +1,26 @@
-"use client";
-
-import WithTitleLayout from "@/components/layouts/withNavBar_title";
+import Navbar from "@/components/mols/menu-bar";
 import DashboardProviders, { DashboardContext } from "@/components/providers";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
+  // await requireUser();
+
   return (
-    <WithTitleLayout title="Dashboard">
-      <div className="space-y-4 flex flex-col">
-        <div className="bg-muted py-4 px-2 mb-4 space-x-2 space-y-2 inline h-fit w-fit rounded-md overflow-hidden">
-          {routes.map(({ label, link }) => (
-            <Link
-              key={label}
-              href={link}
-              className={`px-2 py-2 transition-colors border-2 border-transparent rounded-md ${
-                pathname === link ||
-                (pathname.startsWith(`${link}/`) && link !== "/dashboard")
-                  ? "bg-background"
-                  : "hover:bg-background"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+    <>
+      <Navbar />
+      <main className="flex flex-col flex-1 bg-green-600">
+        <div className="sm:hidden w-full h-full flex">
+          <div className="flex flex-col flex-1 my-8">
+            <span className="inline-block m-auto italic text-sm text-center">
+              Please use a wider screen for better viewing
+            </span>
+          </div>
         </div>
-        <DashboardProviders>{children}</DashboardProviders>
-      </div>
-    </WithTitleLayout>
+        content here
+      </main>
+    </>
   );
 }
-
-const routes: { [key: string]: string }[] = [
-  { label: "Overview", link: "/dashboard" },
-  { label: "Assets", link: "/dashboard/assets" },
-  { label: "Livestream", link: "/dashboard/livestream" },
-  { label: "Reports", link: "/dashboard/reports" },
-  { label: "Notifications", link: "/dashboard/notifications" },
-];

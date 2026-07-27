@@ -156,7 +156,7 @@
   }
   html,
   body {
-    @apply h-fit min-h-screen;
+    @apply h-fit min-h-screen max-w-7xl mx-auto;
   }
   body {
     @apply bg-background text-foreground border flex flex-col;

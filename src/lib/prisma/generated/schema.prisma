@@ -57,7 +57,7 @@ model User {
 model Asset {
   id          String  @id @default(uuid()) @db.Uuid
   title       String
-  description String
+  description String?
   artist      String?
   album       String?
 
@@ -81,6 +81,7 @@ model Asset {
   owner   User   @relation("owner", fields: [ownerId], references: [id])
 
   fingerprint AudioFingerprint?
+  hashes      FingerprintHash[] // Direct relation for high-speed queries & cascade deletions
   watermark   Watermark?
   detections  Detection[]
 
@@ -96,17 +97,36 @@ model Asset {
 model AudioFingerprint {
   id String @id @default(uuid()) @db.Uuid
 
-  algorithm String
-  version   String
-
-  fingerprint Json
+  algorithm String @default("landmark")
+  version   String @default("1.0.4")
 
   generatedAt DateTime @default(now())
 
   assetId String @unique @db.Uuid
   asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
+  hashes FingerprintHash[]
+
   @@map("audio_fingerprints")
+}
+
+// ULTRA-OPTIMIZED FOR SCALE & HIGH-SPEED LOOKUPS
+model FingerprintHash {
+  id BigInt @id @default(autoincrement()) // Autoincrement BigInt saves ~40% PK index memory over UUID
+
+  hash     BigInt // Landmark hash (hcode)
+  offsetMs Int // Relative time offset in milliseconds (tcode)
+
+  audioFingerprintId String           @db.Uuid
+  audioFingerprint   AudioFingerprint @relation(fields: [audioFingerprintId], references: [id], onDelete: Cascade)
+
+  assetId String @db.Uuid
+  asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  // COVERING INDEX: Enables PostgreSQL Index-Only Scans entirely in RAM
+  @@index([hash, assetId, offsetMs])
+  @@index([assetId])
+  @@map("fingerprint_hashes")
 }
 
 model Watermark {
