@@ -1,4 +1,8 @@
+import { hash } from "@/lib/utils";
 import { PrismaClient, User, UserRole, Status } from "../generated";
+
+import { config } from "dotenv";
+config({ path: ".env" }); // Explicitly look at .env.local
 
 export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   console.log("➡️ Seeding Users...");
@@ -6,23 +10,28 @@ export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   const usersData = [
     {
       name: "Admin System",
-      email: "admin@system.com",
+      email: process.env.SYSTEM_EMAIL || "test@goweki.com",
       role: UserRole.ADMINISTRATOR,
       status: Status.ACTIVE,
+      password: process.env.SYSTEM_PASSWORD || "pass1234",
       apiKeyHash: "hash_admin_secret_key_123",
     },
     {
-      name: "John Doe (Artist)",
-      email: "john@musiclabel.com",
+      name: "Example User (Artist)",
+      email: "example@goweki.com",
       role: UserRole.USER,
       status: Status.ACTIVE,
+      password: process.env.SYSTEM_PASSWORD || "pass1234",
       apiKeyHash: "hash_artist_key_456",
     },
   ];
 
   const users: User[] = [];
   for (const u of usersData) {
-    const user = await prisma.user.create({ data: u });
+    const { password, ...u_ } = u;
+    const user = await prisma.user.create({
+      data: { ...u_, passwordHash: await hash(password) },
+    });
     users.push(user);
   }
 

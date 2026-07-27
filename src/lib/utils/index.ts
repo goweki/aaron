@@ -1,10 +1,11 @@
 // Imports used in cssHandlers
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-// Import used in password handlers
-import bcrypt from "bcryptjs";
+
 // Import used in Image resizing
 import Resizer from "react-image-file-resizer";
+
+export * from "./password-handlers";
 
 /* Merges class names using Tailwind CSS and classnames.
  * @param {...ClassValue[]} inputs - Class names or conditional expressions.
@@ -12,32 +13,6 @@ import Resizer from "react-image-file-resizer";
  */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
-}
-
-// PASSWORD HANDLERS
-
-/* Hashes a string.
- * @param plaintext - String to be hashed.
- * @returns corresponding hash value.
- */
-export async function hash(plaintext: string): Promise<string> {
-  const saltRounds = Number(process.env.BCRYPT_SALTROUNDS);
-  if (!saltRounds) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
-  const hash = await bcrypt.hash(plaintext, saltRounds);
-  return hash;
-}
-
-/* Compares plaintext to hash.
- * @param input - plaintext.
- * @param hash - hash value to be compared against.
- * @returns `true` if hash is hashed input, otherwise `false`.
- */
-export async function compareHash(
-  input: string,
-  hash: string,
-): Promise<boolean> {
-  const isValid = await bcrypt.compare(input, hash);
-  return isValid;
 }
 
 /* Parses Date object to human readable format
