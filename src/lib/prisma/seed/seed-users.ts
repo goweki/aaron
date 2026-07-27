@@ -2,7 +2,8 @@ import { hash } from "@/lib/utils";
 import { PrismaClient, User, UserRole, Status } from "../generated";
 
 import { config } from "dotenv";
-config({ path: ".env" }); // Explicitly look at .env.local
+import bcrypt from "bcryptjs";
+config({ path: ".env.local" }); // Explicitly look at .env.local
 
 export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   console.log("➡️ Seeding Users...");
@@ -29,8 +30,13 @@ export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   const users: User[] = [];
   for (const u of usersData) {
     const { password, ...u_ } = u;
+    const passwordHash = await bcrypt.hash(
+      password,
+      process.env.BCRYPT_SALTROUNDS || "9",
+    );
+
     const user = await prisma.user.create({
-      data: { ...u_, passwordHash: await hash(password) },
+      data: { ...u_, passwordHash },
     });
     users.push(user);
   }

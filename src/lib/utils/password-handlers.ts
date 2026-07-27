@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
  * @returns corresponding hash value.
  */
 export async function hash(plaintext: string): Promise<string> {
-  const saltRounds = Number(process.env.BCRYPT_SALTROUNDS ?? "9");
+  const saltRounds = Number(process.env.BCRYPT_SALTROUNDS);
   if (!saltRounds) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
   const hash = await bcrypt.hash(plaintext, saltRounds);
   return hash;
