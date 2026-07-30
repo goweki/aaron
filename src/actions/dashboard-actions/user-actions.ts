@@ -108,17 +108,22 @@ export async function deleteUserAction(
   }
 }
 
-export async function getUsersAction(): Promise<
+export async function getUsersAction(
+  whereUser?: Prisma.UserWhereInput,
+): Promise<
   ActionResult<Prisma.UserGetPayload<{ include: { assets: true } }>[]>
 > {
   const actor = await requireUser();
 
   try {
     const users = await prisma.user.findMany({
-      where:
-        actor.role !== UserRole.ADMINISTRATOR && actor.role !== UserRole.SYSTEM
+      where: {
+        ...whereUser,
+        ...(actor.role !== UserRole.ADMINISTRATOR &&
+        actor.role !== UserRole.SYSTEM
           ? { id: actor.id }
-          : undefined,
+          : {}),
+      },
       include: {
         assets: true,
       },
@@ -128,6 +133,36 @@ export async function getUsersAction(): Promise<
     });
 
     return { ok: true, data: users };
+  } catch (error) {
+    return { ok: false, error: getFriendlyErrorMessage(error) };
+  }
+}
+
+export async function getUserByKey(
+  key: string,
+): Promise<
+  ActionResult<Prisma.UserGetPayload<{ include: { assets: true } }> | null>
+> {
+  const actor = await requireUser();
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        ...{ OR: [{ email: key }, { id: key }] },
+        ...(actor.role !== UserRole.ADMINISTRATOR &&
+        actor.role !== UserRole.SYSTEM
+          ? { id: actor.id }
+          : {}),
+      },
+      include: {
+        assets: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { ok: true, data: user };
   } catch (error) {
     return { ok: false, error: getFriendlyErrorMessage(error) };
   }

@@ -1,25 +1,27 @@
-import bcrypt from "bcryptjs";
+import "server-only";
 
-/* Hashes a string.
- * @param plaintext - String to be hashed.
- * @returns corresponding hash value.
+import bcrypt from "bcryptjs";
+const SALT_ROUNDS = process.env.BCRYPT_SALTROUNDS || 9;
+import crypto from "crypto";
+
+/**
+ * HASHING
  */
-export async function hash(plaintext: string): Promise<string> {
-  const saltRounds = Number(process.env.BCRYPT_SALTROUNDS);
-  if (!saltRounds) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
-  const hash = await bcrypt.hash(plaintext, saltRounds);
-  return hash;
+
+export async function hash(plaintext: string) {
+  if (!SALT_ROUNDS) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
+
+  return await bcrypt.hash(plaintext, SALT_ROUNDS);
 }
 
-/* Compares plaintext to hash.
- * @param input - plaintext.
- * @param hash - hash value to be compared against.
- * @returns `true` if hash is hashed input, otherwise `false`.
- */
+// To compare input&hash
 export async function compareHash(
   input: string,
   hash: string,
 ): Promise<boolean> {
-  const isValid = await bcrypt.compare(input, hash);
-  return isValid;
+  return await bcrypt.compare(input, hash);
+}
+
+export async function generateRandom(length: number = 11): Promise<string> {
+  return crypto.randomBytes(length).toString("hex");
 }

@@ -1,20 +1,13 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-// import { UserRole, UserStatus } from "@/lib/prisma/generated";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
-import Resend from "next-auth/providers/resend";
-import { compareHash } from "../utils";
+import { compareHash } from "../utils/password-handlers";
 import { Status, UserRole } from "../prisma/generated";
 
 const authConfig: NextAuthConfig = {
-  // adapter: PrismaAdapter(prisma),
   debug: true,
   session: { strategy: "jwt" },
   providers: [
-    // Resend({
-    //   apiKey: process.env.RESEND_API_KEY,
-    // }),
     Credentials({
       credentials: {
         username: { label: "Username", type: "text" },

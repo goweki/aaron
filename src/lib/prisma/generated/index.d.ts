@@ -1951,7 +1951,7 @@ export namespace Prisma {
     id: string
     name: string
     phone: string | null
-    email: string | null
+    email: string
     passwordHash: string | null
     voiceSign: string | null
     role: $Enums.UserRole
@@ -2068,7 +2068,7 @@ export namespace Prisma {
       id: string
       name: string
       phone: string | null
-      email: string | null
+      email: string
       passwordHash: string | null
       voiceSign: string | null
       role: $Enums.UserRole
@@ -11460,7 +11460,7 @@ export namespace Prisma {
     id?: UuidFilter<"User"> | string
     name?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
-    email?: StringNullableFilter<"User"> | string | null
+    email?: StringFilter<"User"> | string
     passwordHash?: StringNullableFilter<"User"> | string | null
     voiceSign?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
@@ -11478,7 +11478,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
+    email?: SortOrder
     passwordHash?: SortOrderInput | SortOrder
     voiceSign?: SortOrderInput | SortOrder
     role?: SortOrder
@@ -11517,7 +11517,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
+    email?: SortOrder
     passwordHash?: SortOrderInput | SortOrder
     voiceSign?: SortOrderInput | SortOrder
     role?: SortOrder
@@ -11540,7 +11540,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
-    email?: StringNullableWithAggregatesFilter<"User"> | string | null
+    email?: StringWithAggregatesFilter<"User"> | string
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     voiceSign?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
@@ -12125,7 +12125,7 @@ export namespace Prisma {
     id?: string
     name: string
     phone?: string | null
-    email?: string | null
+    email: string
     passwordHash?: string | null
     voiceSign?: string | null
     role?: $Enums.UserRole
@@ -12143,7 +12143,7 @@ export namespace Prisma {
     id?: string
     name: string
     phone?: string | null
-    email?: string | null
+    email: string
     passwordHash?: string | null
     voiceSign?: string | null
     role?: $Enums.UserRole
@@ -12161,7 +12161,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
@@ -12179,7 +12179,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
@@ -12197,7 +12197,7 @@ export namespace Prisma {
     id?: string
     name: string
     phone?: string | null
-    email?: string | null
+    email: string
     passwordHash?: string | null
     voiceSign?: string | null
     role?: $Enums.UserRole
@@ -12214,7 +12214,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
@@ -12231,7 +12231,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
@@ -14705,7 +14705,7 @@ export namespace Prisma {
     id?: string
     name: string
     phone?: string | null
-    email?: string | null
+    email: string
     passwordHash?: string | null
     voiceSign?: string | null
     role?: $Enums.UserRole
@@ -14722,7 +14722,7 @@ export namespace Prisma {
     id?: string
     name: string
     phone?: string | null
-    email?: string | null
+    email: string
     passwordHash?: string | null
     voiceSign?: string | null
     role?: $Enums.UserRole
@@ -14859,7 +14859,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
@@ -14876,7 +14876,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     voiceSign?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole

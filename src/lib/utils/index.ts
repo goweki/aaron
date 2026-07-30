@@ -5,8 +5,6 @@ import { twMerge } from "tailwind-merge";
 // Import used in Image resizing
 import Resizer from "react-image-file-resizer";
 
-export * from "./password-handlers";
-
 /* Merges class names using Tailwind CSS and classnames.
  * @param {...ClassValue[]} inputs - Class names or conditional expressions.
  * @returns {string} - The merged class names.

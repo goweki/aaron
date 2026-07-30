@@ -37,7 +37,7 @@ const ResetPasswordHtml = ({
           <Section>
             <Text style={text}>Hi {name},</Text>
             <Text style={text}>
-              Someone recently requested a password change for your Q-Sync
+              Someone recently requested a password change for your AARON
               account. If this was you, you can set a new password here:
             </Text>
             <Button style={button} href={resetPasswordLink}>

@@ -32,7 +32,7 @@ export default function ResetPasswordPage(props: {
   const params = use(props.params);
 
   const { token } = params;
-  const email = searchParams.email || "";
+  const username = searchParams.username || "";
 
   const [isVerifying, setIsVerifying] = useState(true);
   const [isPending, startTransition] = useTransition();
@@ -48,13 +48,13 @@ export default function ResetPasswordPage(props: {
     let isMounted = true;
 
     async function verifyToken() {
-      if (!email || !token) {
+      if (!username || !token) {
         toast.error("Invalid reset link");
         router.push("/reset-password");
         return;
       }
 
-      const res = await verifyResetTokenAction(email, token);
+      const res = await verifyResetTokenAction(username, token);
 
       if (!isMounted) return;
 
@@ -72,7 +72,7 @@ export default function ResetPasswordPage(props: {
     return () => {
       isMounted = false;
     };
-  }, [email, token, router]);
+  }, [username, token, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -99,7 +99,7 @@ export default function ResetPasswordPage(props: {
 
     startTransition(async () => {
       const res = await updatePasswordWithTokenAction({
-        email,
+        username,
         token,
         name: formData.name,
         password: formData.newPassword,
@@ -146,7 +146,7 @@ export default function ResetPasswordPage(props: {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              value={email}
+              value={username}
               disabled
               className="bg-slate-50 dark:bg-slate-900"
             />

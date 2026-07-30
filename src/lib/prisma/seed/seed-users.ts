@@ -1,11 +1,14 @@
-import { hash } from "@/lib/utils";
 import { PrismaClient, User, UserRole, Status } from "../generated";
 
 import { config } from "dotenv";
 import bcrypt from "bcryptjs";
 config({ path: ".env.local" }); // Explicitly look at .env.local
 
+const SALT_ROUNDS = process.env.BCRYPT_SALTROUNDS;
+
 export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
+  if (!SALT_ROUNDS) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
+
   console.log("➡️ Seeding Users...");
 
   const usersData = [
@@ -30,10 +33,7 @@ export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   const users: User[] = [];
   for (const u of usersData) {
     const { password, ...u_ } = u;
-    const passwordHash = await bcrypt.hash(
-      password,
-      process.env.BCRYPT_SALTROUNDS || "9",
-    );
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
     const user = await prisma.user.create({
       data: { ...u_, passwordHash },
