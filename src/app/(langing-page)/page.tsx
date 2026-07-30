@@ -1,6 +1,7 @@
 "use client";
 
 import ThemeToggle from "@/components/mols/themeToggle";
+import { usePublicData } from "@/components/providers";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,7 @@ export default function LandingPage() {
   const dataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const { assets, detections } = usePublicData();
 
   useEffect(() => {
     const SpeechRecognition = ((window as any).SpeechRecognition ||

@@ -10,6 +10,10 @@ export type UserWithRelations = Prisma.UserGetPayload<{
 
 export const assetIncludes = Prisma.validator<Prisma.AssetInclude>()({
   owner: true,
+  detections: true,
+  watermark: true,
+  hashes: true,
+  fingerprint: true,
 });
 
 export type AssetWithRelations = Prisma.AssetGetPayload<{

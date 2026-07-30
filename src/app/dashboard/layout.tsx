@@ -1,12 +1,14 @@
+import { fetchDashboardData } from "@/actions/dashboard-actions";
 import Navbar from "@/components/mols/menu-bar";
-import DashboardProviders, { DashboardContext } from "@/components/providers";
+import { DashboardProvider } from "@/components/providers";
+import ErrorView from "@/components/views/error-view";
 
 export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // await requireUser();
+  const dashboardRes = await fetchDashboardData();
 
   return (
     <>
@@ -19,7 +21,13 @@ export default async function DashboardLayout({
             </span>
           </div>
         </div>
-        content here
+        {dashboardRes.ok ? (
+          <DashboardProvider initialData={dashboardRes.data}>
+            {children}
+          </DashboardProvider>
+        ) : (
+          <ErrorView error={dashboardRes.error} />
+        )}
       </main>
     </>
   );

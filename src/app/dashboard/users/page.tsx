@@ -1,10 +1,13 @@
-"use client";
-import { useContext, useEffect, useState } from "react";
-import { DashboardContext, OpenContext } from "@/components/providers";
+import ErrorView from "@/components/views/error-view";
+import { getUsersAction } from "@/actions/dashboard-actions/user-actions";
+import UsersView from "@/components/views/users-view";
 
-export default function UsersPage() {
-  const { data } = useContext(DashboardContext);
+export default async function UsersPage() {
+  const usersRes = await getUsersAction();
 
-  // render
-  return <main>Users</main>;
+  if (!usersRes.ok) {
+    return <ErrorView error={usersRes.error} />;
+  }
+
+  return <UsersView users={usersRes.data} />;
 }

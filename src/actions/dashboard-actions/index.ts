@@ -2,7 +2,7 @@
 
 import { requireUser } from "@/lib/auth/auth-actions";
 import prisma from "@/lib/prisma";
-import { Prisma, UserRole } from "@/lib/prisma/generated";
+import { UserRole } from "@/lib/prisma/generated";
 import { getFriendlyErrorMessage } from "@/lib/utils/error-handlers";
 import { ActionResult } from "@/types/action";
 import {
@@ -18,29 +18,20 @@ export async function fetchDashboardData(): Promise<
   try {
     const actor = await requireUser();
 
-    const qUser: Prisma.UserFindManyArgs =
-      actor.role === UserRole.USER
-        ? {
-            where: { id: actor.id },
-          }
-        : {};
+    const isRegularUser = actor.role === UserRole.USER;
 
-    const users = await prisma.user.findMany({
-      ...qUser,
-      include: userIncludes,
-    });
-
-    const qAsset: Prisma.AssetFindManyArgs =
-      actor.role === UserRole.USER
-        ? {
-            where: { owner: { id: actor.id } },
-          }
-        : {};
-
-    const assets = await prisma.asset.findMany({
-      ...qAsset,
-      include: assetIncludes,
-    });
+    // Run queries in parallel to eliminate waterfall latency
+    const [users, assets] = await Promise.all([
+      prisma.user.findMany({
+        where: isRegularUser ? { id: actor.id } : undefined,
+        include: userIncludes,
+      }),
+      prisma.asset.findMany({
+        // Filter by ownerId foreign key directly instead of joining the relation table
+        where: isRegularUser ? { ownerId: actor.id } : undefined,
+        include: assetIncludes,
+      }),
+    ]);
 
     return { ok: true, data: { users, assets } };
   } catch (error) {

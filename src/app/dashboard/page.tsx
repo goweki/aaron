@@ -16,14 +16,14 @@ import {
 } from "lucide-react";
 import SimpleLineChart from "@/components/mols/simpleLineChart";
 import { RecentDetections } from "@/components/mols/recent-detections";
-import { DashboardContext } from "@/components/providers";
+import { useDashboard } from "@/components/providers";
 import { useContext } from "react";
 
 export default function OverviewPage() {
   const {
     data: { assets },
     refreshData,
-  } = useContext(DashboardContext);
+  } = useDashboard();
 
   return (
     <div className="space-y-4">
