@@ -15,9 +15,9 @@ import {
 export async function fetchDashboardData(): Promise<
   ActionResult<{ assets: AssetWithRelations[]; users: UserWithRelations[] }>
 > {
-  try {
-    const actor = await requireUser();
+  const actor = await requireUser();
 
+  try {
     const isRegularUser = actor.role === UserRole.USER;
 
     // Run queries in parallel to eliminate waterfall latency

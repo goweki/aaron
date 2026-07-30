@@ -1,10 +1,15 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+
+import { use, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { emailValidator, nameValidator, passwordValidator } from "@/lib/utils";
-import { httpCodes } from "@/lib/refDictionary";
+import { House, Loader2, Lock, ShieldCheck } from "lucide-react";
+
+import {
+  verifyResetTokenAction,
+  updatePasswordWithTokenAction,
+} from "@/actions/auth-actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,229 +21,220 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { nameValidator, passwordValidator } from "@/lib/utils";
 
-const default_fData = {
-  oldName: "",
-  newName: "",
-  email: "",
-  newPassword: "",
-  confirmPassword: "",
-};
-
-export default function ResetPassword(
-  props: {
-    params: Promise<{ token: string }>;
-    searchParams: Promise<{ [key: string]: string }>;
-  }
-) {
+export default function ResetPasswordPage(props: {
+  params: Promise<{ token: string }>;
+  searchParams: Promise<{ [key: string]: string }>;
+}) {
+  const router = useRouter();
   const searchParams = use(props.searchParams);
   const params = use(props.params);
+
   const { token } = params;
-  const { email } = searchParams; // /token?email=email@mail.com
-  const router = useRouter();
-  const [fData, setfData] = useState({ ...default_fData, email });
+  const email = searchParams.email || "";
 
-  // onMount
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [isPending, startTransition] = useTransition();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Verify Token on Mount
   useEffect(() => {
-    (async () => {
-      if (!email || !token || emailValidator(email))
+    let isMounted = true;
+
+    async function verifyToken() {
+      if (!email || !token) {
+        toast.error("Invalid reset link");
         router.push("/reset-password");
-      try {
-        //
-        console.log("email: ", email);
-        console.log("token: ", token);
-        // API call to confirm user,token,expiry
-        const fetchOptions = {
-          method: "GET",
-        };
-
-        const response = await fetch(
-          `/api/auth/user?email=${email}&token=${token}`,
-          fetchOptions
-        ).then(async (res_) => {
-          if (res_.ok) {
-            return await res_.json();
-          } else {
-            console.log(`ERROR: ` + JSON.stringify(res_));
-            if (res_.status && res_.status in httpCodes) {
-              throw new Error(httpCodes[res_.status]);
-            } else {
-              throw new Error("Unknown Error, try again later");
-            }
-          }
-        });
-
-        //validate reseting password
-        if (response?.success) {
-          toast.success(response.success);
-          setfData((prev) => ({ ...prev, oldName: response.name }));
-        } else {
-          toast.error(
-            response.failed ||
-              response.error ||
-              "Unknown error, try again later"
-          );
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          // Handle other types of errors
-          toast.error("Unknown error, try again later");
-        }
-      }
-    })();
-  }, [email, token, router]);
-
-  // handle Submit
-  async function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    // if name error
-    if (!fData.oldName) {
-      const nameError_ = nameValidator(fData.newName);
-      if (nameError_) {
-        toast.error(nameError_);
         return;
       }
+
+      const res = await verifyResetTokenAction(email, token);
+
+      if (!isMounted) return;
+
+      if (res.ok) {
+        setFormData((prev) => ({ ...prev, name: res.data.name }));
+        setIsVerifying(false);
+      } else {
+        toast.error(res.error || "Reset link is invalid or expired");
+        router.push("/reset-password");
+      }
     }
-    // if password error
-    const passwordError_ = passwordValidator(
-      fData.newPassword,
-      fData.confirmPassword
-    );
-    if (passwordError_) {
-      toast.error(passwordError_);
+
+    verifyToken();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [email, token, router]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const nameError = nameValidator(formData.name);
+    if (nameError) {
+      toast.error(nameError);
       return;
     }
 
-    // API CALL
-    try {
-      const fetchOptions = {
-        method: "PUT",
-        body: JSON.stringify({
-          email,
-          token,
-          fullName: fData.newName || fData.oldName,
-          password: fData.newPassword,
-        }),
-      };
-
-      const response = await fetch("/api/auth/user", fetchOptions).then(
-        async (res_) => {
-          if (res_.ok) {
-            return await res_.json();
-          } else {
-            console.log(`ERROR: ` + JSON.stringify(res_));
-            if (res_.status && res_.status in httpCodes) {
-              return { error: httpCodes[res_.status] };
-            } else {
-              return { error: "Unknown Error, try again later" }; // unknown errors
-            }
-          }
-        }
-      );
-      //validate reseting password
-      if (response?.success) {
-        toast.success(response.success);
-        router.push(`/sign-in`);
-      } else {
-        toast.error(response.failed || response.error || "Unknown error");
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        // Handle other types of errors
-        toast.error("Unknown error, try again later");
-      }
+    const passwordError = passwordValidator(
+      formData.newPassword,
+      formData.confirmPassword,
+    );
+    if (passwordError) {
+      toast.error(passwordError);
+      return;
     }
+
+    startTransition(async () => {
+      const res = await updatePasswordWithTokenAction({
+        email,
+        token,
+        name: formData.name,
+        password: formData.newPassword,
+      });
+
+      if (res.ok) {
+        toast.success("Password updated successfully! Please sign in.");
+        router.push("/sign-in");
+      } else {
+        toast.error(res.error || "Failed to reset password. Try again.");
+      }
+    });
+  };
+
+  // Render Verifying Loading Card
+  if (isVerifying) {
+    return (
+      <Card className="mx-auto w-full max-w-sm">
+        <CardContent className="flex flex-col items-center justify-center p-8 space-y-3">
+          <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Verifying security token...
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
-  // Render
+
   return (
-    <Card className="mx-auto w-[400px]">
+    <Card className="mx-auto w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-xl">
-          {fData.oldName ? "Update Password" : "Create New Password"}
+        <CardTitle className="text-xl flex items-center gap-2">
+          <Lock className="h-5 w-5 text-indigo-600" /> Update Password
         </CardTitle>
         <CardDescription>
-          {fData.oldName
-            ? "Enter a new password"
-            : "Enter your name and new password"}
+          Set your name and a new secure password for your account.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div id="email-input-group" className="grid gap-2">
-            <Label htmlFor="email">
-              Email
-              {/* <span className="text-foreground/50">*</span> */}
-            </Label>
+
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
+          {/* Readonly Email Display */}
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              value={fData.email}
-              disabled={true}
-              className="placeholder:italic"
+              value={email}
+              disabled
+              className="bg-slate-50 dark:bg-slate-900"
             />
           </div>
 
-          <div id="fullName-input-group" className="grid gap-2">
-            <Label htmlFor="new-name">
-              Prefered Name <span className="text-foreground/50">*</span>
+          {/* Name Field */}
+          <div className="space-y-2">
+            <Label htmlFor="name">
+              Full Name <span className="text-destructive">*</span>
             </Label>
             <Input
-              id="new-name"
-              placeholder="Your name"
-              value={fData.newName || fData.oldName}
-              onChange={(e) =>
-                setfData((prev) => ({ ...prev, newName: e.target.value }))
-              }
-              className="placeholder:italic"
+              id="name"
+              name="name"
+              placeholder="John Doe"
+              value={formData.name}
+              onChange={handleChange}
+              disabled={isPending}
+              required
             />
           </div>
 
-          <div id="new-password-input-group" className="grid gap-2">
-            <Label htmlFor="new-password">
-              New Password <span className="text-foreground/50">*</span>
+          {/* New Password */}
+          <div className="space-y-2">
+            <Label htmlFor="newPassword">
+              New Password <span className="text-destructive">*</span>
             </Label>
             <Input
-              id="new-password"
+              id="newPassword"
+              name="newPassword"
               type="password"
-              placeholder="_ _ _ _"
-              value={fData.newPassword}
-              onChange={(e) =>
-                setfData((prev) => ({ ...prev, newPassword: e.target.value }))
-              }
+              placeholder="••••••••"
+              value={formData.newPassword}
+              onChange={handleChange}
+              disabled={isPending}
+              required
             />
           </div>
-          <div id="confirm-password-input-group" className="grid gap-2">
-            <Label htmlFor="password">
-              Re-type Password <span className="text-foreground/50">*</span>
+
+          {/* Confirm Password */}
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">
+              Confirm Password <span className="text-destructive">*</span>
             </Label>
             <Input
-              id="password"
+              id="confirmPassword"
+              name="confirmPassword"
               type="password"
-              value={fData.confirmPassword}
-              placeholder="_ _ _ _"
-              onChange={(e) =>
-                setfData((prev) => ({
-                  ...prev,
-                  confirmPassword: e.target.value,
-                }))
-              }
+              placeholder="••••••••"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              disabled={isPending}
+              required
             />
           </div>
-          <Button type="submit" className="w-full" onClick={handleSubmit}>
-            {fData.oldName ? "Update Password" : "Sign Up"}
+        </CardContent>
+
+        <CardFooter className="flex flex-col space-y-4 pt-2">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={
+              !formData.name ||
+              !formData.newPassword ||
+              !formData.confirmPassword ||
+              isPending
+            }
+          >
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isPending ? "Updating..." : "Update Password"}
           </Button>
-        </div>
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link href="/sign-in" className="underline">
-            Sign in
-          </Link>
-        </div>
-      </CardContent>
+        </CardFooter>
+      </form>
+
+      <CardFooter className="flex items-center justify-between border-t pt-4">
+        <Link
+          href="/sign-in"
+          className="text-xs text-slate-500 hover:text-indigo-600 transition-colors"
+        >
+          Remember your password? Sign in
+        </Link>
+        <Link
+          href="/"
+          className="text-slate-400 hover:text-indigo-600 transition-colors p-1"
+          title="Go Home"
+        >
+          <House size={18} />
+        </Link>
+      </CardFooter>
     </Card>
   );
 }
