@@ -73,13 +73,13 @@ export default function LandingPage() {
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/sign-in">Sign In</Link>
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   className="bg-indigo-600 hover:bg-indigo-700 text-white"
                   asChild
                 >
                   <Link href="/sign-up">Get Started</Link>
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>
