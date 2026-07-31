@@ -1,17 +1,14 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Menu,
-  Radio,
-  LayoutDashboardIcon,
-  Music2Icon,
-  RadioIcon,
-} from "lucide-react";
+import { LayoutDashboard, Menu, Music2, Radio, RadioIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/mols/themeToggle";
+import { UserNav } from "@/components/mols/user-nav";
+import { cn, titleCase } from "@/lib/utils";
+
 import {
   Sheet,
   SheetContent,
@@ -20,43 +17,48 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useSession } from "next-auth/react";
-import { cn, titleCase } from "@/lib/utils";
-import { UserNav } from "@/components/mols/user-nav";
 
 export const routes = [
-  { label: "Dashboard", link: "/dashboard", icon: LayoutDashboardIcon },
-  { label: "Assets", link: "/dashboard/assets", icon: Music2Icon },
-  { label: "Detections", link: "/dashboard/detections", icon: RadioIcon },
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Assets",
+    href: "/dashboard/assets",
+    icon: Music2,
+  },
+  {
+    label: "Detections",
+    href: "/dashboard/detections",
+    icon: RadioIcon,
+  },
 ];
 
 export default function Navbar() {
   return (
-    <header className="sticky border-b border-border/50 p-4 top-0 z-30 flex items-center justify-between gap-4 bg-background/80 backdrop-blur px-4 sm:px-6 shadow-md">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/80 px-4 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6">
       <div className="flex items-center gap-6">
-        {/* Logo Section */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="p-1.5 rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <Radio className="h-5 w-5 shrink-0" />
+        <Link href="/" className="group flex items-center gap-2.5">
+          <div className="rounded-lg bg-primary/10 p-2 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <Radio className="size-5" />
           </div>
-          {/* <div className="flex flex-col">
-            <span className="font-bold text-base leading-none tracking-tight">
-              AARON
-            </span>
-            <span className="text-[10px] text-muted-foreground leading-tight hidden lg:inline-block">
+
+          <div className="hidden lg:block">
+            <p className="font-semibold tracking-tight">AARON</p>
+            <p className="text-xs text-muted-foreground">
               Autonomous Audio Recognition
-            </span>
-          </div> */}
+            </p>
+          </div>
         </Link>
 
-        {/* Mobile Hamburger & Desktop Navigation */}
-        <HamburgerMenu />
-        <MainNav className="hidden md:flex" />
+        <MobileNav />
+
+        <DesktopNav className="hidden md:flex" />
       </div>
 
-      {/* Right Action Items */}
-      <div className="flex items-center gap-4">
-        {/* <Search /> */}
+      <div className="flex items-center gap-2">
         <ThemeToggle />
         <UserNav />
       </div>
@@ -64,69 +66,74 @@ export default function Navbar() {
   );
 }
 
-function HamburgerMenu() {
-  const { data: session, status: authStatus } = useSession();
-  const pathname = usePathname();
+function MobileNav() {
   return (
     <div className="md:hidden">
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="outline">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Hamburger Menu</span>
+          <Button variant="outline" size="icon">
+            <Menu className="size-5" />
+            <span className="sr-only">Open navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="sm:max-w-xs">
-          <SheetHeader className="text-start">
-            <SheetTitle className="flex items-center gap-2 uppercase">
-              <Radio className="h-5 w-5 text-primary" />
+
+        <SheetContent side="left" className="w-72">
+          <SheetHeader className="text-left">
+            <SheetTitle className="flex items-center gap-2">
+              <Radio className="size-5 text-primary" />
               AARON
             </SheetTitle>
-            <SheetDescription className="text-xs text-muted-foreground">
-              Autonomous Audio Recognition
-            </SheetDescription>
+
+            <SheetDescription>Autonomous Audio Recognition</SheetDescription>
           </SheetHeader>
-          <nav className="grid gap-2 mt-4 text-lg font-medium">
-            {routes.map(({ label, link, icon: Icon }) => (
-              <Link
-                key={label}
-                href={link}
-                className={`${
-                  pathname === link ? "bg-accent text-foreground" : ""
-                } p-2 rounded-lg mr-4 flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}
-              >
-                <Icon className="h-5 w-5" />
-                {label}
-              </Link>
-            ))}
-          </nav>
+
+          <Navigation vertical className="mt-6" />
         </SheetContent>
       </Sheet>
     </div>
   );
 }
 
-function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
-  const { data: session, status: authStatus } = useSession();
+function DesktopNav({ className }: { className?: string }) {
+  return <Navigation className={className} />;
+}
+
+function Navigation({
+  vertical = false,
+  className,
+}: {
+  vertical?: boolean;
+  className?: string;
+}) {
   const pathname = usePathname();
+
   return (
     <nav
-      className={cn("flex items-center space-x-4 lg:space-x-6", className)}
-      {...props}
+      className={cn(
+        vertical ? "flex flex-col gap-1" : "flex items-center gap-6",
+        className,
+      )}
     >
-      {routes.map(({ label, link }) => (
-        <Link
-          href={link}
-          key={label}
-          className={
-            link === pathname
-              ? `text-sm font-medium transition-colors hover:text-primary`
-              : `text-sm font-medium text-muted-foreground transition-colors hover:text-primary`
-          }
-        >
-          {titleCase(label)}
-        </Link>
-      ))}
+      {routes.map(({ label, href, icon: Icon }) => {
+        const active =
+          pathname === href ||
+          (href !== "/dashboard" && pathname.startsWith(href));
+
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              vertical ? "hover:bg-accent" : "hover:text-primary",
+              active ? "bg-accent text-foreground" : "text-muted-foreground",
+            )}
+          >
+            {vertical && <Icon className="size-5" />}
+            {titleCase(label)}
+          </Link>
+        );
+      })}
     </nav>
   );
 }
