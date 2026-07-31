@@ -60,21 +60,6 @@ export function SignInForm() {
 
     startTransition(async () => {
       try {
-        // const res = await signIn("credentials", {
-        //   email,
-        //   password,
-        //   redirect: false,
-        //   callbackUrl,
-        // });
-
-        // if (res?.ok && !res?.error) {
-        //   toast.success("Signed in successfully!");
-        //   router.push(callbackUrl);
-        //   router.refresh();
-        // } else {
-        //   const errKey = res?.error || "CredentialsSignin";
-        //   toast.error(qParamsErrors[errKey] || "Invalid credentials");
-        // }
         const username = email;
 
         const result = await signIn("credentials", {
