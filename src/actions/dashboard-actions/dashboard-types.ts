@@ -35,3 +35,15 @@ export const broadcasterIncludes =
 export type BroadcasterWithRelations = Prisma.BroadcasterGetPayload<{
   include: typeof broadcasterIncludes;
 }>;
+
+// DETECTION
+
+export const detectionIncludes = Prisma.validator<Prisma.DetectionInclude>()({
+  asset: { include: { owner: true } },
+  broadcaster: true,
+  session: true,
+});
+
+export type DetectionWithRelations = Prisma.DetectionGetPayload<{
+  include: typeof detectionIncludes;
+}>;

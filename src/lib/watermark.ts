@@ -1,13 +1,7 @@
 "use client";
 
 import fs from "fs";
-import prisma from "./prisma";
-import { saveWatermarkToDatabase } from "@/actions/audio-processing-actions";
-// import {
-//   createAudioContext,
-//   OfflineAudioContext,
-//   AudioBuffer,
-// } from "web-audio-api";
+import { saveWatermarkToDatabase } from "@/actions/dashboard-actions/audio-processing-actions";
 
 // Function to embed a watermark in the audio file
 async function embedWatermark(

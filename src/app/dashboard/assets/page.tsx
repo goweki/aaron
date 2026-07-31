@@ -1,6 +1,8 @@
+import ViewLayout from "@/components/views/view-layout";
+import ErrorView from "@/components/views/error-view";
 import AssetsView from "@/components/views/assets-view";
 import { getAssetsAction } from "@/actions/dashboard-actions/asset-actions";
-import ErrorView from "@/components/views/error-view";
+import { UploadIcon } from "lucide-react";
 
 export default async function AssetsPage() {
   const assetsRes = await getAssetsAction();
@@ -9,5 +11,24 @@ export default async function AssetsPage() {
     return <ErrorView error={assetsRes.error} />;
   }
 
-  return <AssetsView assets={assetsRes.data} />;
+  return (
+    <ViewLayout
+      title="Audio Catalog & Asset Index"
+      description="Manage registered tracks, inspect acoustic fingerprint indices, monitor watermarks, and track playout history."
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Assets" },
+      ]}
+      actions={[
+        {
+          label: "Upload & Index Track",
+          href: "/dashboard/assets/upload",
+          icon: UploadIcon,
+          variant: "default",
+        },
+      ]}
+    >
+      <AssetsView assets={assetsRes.data} />
+    </ViewLayout>
+  );
 }
