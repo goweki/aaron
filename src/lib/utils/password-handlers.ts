@@ -1,7 +1,7 @@
 import "server-only";
 
 import bcrypt from "bcryptjs";
-const SALT_ROUNDS = process.env.BCRYPT_SALTROUNDS || 9;
+const SALT_ROUNDS = process.env.BCRYPT_SALTROUNDS;
 import crypto from "crypto";
 
 /**
@@ -11,7 +11,7 @@ import crypto from "crypto";
 export async function hash(plaintext: string) {
   if (!SALT_ROUNDS) throw new Error("env variable missing: BCRYPT_SALTROUNDS");
 
-  return await bcrypt.hash(plaintext, SALT_ROUNDS);
+  return await bcrypt.hash(plaintext, parseInt(SALT_ROUNDS));
 }
 
 // To compare input&hash

@@ -14,7 +14,7 @@ export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   const usersData = [
     {
       name: "Admin System",
-      email: process.env.SYSTEM_EMAIL || "test@goweki.com",
+      email: process.env.SYSTEM_EMAIL || "system@goweki.com",
       role: UserRole.ADMINISTRATOR,
       status: Status.ACTIVE,
       password: process.env.SYSTEM_PASSWORD || "pass1234",
@@ -33,7 +33,7 @@ export async function seedUsers(prisma: PrismaClient): Promise<User[]> {
   const users: User[] = [];
   for (const u of usersData) {
     const { password, ...u_ } = u;
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const passwordHash = await bcrypt.hash(password, parseInt(SALT_ROUNDS));
 
     const user = await prisma.user.create({
       data: { ...u_, passwordHash },
