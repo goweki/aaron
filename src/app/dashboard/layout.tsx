@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   return (
     <>
       <Navbar />
-      <main className="flex flex-col flex-1 bg-green-600">
+      <main className="flex flex-col flex-1">
         <div className="sm:hidden w-full h-full flex">
           <div className="flex flex-col flex-1 my-8">
             <span className="inline-block m-auto italic text-sm text-center">

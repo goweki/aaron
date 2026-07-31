@@ -19,7 +19,7 @@ import {
 import { AssetWithRelations } from "@/actions/dashboard-actions/dashboard-types";
 import toast from "react-hot-toast";
 
-export default async function AssetsView({
+export default function AssetsView({
   assets,
 }: {
   assets: AssetWithRelations[];
