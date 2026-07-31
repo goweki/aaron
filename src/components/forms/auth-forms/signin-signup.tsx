@@ -43,8 +43,9 @@ export function SignInForm() {
   };
 
   // Sign In Handler using NextAuth / Server Action transition
-  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const { email, password } = formData;
 
@@ -59,21 +60,39 @@ export function SignInForm() {
 
     startTransition(async () => {
       try {
-        const res = await signIn("credentials", {
-          email,
+        // const res = await signIn("credentials", {
+        //   email,
+        //   password,
+        //   redirect: false,
+        //   callbackUrl,
+        // });
+
+        // if (res?.ok && !res?.error) {
+        //   toast.success("Signed in successfully!");
+        //   router.push(callbackUrl);
+        //   router.refresh();
+        // } else {
+        //   const errKey = res?.error || "CredentialsSignin";
+        //   toast.error(qParamsErrors[errKey] || "Invalid credentials");
+        // }
+        const username = email;
+
+        const result = await signIn("credentials", {
+          username,
           password,
           redirect: false,
           callbackUrl,
         });
 
-        if (res?.ok && !res?.error) {
-          toast.success("Signed in successfully!");
-          router.push(callbackUrl);
-          router.refresh();
-        } else {
-          const errKey = res?.error || "CredentialsSignin";
-          toast.error(qParamsErrors[errKey] || "Invalid credentials");
+        if (result?.error) {
+          const message =
+            qParamsErrors[result.error as keyof typeof qParamsErrors] ??
+            "Failed to sign in";
+          toast.error(message);
+          return;
         }
+
+        router.push(callbackUrl);
       } catch (error) {
         toast.error("An unexpected error occurred. Please try again.");
       }

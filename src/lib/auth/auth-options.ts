@@ -14,6 +14,7 @@ const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log(`[LOGIN attempt] ...`);
         if (!credentials?.username || !credentials?.password) return null;
 
         const username = credentials.username as string;

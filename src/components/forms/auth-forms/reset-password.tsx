@@ -26,6 +26,7 @@ export function ResetPasswordForm() {
 
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const emailError = emailValidator(email);
     if (emailError) {
