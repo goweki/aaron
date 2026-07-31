@@ -4,15 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BookOpen,
-  FileInput,
-  Home,
   Menu,
-  Users,
-  Settings,
-  File,
-  User,
-  Radio, // Lucide icon for audio recognition
+  Radio,
+  LayoutDashboardIcon,
+  Music2Icon,
+  RadioIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/mols/themeToggle";
@@ -29,9 +25,9 @@ import { cn, titleCase } from "@/lib/utils";
 import { UserNav } from "@/components/mols/user-nav";
 
 export const routes = [
-  { label: "Dashboard", link: "/dashboard", icon: Home },
-  { label: "Assets", link: "/dashboard/assets", icon: Users },
-  { label: "Monitor", link: "/dashboard/monitor", icon: BookOpen },
+  { label: "Dashboard", link: "/dashboard", icon: LayoutDashboardIcon },
+  { label: "Assets", link: "/dashboard/assets", icon: Music2Icon },
+  { label: "Detections", link: "/dashboard/detections", icon: RadioIcon },
 ];
 
 export default function Navbar() {

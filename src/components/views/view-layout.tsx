@@ -43,7 +43,7 @@ export default function ViewLayout({
   className = "",
 }: ViewLayoutProps) {
   return (
-    <div className={`max-w-7xl mx-auto p-6 space-y-6 ${className}`}>
+    <div className={`max-w-7xl mx-auto p-6 space-y-6 w-full ${className}`}>
       {/* Header Section */}
       <div className="space-y-3">
         {/* Optional Breadcrumbs */}
