@@ -25,8 +25,8 @@ export default function DashboardIndexPage() {
   } = useDashboard();
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 m-4">
         <SummaryCard
           title="Total Assets"
           Icon={LibraryBig}
@@ -53,7 +53,7 @@ export default function DashboardIndexPage() {
           description="2 new notifications"
         />
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 m-4">
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle>Trend</CardTitle>
