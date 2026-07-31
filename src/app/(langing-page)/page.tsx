@@ -1,342 +1,260 @@
+// app/page.tsx
 "use client";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import {
+  Mic,
+  MicOff,
+  Radio,
+  Music2,
+  ArrowRight,
+  ShieldCheck,
+  LayoutDashboard,
+  User,
+  Activity,
+} from "lucide-react";
 import ThemeToggle from "@/components/mols/themeToggle";
 import { usePublicData } from "@/components/providers";
-import { buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import toast from "react-hot-toast";
-
-/**
- * ts types
- *
- */
-
-interface SpeechRecognition extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start(): void;
-  stop(): void;
-  onresult:
-    ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-  onerror:
-    ((this: SpeechRecognition, ev: Event & { error: string }) => any) | null;
-}
-
-interface SpeechRecognitionStatic {
-  new (): SpeechRecognition;
-}
-
-interface SpeechRecognitionEvent extends Event {
-  readonly resultIndex: number;
-  readonly results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionResultList {
-  readonly length: number;
-  item(index: number): SpeechRecognitionResult;
-  [index: number]: SpeechRecognitionResult;
-}
-
-interface SpeechRecognitionResult {
-  readonly length: number;
-  readonly isFinal: boolean;
-  item(index: number): SpeechRecognitionAlternative;
-  [index: number]: SpeechRecognitionAlternative;
-}
-
-interface SpeechRecognitionAlternative {
-  readonly transcript: string;
-  readonly confidence: number;
-}
-
-/**
- *
- *
- */
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useAudioListener } from "@/hooks/use-audio-listener";
 
 export default function LandingPage() {
-  const [listen, setListen] = useState<boolean>(false);
-  const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const dataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const { assets, detections } = usePublicData();
+  const { data: session } = useSession();
+  const { isListening, transcript, canvasRef, toggleListening } =
+    useAudioListener();
+  const { assets = [], detections = [] } = usePublicData() || {};
 
-  useEffect(() => {
-    const SpeechRecognition = ((window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition) as SpeechRecognitionStatic;
-
-    if (!SpeechRecognition) {
-      console.error("SpeechRecognition is not supported in this browser.");
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = "en-US";
-
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let finalTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        }
-      }
-      setTranscript((prevTranscript) => prevTranscript + finalTranscript);
-    };
-
-    recognition.onerror = (event: Event & { error: string }) => {
-      console.error("Speech recognition error:", event.error);
-      setListen(false);
-      if (event.error === "network") {
-        toast.error(
-          "Network error: You may not have internet connection; try using CHROME browser.",
-        );
-      } else if (event.error === "not-allowed") {
-        toast.error("Permission error: Microphone access is not allowed.");
-      } else if (event.error === "service-not-allowed") {
-        toast.error(
-          "Permission error: Speech recognition service is not allowed.",
-        );
-      } else if (event.error === "no-speech") {
-        toast.error("No speech detected.");
-      } else if (event.error === "aborted") {
-        toast.error("Speech recognition aborted.");
-      } else {
-        toast.error(`An unknown error occurred: ${event.error}`);
-      }
-    };
-
-    recognitionRef.current = recognition;
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (transcript) {
-      setListen(false);
-    }
-  }, [transcript]);
-
-  useEffect(() => {
-    if (!recognitionRef.current) return;
-    if (listen) {
-      setTranscript("");
-      recognitionRef.current.start();
-    } else {
-      recognitionRef.current.stop();
-    }
-  }, [listen]);
-
-  useEffect(() => {
-    if (listen) {
-      const audioContext = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
-      const analyser = audioContext.createAnalyser();
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          const source = audioContext.createMediaStreamSource(stream);
-          source.connect(analyser);
-          analyser.fftSize = 2048;
-
-          // Store stream and source to stop them later
-          streamRef.current = stream;
-          dataArrayRef.current = dataArray;
-          analyserRef.current = analyser;
-          audioContextRef.current = audioContext;
-          drawWaveform();
-        })
-        .catch((error) => {
-          console.error("Error accessing media devices.", error);
-          setListen(false);
-        });
-    } else {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-    }
-
-    return () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [listen]);
-
-  // Handle waveform drawing
-  const drawWaveform = () => {
-    if (!canvasRef.current || !analyserRef.current || !dataArrayRef.current) {
-      return;
-    }
-    const canvas = canvasRef.current;
-    const canvasCtx = canvas.getContext("2d");
-    const analyser = analyserRef.current;
-    const dataArray = dataArrayRef.current;
-    const bufferLength = analyser.frequencyBinCount;
-
-    const draw = () => {
-      if (!canvasCtx) return;
-      requestAnimationFrame(draw);
-      analyser.getByteTimeDomainData(dataArray);
-
-      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-      canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = "rgb(0, 255, 0)"; // Green color for the waveform
-      canvasCtx.beginPath();
-
-      const sliceWidth = (canvas.width * 1.0) / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * canvas.height) / 2;
-
-        if (i === 0) {
-          canvasCtx.moveTo(x, y);
-        } else {
-          canvasCtx.lineTo(x, y);
-        }
-        x += sliceWidth;
-      }
-
-      canvasCtx.lineTo(canvas.width, canvas.height / 2);
-      canvasCtx.stroke();
-    };
-    draw();
-  };
-
-  // render
   return (
-    <main className="flex flex-col items-center justify-between p-8 lg:p-16 w-full">
-      <header className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex md:flex-row flex-col">
-        <p className="fixed left-0 top-0 w-full text-center border-b pb-6 pt-8 px-4 backdrop-blur-lg border-border bg-background/80 lg:static lg:w-auto  lg:rounded-xl lg:border lg:p-4">
-          Autonomous Audio Recognition System&nbsp;
-          <code className="font-mono font-bold">(A.A.R.O.N)</code>
-        </p>
-        <div className="fixed bottom-0 left-0 hidden lg:flex h-48 w-full items-end justify-center lg:static lg:size-auto lg:bg-none gap-4">
-          <Link
-            className={cn(buttonVariants({ variant: "default" }))}
-            href="/sign-in"
-          >
-            Sign In
-          </Link>
-          <ThemeToggle />
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+      {/* Navigation Bar */}
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-indigo-600 text-white rounded-lg">
+              <Radio className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <span className="font-bold tracking-tight text-base sm:text-lg">
+                A.A.R.O.N
+              </span>
+              <span className="hidden sm:inline-block text-xs text-slate-500 dark:text-slate-400 ml-2">
+                Autonomous Audio Recognition
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+
+            {session?.user ? (
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/dashboard" className="gap-2">
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                </Button>
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-800 text-xs font-medium">
+                  <User className="w-3.5 h-3.5 text-indigo-500" />
+                  <span>{session.user.name || session.user.email}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/sign-in">Sign In</Link>
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  asChild
+                >
+                  <Link href="/sign-up">Get Started</Link>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
-      <section className="lg:my-16 relative flex flex-col place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mt-16 lg:mt-8">
-          Automatic Audio Recognition
-        </h1>
-        <p className="italic text-primary text-center mt-8 lg:mt-4">
-          {transcript}
-        </p>
-        <canvas ref={canvasRef} className="h-32 w-96 m-4" />
-      </section>
 
-      <section className="grid gap-4 text-center lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
-        <Link
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "lg:hidden mb-4",
-          )}
-          href="/sign-in"
-        >
-          Sign In
-        </Link>
-
-        {/* Voice Recognition Button Card */}
-        <button
-          onClick={() => setListen((prev) => !prev)}
-          className={`group relative block w-full rounded-lg border text-left px-5 py-4 transition-colors text-inherit cursor-pointer
-      ${
-        listen
-          ? "border-secondary bg-primary/10 shadow-sm"
-          : "border shadow hover:border-secondary hover:bg-primary/20"
-      }`}
-        >
-          {/* Status Indicator Dot */}
-          <span className="absolute top-4 left-4 flex h-3 w-3">
-            <span
-              className={`absolute inline-flex h-full w-full rounded-full opacity-75 
-          ${listen ? "animate-ping bg-red-400" : "bg-transparent"}`}
-            />
-            <span
-              className={`relative inline-flex rounded-full h-3 w-3 
-          ${listen ? "bg-red-500" : "bg-transparent"}`}
-            />
-          </span>
-
-          <div className={listen ? "ml-4" : undefined}>
-            <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
-              Listen
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50 w-fit">
-              Activate voice recognition
-            </p>
-          </div>
-        </button>
-
-        {/* Link Cards */}
-        {options.map(({ name, desc, link }) => (
-          <Link
-            key={name}
-            href={link}
-            className="group border block shadow rounded-lg px-5 py-4 transition-colors hover:border-secondary hover:bg-primary/20"
+      {/* Hero Section */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 flex flex-col items-center justify-between space-y-12">
+        <div className="text-center space-y-4 max-w-3xl">
+          <Badge
+            variant="secondary"
+            className="px-3 py-1 text-xs gap-1.5 font-medium border border-indigo-200 dark:border-indigo-900 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300"
           >
-            {/* Pladded wrapper to align visually with the button which has the status dot */}
-            <div>
-              <h2 className="mb-3 text-2xl font-semibold flex items-center justify-center lg:justify-start gap-1">
-                {name}
-                <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                  -&gt;
+            <ShieldCheck className="w-3.5 h-3.5" /> Live Acoustic Watermark &
+            Identification
+          </Badge>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+            Real-Time Broadcast & Audio Recognition
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Detect acoustic fingerprints, monitor live audio streams, and track
+            digital rights media autonomously.
+          </p>
+        </div>
+
+        {/* Live Audio Visualizer Canvas & Voice Recognition Widget */}
+        <Card className="w-full max-w-2xl border-slate-200 dark:border-slate-800 shadow-lg bg-white/50 dark:bg-slate-900/50 backdrop-blur">
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-lg font-semibold flex items-center justify-center gap-2">
+              <Activity className="w-5 h-5 text-indigo-500" /> Acoustic Sampling
+              Unit
+            </CardTitle>
+            <CardDescription>
+              {isListening
+                ? "Listening... Speak or play audio near your microphone."
+                : "Click the button below to start live microphone audio capture."}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="flex flex-col items-center space-y-6 pt-4">
+            {/* Waveform Output */}
+            <div className="w-full h-32 bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center relative">
+              <canvas
+                ref={canvasRef}
+                className="w-full h-full"
+                width={600}
+                height={128}
+              />
+              {!isListening && (
+                <span className="absolute text-xs text-slate-500 font-mono">
+                  [ Oscilloscope Standby ]
                 </span>
-              </h2>
-              <p className="m-0 mx-auto lg:mx-0 max-w-[30ch] text-sm opacity-50 w-fit">
-                {desc}
-              </p>
+              )}
             </div>
-          </Link>
-        ))}
-      </section>
-    </main>
+
+            {/* Live Transcript Output */}
+            {transcript && (
+              <div className="w-full p-4 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 rounded-lg text-center">
+                <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium uppercase tracking-wider mb-1">
+                  Transcribed Acoustic Data
+                </p>
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 italic">
+                  "{transcript}"
+                </p>
+              </div>
+            )}
+
+            {/* Mic Toggle Trigger */}
+            <Button
+              size="lg"
+              onClick={toggleListening}
+              className={`w-full sm:w-auto px-8 py-6 rounded-full font-semibold transition-all shadow-md gap-2 ${
+                isListening
+                  ? "bg-red-600 hover:bg-red-700 text-white animate-pulse"
+                  : "bg-indigo-600 hover:bg-indigo-700 text-white"
+              }`}
+            >
+              {isListening ? (
+                <>
+                  <MicOff className="w-5 h-5" />
+                  Stop Sampling
+                </>
+              ) : (
+                <>
+                  <Mic className="w-5 h-5" />
+                  Activate Voice Recognition
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Quick Route Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl pt-8">
+          <Card className="hover:border-indigo-500 transition-all shadow-sm hover:shadow-md group">
+            <CardHeader>
+              <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-lg w-fit mb-2">
+                <Music2 className="w-6 h-6" />
+              </div>
+              <CardTitle className="text-xl">Asset Catalog</CardTitle>
+              <CardDescription>
+                Manage fingerprinted tracks, watermark hashes, and metadata
+                index.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Button
+                variant="ghost"
+                className="px-0 group-hover:translate-x-1 transition-transform gap-1.5 text-indigo-600 dark:text-indigo-400"
+                asChild
+              >
+                <Link href="/dashboard/assets">
+                  Explore Catalog <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:border-indigo-500 transition-all shadow-sm hover:shadow-md group">
+            <CardHeader>
+              <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg w-fit mb-2">
+                <Radio className="w-6 h-6" />
+              </div>
+              <CardTitle className="text-xl">Stream Monitoring</CardTitle>
+              <CardDescription>
+                View real-time detection logs across live broadcast channels.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Button
+                variant="ghost"
+                className="px-0 group-hover:translate-x-1 transition-transform gap-1.5 text-emerald-600 dark:text-emerald-400"
+                asChild
+              >
+                <Link href="/dashboard/detections">
+                  View Detections <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:border-indigo-500 transition-all shadow-sm hover:shadow-md group">
+            <CardHeader>
+              <div className="p-2.5 bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 rounded-lg w-fit mb-2">
+                <LayoutDashboard className="w-6 h-6" />
+              </div>
+              <CardTitle className="text-xl">System Overview</CardTitle>
+              <CardDescription>
+                Access full system telemetry, station sessions, and management.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <Button
+                variant="ghost"
+                className="px-0 group-hover:translate-x-1 transition-transform gap-1.5 text-purple-600 dark:text-purple-400"
+                asChild
+              >
+                <Link href="/dashboard">
+                  Go to Dashboard <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+
+      {/* Simple Footer */}
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>
+          © {new Date().getFullYear()} Autonomous Audio Recognition System
+          (A.A.R.O.N). All rights reserved.
+        </p>
+      </footer>
+    </div>
   );
 }
-
-const options = [
-  {
-    name: "Assets",
-    desc: "Watermarked / fingerprinted assets",
-    link: "/dashboard/assets",
-  },
-  {
-    name: "Monitor",
-    desc: "view logs of monitored audio streams ",
-    link: "/dashboard/monitor",
-  },
-];
