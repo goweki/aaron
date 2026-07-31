@@ -8,12 +8,17 @@ import { ActionResult } from "@/types/action";
 import {
   assetIncludes,
   AssetWithRelations,
+  BroadcasterWithRelations,
   userIncludes,
   UserWithRelations,
 } from "./dashboard-types";
 
 export async function fetchDashboardData(): Promise<
-  ActionResult<{ assets: AssetWithRelations[]; users: UserWithRelations[] }>
+  ActionResult<{
+    assets: AssetWithRelations[];
+    users: UserWithRelations[];
+    broadcasters: BroadcasterWithRelations[];
+  }>
 > {
   const actor = await requireUser();
 
@@ -21,7 +26,7 @@ export async function fetchDashboardData(): Promise<
     const isRegularUser = actor.role === UserRole.USER;
 
     // Run queries in parallel to eliminate waterfall latency
-    const [users, assets] = await Promise.all([
+    const [users, assets, broadcasters] = await Promise.all([
       prisma.user.findMany({
         where: isRegularUser ? { id: actor.id } : undefined,
         include: userIncludes,
@@ -31,9 +36,12 @@ export async function fetchDashboardData(): Promise<
         where: isRegularUser ? { ownerId: actor.id } : undefined,
         include: assetIncludes,
       }),
+      prisma.broadcaster.findMany({
+        include: { monitoringSessions: true, detections: true },
+      }),
     ]);
 
-    return { ok: true, data: { users, assets } };
+    return { ok: true, data: { users, assets, broadcasters } };
   } catch (error) {
     return { ok: false, error: getFriendlyErrorMessage(error) };
   }

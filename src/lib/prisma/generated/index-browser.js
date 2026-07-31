@@ -200,6 +200,7 @@ exports.Prisma.BroadcasterScalarFieldEnum = {
 exports.Prisma.MonitoringSessionScalarFieldEnum = {
   id: 'id',
   broadcasterId: 'broadcasterId',
+  audioLink: 'audioLink',
   startedAt: 'startedAt',
   endedAt: 'endedAt',
   status: 'status',

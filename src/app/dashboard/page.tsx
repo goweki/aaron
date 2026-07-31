@@ -17,9 +17,8 @@ import {
 import SimpleLineChart from "@/components/mols/simpleLineChart";
 import { RecentDetections } from "@/components/mols/recent-detections";
 import { useDashboard } from "@/components/providers";
-import { useContext } from "react";
 
-export default function OverviewPage() {
+export default function DashboardIndexPage() {
   const {
     data: { assets },
     refreshData,

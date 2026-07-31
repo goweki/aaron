@@ -8814,6 +8814,7 @@ export namespace Prisma {
   export type MonitoringSessionMinAggregateOutputType = {
     id: string | null
     broadcasterId: string | null
+    audioLink: string | null
     startedAt: Date | null
     endedAt: Date | null
     status: $Enums.Status | null
@@ -8823,6 +8824,7 @@ export namespace Prisma {
   export type MonitoringSessionMaxAggregateOutputType = {
     id: string | null
     broadcasterId: string | null
+    audioLink: string | null
     startedAt: Date | null
     endedAt: Date | null
     status: $Enums.Status | null
@@ -8832,6 +8834,7 @@ export namespace Prisma {
   export type MonitoringSessionCountAggregateOutputType = {
     id: number
     broadcasterId: number
+    audioLink: number
     startedAt: number
     endedAt: number
     status: number
@@ -8843,6 +8846,7 @@ export namespace Prisma {
   export type MonitoringSessionMinAggregateInputType = {
     id?: true
     broadcasterId?: true
+    audioLink?: true
     startedAt?: true
     endedAt?: true
     status?: true
@@ -8852,6 +8856,7 @@ export namespace Prisma {
   export type MonitoringSessionMaxAggregateInputType = {
     id?: true
     broadcasterId?: true
+    audioLink?: true
     startedAt?: true
     endedAt?: true
     status?: true
@@ -8861,6 +8866,7 @@ export namespace Prisma {
   export type MonitoringSessionCountAggregateInputType = {
     id?: true
     broadcasterId?: true
+    audioLink?: true
     startedAt?: true
     endedAt?: true
     status?: true
@@ -8943,6 +8949,7 @@ export namespace Prisma {
   export type MonitoringSessionGroupByOutputType = {
     id: string
     broadcasterId: string
+    audioLink: string | null
     startedAt: Date
     endedAt: Date | null
     status: $Enums.Status
@@ -8969,6 +8976,7 @@ export namespace Prisma {
   export type MonitoringSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     broadcasterId?: boolean
+    audioLink?: boolean
     startedAt?: boolean
     endedAt?: boolean
     status?: boolean
@@ -8981,6 +8989,7 @@ export namespace Prisma {
   export type MonitoringSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     broadcasterId?: boolean
+    audioLink?: boolean
     startedAt?: boolean
     endedAt?: boolean
     status?: boolean
@@ -8991,6 +9000,7 @@ export namespace Prisma {
   export type MonitoringSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     broadcasterId?: boolean
+    audioLink?: boolean
     startedAt?: boolean
     endedAt?: boolean
     status?: boolean
@@ -9001,13 +9011,14 @@ export namespace Prisma {
   export type MonitoringSessionSelectScalar = {
     id?: boolean
     broadcasterId?: boolean
+    audioLink?: boolean
     startedAt?: boolean
     endedAt?: boolean
     status?: boolean
     createdAt?: boolean
   }
 
-  export type MonitoringSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "broadcasterId" | "startedAt" | "endedAt" | "status" | "createdAt", ExtArgs["result"]["monitoringSession"]>
+  export type MonitoringSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "broadcasterId" | "audioLink" | "startedAt" | "endedAt" | "status" | "createdAt", ExtArgs["result"]["monitoringSession"]>
   export type MonitoringSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
     detections?: boolean | MonitoringSession$detectionsArgs<ExtArgs>
@@ -9029,6 +9040,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       broadcasterId: string
+      audioLink: string | null
       startedAt: Date
       endedAt: Date | null
       status: $Enums.Status
@@ -9460,6 +9472,7 @@ export namespace Prisma {
   interface MonitoringSessionFieldRefs {
     readonly id: FieldRef<"MonitoringSession", 'String'>
     readonly broadcasterId: FieldRef<"MonitoringSession", 'String'>
+    readonly audioLink: FieldRef<"MonitoringSession", 'String'>
     readonly startedAt: FieldRef<"MonitoringSession", 'DateTime'>
     readonly endedAt: FieldRef<"MonitoringSession", 'DateTime'>
     readonly status: FieldRef<"MonitoringSession", 'Status'>
@@ -11267,6 +11280,7 @@ export namespace Prisma {
   export const MonitoringSessionScalarFieldEnum: {
     id: 'id',
     broadcasterId: 'broadcasterId',
+    audioLink: 'audioLink',
     startedAt: 'startedAt',
     endedAt: 'endedAt',
     status: 'status',
@@ -11959,6 +11973,7 @@ export namespace Prisma {
     NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
     id?: UuidFilter<"MonitoringSession"> | string
     broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
     status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
@@ -11970,6 +11985,7 @@ export namespace Prisma {
   export type MonitoringSessionOrderByWithRelationInput = {
     id?: SortOrder
     broadcasterId?: SortOrder
+    audioLink?: SortOrderInput | SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -11985,6 +12001,7 @@ export namespace Prisma {
     OR?: MonitoringSessionWhereInput[]
     NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
     broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
     status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
@@ -11996,6 +12013,7 @@ export namespace Prisma {
   export type MonitoringSessionOrderByWithAggregationInput = {
     id?: SortOrder
     broadcasterId?: SortOrder
+    audioLink?: SortOrderInput | SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -12011,6 +12029,7 @@ export namespace Prisma {
     NOT?: MonitoringSessionScalarWhereWithAggregatesInput | MonitoringSessionScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"MonitoringSession"> | string
     broadcasterId?: UuidWithAggregatesFilter<"MonitoringSession"> | string
+    audioLink?: StringNullableWithAggregatesFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeWithAggregatesFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableWithAggregatesFilter<"MonitoringSession"> | Date | string | null
     status?: EnumStatusWithAggregatesFilter<"MonitoringSession"> | $Enums.Status
@@ -12689,6 +12708,7 @@ export namespace Prisma {
 
   export type MonitoringSessionCreateInput = {
     id?: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -12700,6 +12720,7 @@ export namespace Prisma {
   export type MonitoringSessionUncheckedCreateInput = {
     id?: string
     broadcasterId: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -12709,6 +12730,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -12720,6 +12742,7 @@ export namespace Prisma {
   export type MonitoringSessionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -12730,6 +12753,7 @@ export namespace Prisma {
   export type MonitoringSessionCreateManyInput = {
     id?: string
     broadcasterId: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -12738,6 +12762,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -12747,6 +12772,7 @@ export namespace Prisma {
   export type MonitoringSessionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -13506,6 +13532,7 @@ export namespace Prisma {
   export type MonitoringSessionCountOrderByAggregateInput = {
     id?: SortOrder
     broadcasterId?: SortOrder
+    audioLink?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
     status?: SortOrder
@@ -13515,6 +13542,7 @@ export namespace Prisma {
   export type MonitoringSessionMaxOrderByAggregateInput = {
     id?: SortOrder
     broadcasterId?: SortOrder
+    audioLink?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
     status?: SortOrder
@@ -13524,6 +13552,7 @@ export namespace Prisma {
   export type MonitoringSessionMinOrderByAggregateInput = {
     id?: SortOrder
     broadcasterId?: SortOrder
+    audioLink?: SortOrder
     startedAt?: SortOrder
     endedAt?: SortOrder
     status?: SortOrder
@@ -15453,6 +15482,7 @@ export namespace Prisma {
 
   export type MonitoringSessionCreateWithoutBroadcasterInput = {
     id?: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -15462,6 +15492,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUncheckedCreateWithoutBroadcasterInput = {
     id?: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -15541,6 +15572,7 @@ export namespace Prisma {
     NOT?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
     id?: UuidFilter<"MonitoringSession"> | string
     broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
     status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
@@ -15783,6 +15815,7 @@ export namespace Prisma {
 
   export type MonitoringSessionCreateWithoutDetectionsInput = {
     id?: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -15793,6 +15826,7 @@ export namespace Prisma {
   export type MonitoringSessionUncheckedCreateWithoutDetectionsInput = {
     id?: string
     broadcasterId: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -15919,6 +15953,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUpdateWithoutDetectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -15929,6 +15964,7 @@ export namespace Prisma {
   export type MonitoringSessionUncheckedUpdateWithoutDetectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -16149,6 +16185,7 @@ export namespace Prisma {
 
   export type MonitoringSessionCreateManyBroadcasterInput = {
     id?: string
+    audioLink?: string | null
     startedAt: Date | string
     endedAt?: Date | string | null
     status?: $Enums.Status
@@ -16172,6 +16209,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUpdateWithoutBroadcasterInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -16181,6 +16219,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUncheckedUpdateWithoutBroadcasterInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -16190,6 +16229,7 @@ export namespace Prisma {
 
   export type MonitoringSessionUncheckedUpdateManyWithoutBroadcasterInput = {
     id?: StringFieldUpdateOperationsInput | string
+    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status

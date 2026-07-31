@@ -171,6 +171,7 @@ model MonitoringSession {
     broadcasterId String      @db.Uuid
     broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id], onDelete: Cascade)
 
+    audioLink String?
     startedAt DateTime
     endedAt   DateTime?
 

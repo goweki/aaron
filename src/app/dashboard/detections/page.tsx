@@ -1,172 +1,208 @@
-"use client";
-
-import { useState, useRef } from "react";
+import { revalidatePath } from "next/cache";
+import prisma from "@/lib/prisma";
+import { requireUser } from "@/lib/auth/auth-actions";
+import { DetectionStatus } from "@/lib/prisma/generated";
 import {
-  Mic,
-  Square,
-  Search,
-  Music,
-  Disc,
   Radio,
-  AlertCircle,
+  Music,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  ExternalLink,
 } from "lucide-react";
 
-export default function DetectionPage() {
-  const [isRecording, setIsRecording] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [matchResult, setMatchResult] = useState<any>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+async function updateDetectionStatusAction(formData: FormData) {
+  "use server";
+  await requireUser();
+  const detectionId = formData.get("detectionId") as string;
+  const status = formData.get("status") as DetectionStatus;
 
-  const startListening = async () => {
-    setIsRecording(true);
-    setMatchResult(null);
+  if (detectionId && status) {
+    await prisma.detection.update({
+      where: { id: detectionId },
+      data: { status },
+    });
+    revalidatePath("/dashboard/detections");
+  }
+}
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+export default async function DetectionsPage() {
+  await requireUser();
 
-      const chunks: Blob[] = [];
-
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-
-      mediaRecorder.onstop = async () => {
-        setLoading(true);
-        setIsRecording(false);
-
-        const blob = new Blob(chunks, { type: "audio/wav" });
-        const formData = new FormData();
-        formData.append("audio", blob, "sample.wav");
-
-        try {
-          const res = await fetch("/api/identify", {
-            method: "POST",
-            body: formData,
-          });
-
-          const data = await res.json();
-          setMatchResult(data);
-        } catch (err) {
-          console.error("Detection error:", err);
-        } finally {
-          setLoading(false);
-          stream.getTracks().forEach((track) => track.stop());
-        }
-      };
-
-      mediaRecorder.start();
-
-      // Automatically capture 5-second sample window
-      setTimeout(() => {
-        if (mediaRecorder.state === "recording") {
-          mediaRecorder.stop();
-        }
-      }, 5000);
-    } catch (err) {
-      console.error("Microphone error:", err);
-      setIsRecording(false);
-    }
-  };
-
-  const stopListening = () => {
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state === "recording"
-    ) {
-      mediaRecorderRef.current.stop();
-    }
-  };
+  const detections = await prisma.detection.findMany({
+    orderBy: { broadcastAt: "desc" },
+    include: {
+      asset: true,
+      broadcaster: true,
+    },
+  });
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-8 text-center">
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Live Audio Detection
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          Radio & Broadcast Detections
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Capture ambient audio from your microphone to match against your
-          catalog index in real time.
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Review automated audio identification matches captured across
+          monitored streams.
         </p>
       </div>
 
-      {/* Record Trigger Card */}
-      <div className="border rounded-2xl p-10 bg-white shadow-sm flex flex-col items-center justify-center space-y-6">
-        <div className="relative">
-          {isRecording && (
-            <span className="absolute -inset-3 rounded-full bg-red-500/20 animate-ping" />
-          )}
-          <button
-            onClick={isRecording ? stopListening : startListening}
-            disabled={loading}
-            className={`relative z-10 w-24 h-24 rounded-full flex items-center justify-center shadow-lg transition-all ${
-              isRecording
-                ? "bg-red-600 hover:bg-red-700 text-white"
-                : "bg-indigo-600 hover:bg-indigo-700 text-white"
-            }`}
-          >
-            {isRecording ? (
-              <Square className="w-8 h-8" />
-            ) : (
-              <Mic className="w-10 h-10" />
-            )}
-          </button>
-        </div>
-
-        <div>
-          <p className="text-base font-semibold text-slate-800">
-            {isRecording
-              ? "Listening to Audio (5s)..."
-              : loading
-                ? "Matching Hashes..."
-                : "Click to Identify"}
-          </p>
-          <p className="text-xs text-slate-500 mt-1">
-            Uses Time-Offset Histogram scoring over PostgreSQL indexes
+      {detections.length === 0 ? (
+        <div className="border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl p-12 text-center bg-slate-50/50 dark:bg-slate-900/50">
+          <Radio className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200">
+            No detections logged yet
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            As live stream monitoring sessions process broadcast audio, matched
+            fingerprints will appear here.
           </p>
         </div>
-      </div>
+      ) : (
+        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-950 shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium">
+                <tr>
+                  <th className="py-3 px-4">Detected Asset</th>
+                  <th className="py-3 px-4">Broadcaster</th>
+                  <th className="py-3 px-4">Match Confidence</th>
+                  <th className="py-3 px-4">Broadcast Time</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Verification</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {detections.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors"
+                  >
+                    {/* Asset Info */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
+                          <Music className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-slate-900 dark:text-slate-100">
+                            {item.asset.title}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {item.asset.artist || "Unknown Artist"}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
 
-      {/* Detection Results */}
-      {matchResult && (
-        <div className="text-left border rounded-xl p-6 bg-white shadow-sm space-y-4">
-          <div className="flex items-center gap-2 border-b pb-3">
-            <Radio className="w-5 h-5 text-indigo-600" />
-            <h3 className="font-semibold text-slate-900">Detection Output</h3>
+                    {/* Broadcaster Info */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-2">
+                        <Radio className="w-3.5 h-3.5 text-emerald-500" />
+                        <span className="font-medium text-slate-800 dark:text-slate-200">
+                          {item.broadcaster.name}
+                        </span>
+                      </div>
+                      {item.broadcaster.frequency && (
+                        <span className="text-xs text-slate-500 font-mono ml-5">
+                          {item.broadcaster.frequency}
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Score / Confidence */}
+                    <td className="py-3.5 px-4">
+                      <span className="font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        {item.confidence.toFixed(1)} aligned hashes
+                      </span>
+                      {item.duration && (
+                        <p className="text-xs text-slate-500">
+                          Duration: {item.duration.toFixed(1)}s
+                        </p>
+                      )}
+                    </td>
+
+                    {/* Broadcast Timestamp */}
+                    <td className="py-3.5 px-4 text-xs text-slate-600 dark:text-slate-400">
+                      {new Date(item.broadcastAt).toLocaleString()}
+                    </td>
+
+                    {/* Status Pill */}
+                    <td className="py-3.5 px-4">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                          item.status === "VERIFIED"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+                            : item.status === "REJECTED"
+                              ? "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
+                              : "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
+                        }`}
+                      >
+                        {item.status === "VERIFIED" && (
+                          <CheckCircle2 className="w-3 h-3" />
+                        )}
+                        {item.status === "REJECTED" && (
+                          <XCircle className="w-3 h-3" />
+                        )}
+                        {item.status === "PENDING" && (
+                          <Clock className="w-3 h-3" />
+                        )}
+                        {item.status}
+                      </span>
+                    </td>
+
+                    {/* Verification Actions */}
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {item.status !== "VERIFIED" && (
+                          <form action={updateDetectionStatusAction}>
+                            <input
+                              type="hidden"
+                              name="detectionId"
+                              value={item.id}
+                            />
+                            <input
+                              type="hidden"
+                              name="status"
+                              value="VERIFIED"
+                            />
+                            <button
+                              type="submit"
+                              className="px-2.5 py-1 text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-md transition"
+                            >
+                              Approve
+                            </button>
+                          </form>
+                        )}
+                        {item.status !== "REJECTED" && (
+                          <form action={updateDetectionStatusAction}>
+                            <input
+                              type="hidden"
+                              name="detectionId"
+                              value={item.id}
+                            />
+                            <input
+                              type="hidden"
+                              name="status"
+                              value="REJECTED"
+                            />
+                            <button
+                              type="submit"
+                              className="px-2.5 py-1 text-xs font-medium bg-slate-100 hover:bg-red-50 hover:text-red-600 dark:bg-slate-800 dark:hover:bg-red-950/30 rounded-md transition"
+                            >
+                              Reject
+                            </button>
+                          </form>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-
-          {matchResult.assetId ? (
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 p-4 bg-emerald-50/60 border border-emerald-200 rounded-lg">
-                <Disc className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
-                    Match Found
-                  </p>
-                  <p className="font-bold text-slate-900 mt-0.5">
-                    Asset ID: {matchResult.assetId}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-slate-600 mt-2">
-                    <span>
-                      Score: <strong>{matchResult.confidence}</strong> aligned
-                      hashes
-                    </span>
-                    <span>
-                      Start Offset:{" "}
-                      <strong>{matchResult.startOffset?.toFixed(2)}s</strong>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 p-4 bg-slate-50 border rounded-lg text-slate-600 text-sm">
-              <AlertCircle className="w-5 h-5 text-slate-400 shrink-0" />
-              <span>
-                No matching asset found in database (Score:{" "}
-                {matchResult.confidence}).
-              </span>
-            </div>
-          )}
         </div>
       )}
     </div>
