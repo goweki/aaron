@@ -15,10 +15,6 @@ export default async function AssetsPage() {
     <ViewLayout
       title="Audio Catalog & Asset Index"
       description="Manage registered tracks, inspect acoustic fingerprint indices, monitor watermarks, and track playout history."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Assets" },
-      ]}
       actions={[
         {
           label: "Upload & Index Track",

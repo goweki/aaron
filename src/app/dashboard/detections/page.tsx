@@ -15,10 +15,6 @@ export default async function DetectionsPage() {
     <ViewLayout
       title="Broadcast & Media Detections"
       description="Review real-time audio fingerprint matches and verification status captured across monitored channels."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Detections" },
-      ]}
       actions={[
         {
           label: "Start Monitoring Session",
