@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarDays } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
@@ -34,7 +34,7 @@ export function CalendarDateRangePicker({
               !date && "text-muted-foreground",
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarDays className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>

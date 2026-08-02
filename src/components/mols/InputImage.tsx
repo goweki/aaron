@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
+import { ImageIcon, Upload } from "lucide-react";
 
 export function InputImage({
   _photo,
@@ -21,9 +22,7 @@ export function InputImage({
       className="group relative flex justify-center min-w-32 min-h-[9.5rem] placeholder:italic placeholder:opacity-50 items-center rounded-md hover:cursor-pointer border-2 border-primary/50"
     >
       {!imagePreviewUrl && !_photo ? (
-        <span className="text-black/75 group-hover:opacity-0 material-icons text-2xl transition-opacity duration-300">
-          image
-        </span>
+        <ImageIcon className="size-6 text-slate-700 transition-opacity duration-300 group-hover:opacity-0 dark:text-slate-300" />
       ) : (
         <Image
           alt="display-photo"
@@ -36,9 +35,7 @@ export function InputImage({
           className="group-hover:opacity-25 object-contain transition-opacity duration-300 rounded-md !bg-transparent"
         />
       )}
-      <span className="material-icons text-2xl absolute inset-0 flex justify-center items-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-black">
-        upload
-      </span>
+      <Upload className="absolute inset-0 m-auto size-6 text-slate-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:text-slate-100" />
       <Input
         id="upload-image"
         className="hidden"

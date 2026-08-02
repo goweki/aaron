@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { SignInForm } from "@/components/forms/auth-forms/signin-signup";
 import { AuthErrorListener } from "@/components/forms/auth-forms/auth-error-listener";
 
-export default function SignInPage() {
+export default async function SignInPage() {
   return (
     <Suspense fallback={<SignInFormSkeleton />}>
       <AuthErrorListener />

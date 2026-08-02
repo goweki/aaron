@@ -1,250 +1,99 @@
-Here is the **A.A.R.O.N. Engineering & Design System Standard**. You can store this in your repository (e.g., `DEVELOPMENT_GUIDELINES.md` or `.cursorrules`) to guide developers and prompt LLM agents for future feature development.
+# A.A.R.O.N. Development Style Guide
 
----
+Use this guide for every change. Prefer the smallest complete change that preserves existing behavior. Do not introduce a new library, pattern, route, or data model unless the task requires it.
 
-# A.A.R.O.N. System Architecture & Coding Standards
+## Stack and boundaries
 
-## 1. Stack Overview & Core Principles
+- Use Next.js App Router and TypeScript. Keep type checking clean.
+- Use Tailwind CSS, shadcn/ui primitives, and Lucide React icons.
+- Pages are Server Components by default. Add `"use client"` only to the smallest interactive component that needs browser APIs, state, effects, or event handlers.
+- Keep database access, secrets, filesystem access, Node APIs, and privileged processing in server-only modules. Add `import "server-only"` to server services that could otherwise be imported by the client.
+- Do not put server and browser implementations in the same module.
 
-- **Framework:** Next.js App Router with TypeScript.
-- **Styling & UI:** Tailwind CSS, `shadcn/ui` components, and Lucide React icons.
-- **Data Fetching & Actions:** React Server Components (RSC) for page-level data fetching; Next.js Server Actions for mutations.
-- **State & Transitions:** React `useTransition` for asynchronous client-side mutation states.
-- **Notifications:** Standardized toast system (`react-hot-toast`).
+## Files, routes, and components
 
----
+- Route files should be thin: fetch/authorize, handle result objects, and compose views.
+- Dashboard route pages must be `async`, perform or delegate authorization, handle failed results with `ErrorView`, and wrap content in `ViewLayout`.
+- Put interactive UI in `src/components/`; put reusable page bodies in `src/components/views/`; put domain-specific forms in `src/components/forms/<domain>/`.
+- Keep browser API integrations as hooks in `src/hooks/use-<feature>.ts`.
+- Put reusable server domain logic in `src/lib/<domain>/` or an existing domain module. Do not import route handlers into UI code.
+- API routes are for external/API consumers. Use Server Actions for mutations initiated by the web UI.
 
-## 2. Server Architecture & Data Management
+## Naming
 
-### Page Architecture (RSC First)
+- Use `kebab-case` for directories and filenames: `upload-asset-form.tsx`, `audio-processing-actions.ts`.
+- Name React components and types in `PascalCase`; hooks start with `use`; functions and variables use `camelCase`; constants use `UPPER_SNAKE_CASE` only for immutable module-level constants.
+- Name by domain intent, not implementation detail: `indexAssetAction`, `detectionCount`, `watermarkPayload`; avoid `data`, `item`, `handle`, or `utils` when a precise name is available.
+- Boolean names start with `is`, `has`, `can`, or `should`: `isPending`, `hasWatermark`, `canManageUsers`.
+- Use singular nouns for one record and plural nouns for collections. Include units in numeric names when meaningful: `durationMs`, `fileSizeBytes`.
+- Action names end in `Action`; result-bearing queries should end in `Action` when they are Server Actions, otherwise use a descriptive verb such as `getUrl` or `extractFingerprints`.
 
-- **Server Components (`page.tsx`):** All page components are `async` Server Components that handle data fetching, error handling, and authorization checking.
-- **Error Handling:** Always check Server Action / Query responses using result objects (e.g., `{ ok: boolean, data?: T, error?: string }`). Render `<ErrorView error="{...}"/>` if the query fails.
-- **Layout Wrapper:** Wrap all dashboard views in the reusable `<ViewLayout>` component to guarantee uniform headers, breadcrumbs, and primary page actions across the platform.
+## Data fetching, authorization, and errors
 
-```tsx
-// Standard Page Template
-export default async function FeaturePage() {
-  const res = await getFeatureDataAction();
+- Query and mutation functions return `ActionResult<T>` (`{ ok, data?, error? }`) rather than throwing expected user-facing errors.
+- Check `res.ok` before using `res.data`. Server pages render `ErrorView` for failed page data.
+- Authenticate and authorize on the server for every protected read or mutation. Never rely on hidden controls or client-provided owner IDs for authorization.
+- Filter data by the authenticated actor in the query, not after fetching it.
+- Log unexpected server errors with useful context; return a safe, actionable error message to the UI. Do not expose stack traces, secrets, tokens, or raw database errors.
+- Revalidate the affected routes after successful mutations.
 
-  if (!res.ok) {
-    return <ErrorView error={res.error} />;
-  }
+## Client mutations and feedback
 
-  return (
-    <ViewLayout
-      title="Feature Title"
-      description="Clear, action-oriented description of what this page monitors or manages."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Feature" },
-      ]}
-      actions={[
-        {
-          label: "Primary Action",
-          href: "/dashboard/feature/new",
-          icon: PlusIcon,
-          variant: "default",
-        },
-      ]}
-    >
-      <FeatureView data={res.data} />
-    </ViewLayout>
-  );
-}
-```
+- Call Server Actions from client components inside `startTransition` from `useTransition`.
+- Never use `<form action={serverAction}>` or an inline async `action` in a Client Component. Use `onSubmit` or `onClick` handlers instead.
+- Track the active record ID for row-level operations. Disable controls while pending, add `disabled:opacity-50`, and show `Loader2` with `animate-spin` only on the active control.
+- Use `react-hot-toast` for success and failure feedback. Do not add a second toast system.
+- Validate obvious client input for usability, but treat server validation as authoritative.
 
-### Server Actions & Mutations
+## UI, accessibility, and copy
 
-- **No Raw Form Actions:** Do not bind `<form action={serverAction}>` directly in Client Components.
-- **Async Transitions:** Wrap Server Actions inside `startTransition` using React's `useTransition` hook.
-- **Action Signatures:** Server Actions should accept direct parameters (e.g., `(id: string, status: Enum)`) and return `{ ok: boolean, data?: T, error?: string }`.
-- **State Scoping:** Track single-item pending states (e.g., `activeItemId`) to isolate loading spinners to the row or button being clicked.
+- Use shadcn components before writing a raw equivalent. Raw controls are acceptable only when the primitive cannot meet the requirement.
+- Use Lucide icons only. Choose icons that match the domain: `Music2`/`Library` for assets, `Radio`/`Fingerprint`/`Mic` for monitoring, and `CheckCircle2`/`XCircle`/`Clock`/`Loader2` for states.
+- Support light and dark themes for every custom color: light backgrounds use `bg-slate-50` or `bg-white`; dark counterparts use `dark:bg-slate-950` or `dark:bg-slate-900`. Pair slate borders with `dark:border-slate-800`.
+- Use Indigo for primary actions and telemetry, Emerald for successful/active states, Amber or Slate for pending/inactive states, and Red for errors/destructive states.
+- Preserve keyboard access, semantic labels, visible focus styles, and meaningful `alt` text. Buttons with icons only require an accessible label.
+- Write concise, technical, domain-accurate copy: “Acoustic Fingerprint Index”, “Broadcast Stream Match”, and “aligned hashes” are preferred over generic terms.
 
-```tsx
-// Standard Action Trigger Pattern
-const [isPending, startTransition] = useTransition();
-const [activeItemId, setActiveItemId] = useState<string | null>(null);
+## Forms and validation
 
-const handleAction = (id: string) => {
-  setActiveItemId(id);
-  startTransition(async () => {
-    const res = await updateStatusAction(id);
-    if (!res.ok) {
-      toast.error(res.error || "Operation failed");
-    } else {
-      toast.success("Updated successfully");
-    }
-    setActiveItemId(null);
-  });
-};
-```
+- Use controlled inputs when client state or validation is needed; provide `id`, `Label`, `name`, and an appropriate `autoComplete` value where applicable.
+- Keep form submission, pending state, success/error feedback, and reset behavior together in the form component.
+- Use Zod or explicit server validation at trust boundaries. Validate file type, size, ownership, and required metadata on the server.
+- Never hardcode user IDs, credentials, URLs, or environment-specific paths.
 
----
+## URLs, environment, and external input
 
-## 3. Web & Browser API Encapsulation
+- Use `NEXT_PUBLIC_APP_URL` for the public application origin. Normalize it to an absolute `http` or `https` URL before composing links.
+- Never pass unchecked input to `new URL()`, filesystem APIs, shell commands, database filters, or HTML rendering.
+- Encode user-controlled URL query values and use parameterized Prisma queries.
+- Keep environment variables documented in `.env.template`; never commit real values.
 
-- **Custom Hooks:** Abstract complex web APIs (Web Audio API, SpeechRecognition, Oscilloscopes/Canvas drawing, MediaDevices) into standalone custom hooks (e.g., `useAudioListener()`).
-- **Clean Cleanup:** Always release resources inside `useEffect` cleanup callbacks (`AudioContext.close()`, `MediaStream.getTracks().forEach(t => t.stop())`, `cancelAnimationFrame`).
+## Audio and background processing
 
----
+- Browser audio, microphone, canvas, and media APIs belong in focused custom hooks with `useEffect` cleanup for streams, animation frames, and `AudioContext` instances.
+- Server audio processing belongs in server-only services. Use explicit input/output paths or storage keys, close contexts/processes in `finally`, and persist metadata transactionally where appropriate.
+- Do not import `fs`, `child_process`, Prisma, or server actions into a client module.
 
-## 4. Design System & UI/UX Guidelines
+## Database and types
 
-### Theme & Colors
+- Reuse generated Prisma types and existing relation include definitions. Do not duplicate schema types by hand.
+- Keep transactions focused and bounded. Use `createMany` for bulk inserts where appropriate.
+- Do not use unchecked Prisma input types for untrusted browser data without constructing a validated, allow-listed server object first.
+- Prefer `unknown` plus narrowing over `any`.
 
-- **Theme Strategy:** Dual-theme architecture (Dark / Light) powered by Tailwind CSS dark mode classes (`dark:...`).
-- **Color Palette:**
-- **Backgrounds:** Light: `bg-slate-50` / `bg-white`; Dark: `dark:bg-slate-950` / `dark:bg-slate-900`.
-- **Borders:** `border-slate-200` / `dark:border-slate-800`.
-- **Primary Accents:** Indigo (`indigo-600`, `indigo-500`) for primary brand interactions & key telemetry metrics.
-- **Status Pills:**
-- **Active / Verified:** Emerald (`bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300`).
-- **Inactive / Pending:** Slate or Amber (`bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300`).
-- **Rejected / Error:** Red (`bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300`).
+## Imports, formatting, and maintenance
 
-### Icon Selection Rules (Lucide React)
+- Use `@/` aliases for app modules and type-only imports (`import type`) when an import is only used as a type.
+- Remove unused code, commented-out implementations, stale TODOs, and unused dependencies as part of the change that makes them obsolete.
+- Avoid duplicate page titles, duplicate data fetches, and duplicate client/server logic.
+- Prefer small pure helpers and early returns over deeply nested conditionals.
+- Do not reformat unrelated files or overwrite user changes.
 
-Always use context-appropriate Lucide icons:
+## Completion checklist
 
-- **Dashboard / Overview:** `LayoutDashboard`, `Activity`, `Gauge`
-- **Audio Assets & Catalog:** `Music2`, `Library`, `Waves`
-- **Broadcast Monitoring & Detections:** `Radio`, `Fingerprint`, `Mic`
-- **System Operations:** `Clock`, `CheckCircle2`, `XCircle`, `Loader2` (for pending states)
-
-### Micro-Interactions & UX Copy
-
-- **Button States:** Disable buttons during transitions (`disabled={isPending}`) and set `disabled:opacity-50`. Display `Loader2` with `animate-spin` inside the active button.
-- **Copywriting:** Use professional, technical, and domain-accurate terminology (e.g., _"Acoustic Fingerprint Index"_, _"Broadcast Stream Match"_, _"Aligned Hashes"_ instead of vague generic terms).
-
----
-
-## 5. URL & Environment Hygiene
-
-- **URL Parsing:** Never pass unvalidated string domains to `new URL()`. Always sanitize or prepend `https://` to avoid Node `ERR_INVALID_URL` runtime crashes.
-- **Absolute Protocol:** Standardize environment variable handling for `NEXT_PUBLIC_APP_URL` to enforce valid protocols across server and client boundaries.
-  Here is the **A.A.R.O.N. Engineering & Design System Standard**. You can store this in your repository (e.g., `DEVELOPMENT_GUIDELINES.md` or `.cursorrules`) to guide developers and prompt LLM agents for future feature development.
-
----
-
-# A.A.R.O.N. System Architecture & Coding Standards
-
-## 1. Stack Overview & Core Principles
-
-- **Framework:** Next.js App Router with TypeScript.
-- **Styling & UI:** Tailwind CSS, `shadcn/ui` components, and Lucide React icons.
-- **Data Fetching & Actions:** React Server Components (RSC) for page-level data fetching; Next.js Server Actions for mutations.
-- **State & Transitions:** React `useTransition` for asynchronous client-side mutation states.
-- **Notifications:** Standardized toast system (`react-hot-toast`).
-
----
-
-## 2. Server Architecture & Data Management
-
-### Page Architecture (RSC First)
-
-- **Server Components (`page.tsx`):** All page components are `async` Server Components that handle data fetching, error handling, and authorization checking.
-- **Error Handling:** Always check Server Action / Query responses using result objects (e.g., `{ ok: boolean, data?: T, error?: string }`). Render `<ErrorView error="{...}"/>` if the query fails.
-- **Layout Wrapper:** Wrap all dashboard views in the reusable `<ViewLayout>` component to guarantee uniform headers, breadcrumbs, and primary page actions across the platform.
-
-```tsx
-// Standard Page Template
-export default async function FeaturePage() {
-  const res = await getFeatureDataAction();
-
-  if (!res.ok) {
-    return <ErrorView error={res.error} />;
-  }
-
-  return (
-    <ViewLayout
-      title="Feature Title"
-      description="Clear, action-oriented description of what this page monitors or manages."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Feature" },
-      ]}
-      actions={[
-        {
-          label: "Primary Action",
-          href: "/dashboard/feature/new",
-          icon: PlusIcon,
-          variant: "default",
-        },
-      ]}
-    >
-      <FeatureView data={res.data} />
-    </ViewLayout>
-  );
-}
-```
-
-### Server Actions & Mutations
-
-- **No Raw Form Actions:** Do not bind `<form action={serverAction}>` directly in Client Components.
-- **Async Transitions:** Wrap Server Actions inside `startTransition` using React's `useTransition` hook.
-- **Action Signatures:** Server Actions should accept direct parameters (e.g., `(id: string, status: Enum)`) and return `{ ok: boolean, data?: T, error?: string }`.
-- **State Scoping:** Track single-item pending states (e.g., `activeItemId`) to isolate loading spinners to the row or button being clicked.
-
-```tsx
-// Standard Action Trigger Pattern
-const [isPending, startTransition] = useTransition();
-const [activeItemId, setActiveItemId] = useState<string | null>(null);
-
-const handleAction = (id: string) => {
-  setActiveItemId(id);
-  startTransition(async () => {
-    const res = await updateStatusAction(id);
-    if (!res.ok) {
-      toast.error(res.error || "Operation failed");
-    } else {
-      toast.success("Updated successfully");
-    }
-    setActiveItemId(null);
-  });
-};
-```
-
----
-
-## 3. Web & Browser API Encapsulation
-
-- **Custom Hooks:** Abstract complex web APIs (Web Audio API, SpeechRecognition, Oscilloscopes/Canvas drawing, MediaDevices) into standalone custom hooks (e.g., `useAudioListener()`).
-- **Clean Cleanup:** Always release resources inside `useEffect` cleanup callbacks (`AudioContext.close()`, `MediaStream.getTracks().forEach(t => t.stop())`, `cancelAnimationFrame`).
-
----
-
-## 4. Design System & UI/UX Guidelines
-
-### Theme & Colors
-
-- **Theme Strategy:** Dual-theme architecture (Dark / Light) powered by Tailwind CSS dark mode classes (`dark:...`).
-- **Color Palette:**
-- **Backgrounds:** Light: `bg-slate-50` / `bg-white`; Dark: `dark:bg-slate-950` / `dark:bg-slate-900`.
-- **Borders:** `border-slate-200` / `dark:border-slate-800`.
-- **Primary Accents:** Indigo (`indigo-600`, `indigo-500`) for primary brand interactions & key telemetry metrics.
-- **Status Pills:**
-- **Active / Verified:** Emerald (`bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300`).
-- **Inactive / Pending:** Slate or Amber (`bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300`).
-- **Rejected / Error:** Red (`bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300`).
-
-### Icon Selection Rules (Lucide React)
-
-Always use context-appropriate Lucide icons:
-
-- **Dashboard / Overview:** `LayoutDashboard`, `Activity`, `Gauge`
-- **Audio Assets & Catalog:** `Music2`, `Library`, `Waves`
-- **Broadcast Monitoring & Detections:** `Radio`, `Fingerprint`, `Mic`
-- **System Operations:** `Clock`, `CheckCircle2`, `XCircle`, `Loader2` (for pending states)
-
-### Micro-Interactions & UX Copy
-
-- **Button States:** Disable buttons during transitions (`disabled={isPending}`) and set `disabled:opacity-50`. Display `Loader2` with `animate-spin` inside the active button.
-- **Copywriting:** Use professional, technical, and domain-accurate terminology (e.g., _"Acoustic Fingerprint Index"_, _"Broadcast Stream Match"_, _"Aligned Hashes"_ instead of vague generic terms).
-
----
-
-## 5. URL & Environment Hygiene
-
-- **URL Parsing:** Never pass unvalidated string domains to `new URL()`. Always sanitize or prepend `https://` to avoid Node `ERR_INVALID_URL` runtime crashes.
-- **Absolute Protocol:** Standardize environment variable handling for `NEXT_PUBLIC_APP_URL` to enforce valid protocols across server and client boundaries.
+- Is the route/server boundary correct and protected?
+- Are result objects, errors, loading state, and toasts handled?
+- Are names precise, types explicit, and dead code absent?
+- Does custom UI work in both themes and use shadcn/Lucide conventions?
+- Are URLs, environment values, file paths, and external input validated?
+- Did `npx tsc --noEmit` and the relevant test/build command run, or is the blocker reported?

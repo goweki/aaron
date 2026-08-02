@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useTransition } from "react";
 import {
   Users,
   UserPlus,
@@ -15,6 +16,7 @@ import {
   Mail,
   Key,
   Music,
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -25,28 +27,33 @@ import {
 } from "@/actions/dashboard-actions/user-actions";
 
 export default function UsersView({ users }: { users: UserWithRelations[] }) {
-  return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            User & System Accounts
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Manage system access, roles, user status, and view catalog
-            contributions.
-          </p>
-        </div>
+  const [isPending, startTransition] = useTransition();
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
 
-        <Link
-          href="/dashboard/users/create"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg shadow transition"
-        >
-          <UserPlus className="w-4 h-4" />
-          Add New User
-        </Link>
-      </div>
+  const runAction = (
+    id: string,
+    action: (userId: string) => ReturnType<typeof toggleUserStatusAction>,
+    successMessage: string,
+  ) => {
+    setActiveItemId(id);
+    startTransition(async () => {
+      try {
+        const res = await action(id);
+        if (!res.ok) {
+          toast.error(res.error || "Operation failed");
+        } else {
+          toast.success(successMessage);
+        }
+      } catch {
+        toast.error("Operation failed. Please try again.");
+      } finally {
+        setActiveItemId(null);
+      }
+    });
+  };
+
+  return (
+    <div className="space-y-8">
 
       {/* Users Table / Empty State */}
       {users.length === 0 ? (
@@ -137,12 +144,12 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
                     {/* System Role */}
                     <td className="py-3.5 px-4">
                       {user.role === "ADMINISTRATOR" && (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800">
                           <ShieldAlert className="w-3 h-3" /> Admin
                         </span>
                       )}
                       {user.role === "SYSTEM" && (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800">
                           <Shield className="w-3 h-3" /> System
                         </span>
                       )}
@@ -177,17 +184,17 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
 
                     {/* Status Badge & Toggle */}
                     <td className="py-3.5 px-4">
-                      <form
-                        action={async () => {
-                          const res = await toggleUserStatusAction(user.id);
-                          if (!res.ok) {
-                            toast.error(res.error);
+                      <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() =>
+                            runAction(
+                              user.id,
+                              toggleUserStatusAction,
+                              "User status updated",
+                            )
                           }
-                        }}
-                      >
-                        <button
-                          type="submit"
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border transition ${
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border transition disabled:opacity-50 ${
                             user.status === "ACTIVE"
                               ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
                               : user.status === "PENDING"
@@ -195,45 +202,45 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
                                 : "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
                           }`}
                         >
-                          {user.status === "ACTIVE" && (
+                          {isPending && activeItemId === user.id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : user.status === "ACTIVE" ? (
                             <>
                               <CheckCircle2 className="w-3 h-3" /> Active
                             </>
-                          )}
-                          {user.status === "PENDING" && (
+                          ) : user.status === "PENDING" ? (
                             <>
                               <Clock className="w-3 h-3" /> Pending
                             </>
-                          )}
-                          {(user.status === "INACTIVE" ||
-                            user.status === "DELETED") && (
+                          ) : (
                             <>
                               <XCircle className="w-3 h-3" /> Inactive
                             </>
                           )}
-                        </button>
-                      </form>
+                      </button>
                     </td>
 
                     {/* Row Actions */}
                     <td className="py-3.5 px-4 text-right">
-                      <form
-                        action={async () => {
-                          const res = await deleteUserAction(user.id);
-                          if (!res.ok) {
-                            toast.error(res.error);
+                      <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() =>
+                            runAction(
+                              user.id,
+                              deleteUserAction,
+                              "User deleted successfully",
+                            )
                           }
-                        }}
-                        className="inline-block"
-                      >
-                        <button
-                          type="submit"
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
+                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50"
                           title="Delete User"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </form>
+                          {isPending && activeItemId === user.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                      </button>
                     </td>
                   </tr>
                 ))}

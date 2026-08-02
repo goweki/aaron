@@ -1,190 +1,116 @@
-"use client";
+import "server-only";
 
-import fs from "fs";
-import { saveWatermarkToDatabase } from "@/actions/dashboard-actions/audio-processing-actions";
+import { readFile, writeFile } from "node:fs/promises";
+import { AudioContext, type AudioBuffer as NodeAudioBuffer } from "web-audio-api";
+import prisma from "@/lib/prisma";
 
-// Function to embed a watermark in the audio file
-async function embedWatermark(
-  inputFilePath: string,
-  outputFilePath: string,
-  watermarkText: string,
-): Promise<void> {
-  // Create an AudioContext, checking for webkitAudioContext for compatibility
-  const audioContext = new (
-    window.AudioContext || (window as any).webkitAudioContext
-  )();
+const WATERMARK_ALGORITHM = "spread-spectrum-lsb-v1";
+const SAMPLE_STRIDE = 512;
+const WATERMARK_AMPLITUDE = 1e-7;
 
-  // Load the audio file
-  const audioBuffer = await loadAudioFile(audioContext, inputFilePath);
-
-  // Convert the watermark text to binary
-  const watermarkBinary = textToBinary(watermarkText);
-
-  // Embed the watermark in the audio buffer
-  const watermarkedBuffer = embedWatermarkInBuffer(
-    audioBuffer,
-    watermarkBinary,
-  );
-
-  // Save the watermarked audio to disk
-  await saveAudioFile(audioContext, watermarkedBuffer, outputFilePath);
-
-  // Save the watermark to the database
-  await saveWatermarkToDatabase(outputFilePath, watermarkText, "algorithm");
+export interface EmbedWatermarkInput {
+  assetId: string;
+  inputFilePath: string;
+  outputFilePath: string;
+  payload: string;
 }
 
-// Function to load an audio file into an AudioBuffer
-function loadAudioFile(
-  audioContext: AudioContext,
-  filePath: string,
-): Promise<AudioBuffer> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, (err, data) => {
-      if (err) return reject(err);
-
-      audioContext.decodeAudioData(
-        data.buffer,
-        (buffer) => {
-          resolve(buffer);
-        },
-        reject,
-      );
-    });
-  });
+export interface WatermarkPipelineResult {
+  assetId: string;
+  outputFilePath: string;
+  algorithm: string;
 }
 
-// Function to convert text to binary
-function textToBinary(text: string): string {
-  return text
-    .split("")
-    .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
-    .join("");
-}
-
-// Function to embed the watermark binary into the audio buffer
-function embedWatermarkInBuffer(
-  audioBuffer: AudioBuffer,
-  watermarkBinary: string,
-): AudioBuffer {
-  const numChannels = audioBuffer.numberOfChannels;
-  const sampleRate = audioBuffer.sampleRate;
-  const length = audioBuffer.length;
-
-  // Create an AudioContext, checking for webkitAudioContext for compatibility
-  const audioContext = new (
-    window.AudioContext || (window as any).webkitAudioContext
-  )();
-
-  // Create a new buffer using the AudioContext
-  const newBuffer = audioContext.createBuffer(numChannels, length, sampleRate);
-
-  for (let channel = 0; channel < numChannels; channel++) {
-    const inputData = audioBuffer.getChannelData(channel);
-    const outputData = newBuffer.getChannelData(channel);
-
-    for (let i = 0; i < length; i++) {
-      outputData[i] = inputData[i];
-
-      // Embed the watermark bit into the LSB of the sample
-      if (i < watermarkBinary.length) {
-        const watermarkBit = parseInt(watermarkBinary[i], 2);
-        outputData[i] = (inputData[i] & ~1) | watermarkBit;
-      }
-    }
+/**
+ * Server-only watermarking pipeline. It decodes an audio file with the
+ * Node-compatible Web Audio implementation, applies a low-amplitude payload,
+ * writes a WAV artifact, and records the corresponding watermark metadata.
+ */
+export async function embedWatermark({
+  assetId,
+  inputFilePath,
+  outputFilePath,
+  payload,
+}: EmbedWatermarkInput): Promise<WatermarkPipelineResult> {
+  if (!assetId || !payload.trim()) {
+    throw new Error("An asset ID and watermark payload are required.");
   }
 
-  return newBuffer;
-}
-
-// Function to save the watermarked audio buffer to a file
-function saveAudioFile(
-  audioContext: AudioContext,
-  audioBuffer: AudioBuffer,
-  filePath: string,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const offlineContext = new OfflineAudioContext(
-      audioBuffer.numberOfChannels,
-      audioBuffer.length,
-      audioBuffer.sampleRate,
+  const context = new AudioContext({ sinkId: { type: "none" } });
+  try {
+    const sourceBytes = await readFile(inputFilePath);
+    const source = await context.decodeAudioData(sourceBytes);
+    const watermarked = context.createBuffer(
+      source.numberOfChannels,
+      source.length,
+      source.sampleRate,
     );
 
-    const bufferSource = offlineContext.createBufferSource();
-    bufferSource.buffer = audioBuffer;
-    bufferSource.connect(offlineContext.destination);
-    bufferSource.start();
+    for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
+      watermarked.copyToChannel(source.getChannelData(channel), channel);
+    }
+    applyPayload(watermarked, payload);
 
-    offlineContext
-      .startRendering()
-      .then((renderedBuffer: AudioBuffer) => {
-        const wavData = audioBufferToWav(renderedBuffer);
-        fs.writeFile(filePath, Buffer.from(wavData), (err) => {
-          if (err) return reject(err);
-          resolve();
-        });
-      })
-      .catch(reject);
-  });
+    await writeFile(outputFilePath, audioBufferToWav(watermarked));
+    await prisma.watermark.upsert({
+      where: { assetId },
+      create: { assetId, payload: payload.trim(), algorithm: WATERMARK_ALGORITHM },
+      update: { payload: payload.trim(), algorithm: WATERMARK_ALGORITHM },
+    });
+
+    return { assetId, outputFilePath, algorithm: WATERMARK_ALGORITHM };
+  } finally {
+    await context.close();
+  }
 }
 
-// Function to convert an AudioBuffer to a WAV file format
-function audioBufferToWav(buffer: AudioBuffer): ArrayBuffer {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const format = 1; // PCM
-  const bitsPerSample = 16;
+function applyPayload(buffer: NodeAudioBuffer, payload: string) {
+  const bits = Array.from(payload)
+    .flatMap((character) =>
+      character.charCodeAt(0).toString(2).padStart(8, "0").split(""),
+    )
+    .map(Number);
 
-  let header = new ArrayBuffer(44);
-  let view = new DataView(header);
+  if (bits.length * SAMPLE_STRIDE > buffer.length) {
+    throw new Error("Audio asset is too short to contain this watermark payload.");
+  }
 
-  /* RIFF identifier */
-  writeString(view, 0, "RIFF");
-  /* RIFF chunk length */
-  view.setUint32(4, 36 + buffer.length * 2 * numChannels, true);
-  /* RIFF type */
-  writeString(view, 8, "WAVE");
-  /* format chunk identifier */
-  writeString(view, 12, "fmt ");
-  /* format chunk length */
-  view.setUint32(16, 16, true);
-  /* sample format (raw) */
-  view.setUint16(20, format, true);
-  /* channel count */
-  view.setUint16(22, numChannels, true);
-  /* sample rate */
-  view.setUint32(24, sampleRate, true);
-  /* byte rate (sample rate * block align) */
-  view.setUint32(28, sampleRate * numChannels * 2, true);
-  /* block align (channel count * bytes per sample) */
-  view.setUint16(32, numChannels * 2, true);
-  /* bits per sample */
-  view.setUint16(34, bitsPerSample, true);
-  /* data chunk identifier */
-  writeString(view, 36, "data");
-  /* data chunk length */
-  view.setUint32(40, buffer.length * 2 * numChannels, true);
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const samples = buffer.getChannelData(channel);
+    bits.forEach((bit, index) => {
+      const sampleIndex = index * SAMPLE_STRIDE;
+      const delta = bit === 1 ? WATERMARK_AMPLITUDE : -WATERMARK_AMPLITUDE;
+      samples[sampleIndex] = Math.max(-1, Math.min(1, samples[sampleIndex] + delta));
+    });
+  }
+}
 
-  // Convert the samples
-  let samples = new Int16Array(buffer.length * numChannels);
-  for (let channel = 0; channel < numChannels; channel++) {
-    const channelData = buffer.getChannelData(channel);
-    for (let i = 0; i < channelData.length; i++) {
-      samples[i * numChannels + channel] =
-        Math.max(-1, Math.min(1, channelData[i])) * 32767;
+function audioBufferToWav(buffer: NodeAudioBuffer): Buffer {
+  const bytesPerSample = 2;
+  const blockAlign = buffer.numberOfChannels * bytesPerSample;
+  const output = Buffer.alloc(44 + buffer.length * blockAlign);
+
+  output.write("RIFF", 0);
+  output.writeUInt32LE(36 + buffer.length * blockAlign, 4);
+  output.write("WAVEfmt ", 8);
+  output.writeUInt32LE(16, 16);
+  output.writeUInt16LE(1, 20);
+  output.writeUInt16LE(buffer.numberOfChannels, 22);
+  output.writeUInt32LE(buffer.sampleRate, 24);
+  output.writeUInt32LE(buffer.sampleRate * blockAlign, 28);
+  output.writeUInt16LE(blockAlign, 32);
+  output.writeUInt16LE(16, 34);
+  output.write("data", 36);
+  output.writeUInt32LE(buffer.length * blockAlign, 40);
+
+  let offset = 44;
+  for (let sample = 0; sample < buffer.length; sample += 1) {
+    for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+      const value = Math.max(-1, Math.min(1, buffer.getChannelData(channel)[sample]));
+      output.writeInt16LE(Math.round(value * 0x7fff), offset);
+      offset += bytesPerSample;
     }
   }
 
-  // Write the sample data
-  let wav = new Uint8Array(header.byteLength + samples.byteLength);
-  wav.set(new Uint8Array(header), 0);
-  wav.set(new Uint8Array(samples.buffer), header.byteLength);
-
-  return wav.buffer;
-}
-
-// Helper function to write a string to a DataView
-function writeString(view: DataView, offset: number, string: string): void {
-  for (let i = 0; i < string.length; i++) {
-    view.setUint8(offset + i, string.charCodeAt(i));
-  }
+  return output;
 }

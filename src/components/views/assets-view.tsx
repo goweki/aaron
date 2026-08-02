@@ -119,8 +119,8 @@
 //                     {/* Watermark State */}
 //                     <td className="py-3.5 px-4">
 //                       {asset.watermark ? (
-//                         <span className="inline-flex items-center gap-1.5 text-xs text-purple-700 dark:text-purple-300 font-medium bg-purple-50 dark:bg-purple-950/40 px-2.5 py-1 rounded-md border border-purple-200 dark:border-purple-800">
-//                           <Waves className="w-3.5 h-3.5 text-purple-500" />{" "}
+//                         <span className="inline-flex items-center gap-1.5 text-xs text-indigo-700 dark:text-indigo-300 font-medium bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-md border border-indigo-200 dark:border-indigo-800">
+//                           <Waves className="w-3.5 h-3.5 text-indigo-500" />{" "}
 //                           Embedded
 //                         </span>
 //                       ) : (
@@ -141,7 +141,7 @@
 //                     {/* Status Toggle Button */}
 //                     <td className="py-3.5 px-4">
 //                       <form
-//                         action={async () => {
+//                         onSubmit={() => {
 //                           const res = await toggleAssetStatusAction(asset.id);
 //                           if (!res.ok) {
 //                             toast.error(res.error);
@@ -172,7 +172,7 @@
 //                     {/* Row Actions */}
 //                     <td className="py-3.5 px-4 text-right">
 //                       <form
-//                         action={async () => {
+//                         onSubmit={() => {
 //                           const res = await deleteAssetAction(asset.id);
 //                           if (!res.ok) {
 //                             toast.error(res.error);
@@ -202,7 +202,7 @@
 
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
   Music,
@@ -229,14 +229,20 @@ export default function AssetsView({
   assets: AssetWithRelations[];
 }) {
   const [isPending, startTransition] = useTransition();
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
 
   const handleToggleStatus = (assetId: string) => {
+    setActiveItemId(assetId);
     startTransition(async () => {
-      const res = await toggleAssetStatusAction(assetId);
-      if (!res.ok) {
-        toast.error(res.error);
-      } else {
-        toast.success("Asset status updated");
+      try {
+        const res = await toggleAssetStatusAction(assetId);
+        if (!res.ok) {
+          toast.error(res.error);
+        } else {
+          toast.success("Asset status updated");
+        }
+      } finally {
+        setActiveItemId(null);
       }
     });
   };
@@ -244,12 +250,17 @@ export default function AssetsView({
   const handleDelete = (assetId: string) => {
     if (!confirm("Are you sure you want to delete this asset?")) return;
 
+    setActiveItemId(assetId);
     startTransition(async () => {
-      const res = await deleteAssetAction(assetId);
-      if (!res.ok) {
-        toast.error(res.error);
-      } else {
-        toast.success("Asset deleted successfully");
+      try {
+        const res = await deleteAssetAction(assetId);
+        if (!res.ok) {
+          toast.error(res.error);
+        } else {
+          toast.success("Asset deleted successfully");
+        }
+      } finally {
+        setActiveItemId(null);
       }
     });
   };
@@ -349,8 +360,8 @@ export default function AssetsView({
                     {/* Watermark State */}
                     <td className="py-3.5 px-4">
                       {asset.watermark ? (
-                        <span className="inline-flex items-center gap-1.5 text-xs text-purple-700 dark:text-purple-300 font-medium bg-purple-50 dark:bg-purple-950/40 px-2.5 py-1 rounded-md border border-purple-200 dark:border-purple-800">
-                          <Waves className="w-3.5 h-3.5 text-purple-500" />{" "}
+                        <span className="inline-flex items-center gap-1.5 text-xs text-indigo-700 dark:text-indigo-300 font-medium bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-1 rounded-md border border-indigo-200 dark:border-indigo-800">
+                          <Waves className="w-3.5 h-3.5 text-indigo-500" />{" "}
                           Embedded
                         </span>
                       ) : (
@@ -380,7 +391,9 @@ export default function AssetsView({
                             : "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
                         }`}
                       >
-                        {asset.status === "ACTIVE" ? (
+                        {isPending && activeItemId === asset.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : asset.status === "ACTIVE" ? (
                           <>
                             <CheckCircle2 className="w-3 h-3" /> Active
                           </>
@@ -401,7 +414,7 @@ export default function AssetsView({
                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50"
                         title="Delete Asset"
                       >
-                        {isPending ? (
+                        {isPending && activeItemId === asset.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
                           <Trash2 className="w-4 h-4" />

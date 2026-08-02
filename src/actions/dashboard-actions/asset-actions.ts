@@ -7,6 +7,80 @@ import { getFriendlyErrorMessage } from "@/lib/utils/error-handlers";
 import { ActionResult } from "@/types/action";
 import { assetIncludes, AssetWithRelations } from "./dashboard-types";
 import { revalidatePath } from "next/cache";
+import { extractFingerprints } from "@/lib/audio/fingerprint";
+
+export interface IndexAssetInput {
+  file: File;
+  title: string;
+  artist?: string;
+  album?: string;
+  watermarkPayload?: string;
+}
+
+export async function indexAssetAction(
+  input: IndexAssetInput,
+): Promise<ActionResult<{ assetId: string; fingerprintsCount: number }>> {
+  try {
+    const actor = await requireUser();
+    const title = input.title.trim();
+
+    if (!input.file || !title) {
+      return { ok: false, error: "An audio file and track title are required." };
+    }
+
+    const fingerprints = await extractFingerprints(
+      Buffer.from(await input.file.arrayBuffer()),
+    );
+    if (fingerprints.length === 0) {
+      return {
+        ok: false,
+        error: "No landmark hashes could be extracted from this audio file.",
+      };
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const asset = await tx.asset.create({
+        data: {
+          title,
+          artist: input.artist?.trim() || null,
+          album: input.album?.trim() || null,
+          filename: input.file.name,
+          fileSize: input.file.size,
+          ownerId: actor.id,
+          status: Status.ACTIVE,
+          type: "MUSIC",
+        },
+      });
+      const fingerprint = await tx.audioFingerprint.create({
+        data: { assetId: asset.id, algorithm: "landmark", version: "1.0.4" },
+      });
+      await tx.fingerprintHash.createMany({
+        data: fingerprints.map((item) => ({
+          hash: BigInt(item.hcode),
+          offsetMs: item.tcode,
+          audioFingerprintId: fingerprint.id,
+          assetId: asset.id,
+        })),
+      });
+      if (input.watermarkPayload?.trim()) {
+        await tx.watermark.create({
+          data: {
+            assetId: asset.id,
+            algorithm: "metadata-payload",
+            payload: input.watermarkPayload.trim(),
+          },
+        });
+      }
+      return { assetId: asset.id, fingerprintsCount: fingerprints.length };
+    });
+
+    revalidatePath("/dashboard/assets");
+    revalidatePath("/dashboard");
+    return { ok: true, data: result };
+  } catch (error) {
+    return { ok: false, error: getFriendlyErrorMessage(error) };
+  }
+}
 
 export async function createAssetAction(
   input: Prisma.AssetUncheckedCreateInput,
