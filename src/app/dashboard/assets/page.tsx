@@ -15,14 +15,6 @@ export default async function AssetsPage() {
     <ViewLayout
       title="Audio Catalog"
       description="Manage registered tracks, inspect acoustic fingerprint indices, monitor watermarks, and track playout history."
-      actions={[
-        {
-          label: "Upload & Index Track",
-          href: "/dashboard/assets/upload",
-          icon: UploadIcon,
-          variant: "default",
-        },
-      ]}
     >
       <AssetsView assets={assetsRes.data} />
     </ViewLayout>

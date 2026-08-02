@@ -14,10 +14,6 @@ export default async function MonitoringPage() {
     <ViewLayout
       title="Monitoring Sessions"
       description="Track active broadcast monitors, session lifecycles, and match telemetry."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Monitor" },
-      ]}
     >
       <MonitoringView sessions={sessionsRes.data} />
     </ViewLayout>

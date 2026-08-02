@@ -14,7 +14,10 @@ export default async function UsersPage() {
     <ViewLayout
       title="User & System Accounts"
       description="Manage operator access, system roles, account status, and catalog contributions."
-      breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Users" }]}
+      breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Users" },
+      ]}
     >
       <UsersView users={usersRes.data} />
     </ViewLayout>

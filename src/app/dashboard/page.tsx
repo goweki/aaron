@@ -14,7 +14,6 @@ export default async function DashboardIndexPage() {
     <ViewLayout
       title="System Telemetry Overview"
       description="Monitor catalog capacity, broadcast activity, acoustic fingerprint matches, and operational notifications."
-      breadcrumbs={[{ label: "Dashboard" }]}
     >
       <DashboardOverview data={dashboardRes.data} />
     </ViewLayout>

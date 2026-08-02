@@ -14,10 +14,6 @@ export default async function WatermarksPage() {
     <ViewLayout
       title="Watermark Studio"
       description="Review registered watermark payloads and trigger server-side embedding workflows."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Watermarks" },
-      ]}
     >
       <WatermarksView watermarks={watermarksRes.data} />
     </ViewLayout>

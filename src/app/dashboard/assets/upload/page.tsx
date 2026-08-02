@@ -6,11 +6,6 @@ export default async function UploadAssetPage() {
     <ViewLayout
       title="Upload & Index Audio Asset"
       description="Generate landmark hashes and optionally register an inaudible watermark payload for a catalog track."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Audio Catalog", href: "/dashboard/assets" },
-        { label: "Upload" },
-      ]}
     >
       <UploadAssetForm />
     </ViewLayout>

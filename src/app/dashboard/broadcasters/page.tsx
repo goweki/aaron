@@ -14,10 +14,6 @@ export default async function BroadcastersPage() {
     <ViewLayout
       title="Broadcaster Registry"
       description="Register broadcast channels, manage stream metadata, and inspect monitoring sessions."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Broadcasters" },
-      ]}
     >
       <BroadcastersView broadcasters={broadcastersRes.data} />
     </ViewLayout>

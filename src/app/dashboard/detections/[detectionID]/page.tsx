@@ -23,11 +23,6 @@ export default async function DetectionDetailPage({ params }: Props) {
     <ViewLayout
       title="Detection Inspector"
       description="Inspect the matched broadcast sample, asset reference, and verification status."
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Detections", href: "/dashboard/detections" },
-        { label: detectionRes.data.id },
-      ]}
     >
       <DetectionInspector detection={detectionRes.data} />
     </ViewLayout>
