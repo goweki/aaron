@@ -6,7 +6,7 @@ import { ActionResult } from "@/types/action";
 import { getFriendlyErrorMessage } from "@/lib/utils/error-handlers";
 import { revalidatePath } from "next/cache";
 import { Prisma, UserRole } from "@/lib/prisma/generated";
-import { embedWatermark } from "@/lib/watermark";
+import { embedWatermark } from "@/lib/audio/watermark";
 
 function assertAdminOrSystem(actor: { role: UserRole }) {
   if (actor.role !== UserRole.ADMINISTRATOR && actor.role !== UserRole.SYSTEM) {
@@ -64,12 +64,12 @@ export async function embedWatermarkAction(input: {
       return { ok: false, error: "Asset not found." };
     }
 
-    const tempDir = process.env.WATERMARK_TEMP_PATH || "/tmp";
+    const tempDir = process.env.WATERMARK_TEMP_PATH || "/temp";
     const sanitizedFile =
       asset.filename?.replace(/[^a-zA-Z0-9._-]/g, "_") || asset.id;
     const outputFile = `${tempDir}/${asset.id}-watermarked.wav`;
+
     await embedWatermark({
-      assetId: asset.id,
       inputFilePath: outputFile,
       outputFilePath: outputFile,
       payload: input.payload.trim(),

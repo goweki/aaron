@@ -11,7 +11,6 @@ import { ActionResult } from "@/types/action";
 import { assetIncludes, AssetWithRelations } from "./dashboard-types";
 import { revalidatePath } from "next/cache";
 import { extractFingerprints } from "@/lib/audio/fingerprint";
-import { embedWatermark } from "@/lib/watermark";
 
 export interface IndexAssetInput {
   file: File;
@@ -45,12 +44,26 @@ export async function indexAssetAction(
       };
     }
 
+    // const assetId = randomUUID();
+    // const assetDirectory =
+    //   process.env.ASSET_STORAGE_PATH ?? "/temp/aaron-assets";
+    // const assetFolder = path.join(assetDirectory, assetId);
+    // const assetFileName = `${assetId}${path.extname(input.file.name) || ".wav"}`;
+    // const assetFilePath = path.join(assetFolder, assetFileName);
     const assetId = randomUUID();
     const assetDirectory =
-      process.env.ASSET_STORAGE_PATH ?? "/tmp/aaron-assets";
-    const assetFolder = path.join(assetDirectory, assetId);
+      process.env.ASSET_STORAGE_PATH ?? "/temp/aaron-assets";
+
+    // Disable static directory tracing for dynamic runtime paths
+    const assetFolder = path.join(
+      /*turbopackIgnore: true*/ assetDirectory,
+      assetId,
+    );
     const assetFileName = `${assetId}${path.extname(input.file.name) || ".wav"}`;
-    const assetFilePath = path.join(assetFolder, assetFileName);
+    const assetFilePath = path.join(
+      /*turbopackIgnore: true*/ assetFolder,
+      assetFileName,
+    );
 
     await mkdir(assetFolder, { recursive: true });
     await writeFile(assetFilePath, Buffer.from(await input.file.arrayBuffer()));

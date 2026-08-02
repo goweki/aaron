@@ -15,6 +15,7 @@
 
 # local working files
 /local/
+/temp/
 
 # production
 /build
