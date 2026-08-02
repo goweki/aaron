@@ -14,8 +14,8 @@
 /out/
 
 # local working files
-/local/
-/temp/
+local/
+temp/
 
 # production
 /build
