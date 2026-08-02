@@ -15,14 +15,6 @@ export default async function DetectionsPage() {
     <ViewLayout
       title="Broadcast & Media Detections"
       description="Review real-time audio fingerprint matches and verification status captured across monitored channels."
-      actions={[
-        {
-          label: "Start Monitoring Session",
-          href: "/dashboard/detections/new",
-          icon: PlusIcon,
-          variant: "default",
-        },
-      ]}
     >
       <DetectionsView detections={detectionsRes.data} />
     </ViewLayout>

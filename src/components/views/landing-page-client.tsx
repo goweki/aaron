@@ -143,7 +143,7 @@ export default function LandingPageClient() {
                   Transcribed Acoustic Data
                 </p>
                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 italic">
-                  "{transcript}"
+                  &ldquo;{transcript}&rdquo;
                 </p>
               </div>
             )}

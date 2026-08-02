@@ -9,7 +9,11 @@ export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
   // When mounted on client, now we can show the UI
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const handle = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(handle);
+  }, []);
+
   if (!isMounted) return null;
 
   //handle ThemeToggle

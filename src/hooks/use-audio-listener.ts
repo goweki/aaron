@@ -66,14 +66,15 @@ export function useAudioListener() {
 
   // Stop listening when transcript updates
   useEffect(() => {
-    if (transcript) setIsListening(false);
+    if (!transcript) return;
+    const timeout = window.setTimeout(() => setIsListening(false), 0);
+    return () => window.clearTimeout(timeout);
   }, [transcript]);
 
   // Handle Speech Recognition Toggle
   useEffect(() => {
     if (!recognitionRef.current) return;
     if (isListening) {
-      setTranscript("");
       try {
         recognitionRef.current.start();
       } catch (err) {
@@ -171,7 +172,10 @@ export function useAudioListener() {
     };
   }, [isListening, drawWaveform]);
 
-  const toggleListening = () => setIsListening((prev) => !prev);
+  const toggleListening = () => {
+    setTranscript("");
+    setIsListening((prev) => !prev);
+  };
 
   return {
     isListening,

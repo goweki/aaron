@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // Adjust path to match your Prisma client location
+import { auth } from "@/lib/auth/index";
+import { prisma } from "@/lib/prisma";
 import { extractFingerprints } from "@/lib/audio/fingerprint";
 
 // FORCE Node.js runtime to enable child_process (ffmpeg) and native streams
@@ -7,20 +8,43 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
+    const user = session?.user;
+
+    if (!user?.id) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const title = formData.get("title") as string | null;
-    const ownerId = formData.get("ownerId") as string | null;
+    const title = (formData.get("title") as string | null)?.trim() || null;
 
     // Optional metadata
-    const artist = (formData.get("artist") as string) || null;
-    const album = (formData.get("album") as string) || null;
-    const description = (formData.get("description") as string) || "";
-    const isrc = (formData.get("isrc") as string) || null;
+    const artist = (formData.get("artist") as string)?.trim() || null;
+    const album = (formData.get("album") as string)?.trim() || null;
+    const description = (formData.get("description") as string)?.trim() || "";
+    const isrc = (formData.get("isrc") as string)?.trim() || null;
 
-    if (!file || !title || !ownerId) {
+    if (!file || !title) {
       return NextResponse.json(
-        { error: "Missing required fields: file, title, ownerId" },
+        { error: "Missing required fields: file and title." },
+        { status: 400 },
+      );
+    }
+
+    if (!file.type?.startsWith("audio/")) {
+      return NextResponse.json(
+        { error: "Uploaded file must be a supported audio format." },
+        { status: 415 },
+      );
+    }
+
+    if (file.size <= 0) {
+      return NextResponse.json(
+        { error: "Uploaded file is empty." },
         { status: 400 },
       );
     }
@@ -54,7 +78,7 @@ export async function POST(req: NextRequest) {
           isrc,
           filename: file.name,
           fileSize: file.size,
-          ownerId,
+          ownerId: user.id,
           status: "ACTIVE",
           type: "MUSIC",
         },

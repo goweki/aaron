@@ -54,7 +54,6 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
 
   return (
     <div className="space-y-8">
-
       {/* Users Table / Empty State */}
       {users.length === 0 ? (
         <div className="border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl p-12 text-center bg-slate-50/50 dark:bg-slate-900/50">
@@ -64,15 +63,13 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-6">
             Get started by inviting or creating system operators and rights
-            holders.
+            holders from your deployment environment. User creation is not
+            available in this build.
           </p>
-          <Link
-            href="/dashboard/users/create"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg shadow transition"
-          >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 font-medium text-sm rounded-lg shadow transition">
             <UserPlus className="w-4 h-4" />
-            Add First User
-          </Link>
+            User creation is unavailable
+          </div>
         </div>
       ) : (
         <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-950 shadow-sm">
@@ -185,61 +182,61 @@ export default function UsersView({ users }: { users: UserWithRelations[] }) {
                     {/* Status Badge & Toggle */}
                     <td className="py-3.5 px-4">
                       <button
-                          type="button"
-                          disabled={isPending}
-                          onClick={() =>
-                            runAction(
-                              user.id,
-                              toggleUserStatusAction,
-                              "User status updated",
-                            )
-                          }
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border transition disabled:opacity-50 ${
-                            user.status === "ACTIVE"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-                              : user.status === "PENDING"
-                                ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
-                                : "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
-                          }`}
-                        >
-                          {isPending && activeItemId === user.id ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : user.status === "ACTIVE" ? (
-                            <>
-                              <CheckCircle2 className="w-3 h-3" /> Active
-                            </>
-                          ) : user.status === "PENDING" ? (
-                            <>
-                              <Clock className="w-3 h-3" /> Pending
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="w-3 h-3" /> Inactive
-                            </>
-                          )}
+                        type="button"
+                        disabled={isPending}
+                        onClick={() =>
+                          runAction(
+                            user.id,
+                            toggleUserStatusAction,
+                            "User status updated",
+                          )
+                        }
+                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium border transition disabled:opacity-50 ${
+                          user.status === "ACTIVE"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+                            : user.status === "PENDING"
+                              ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
+                              : "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
+                        }`}
+                      >
+                        {isPending && activeItemId === user.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : user.status === "ACTIVE" ? (
+                          <>
+                            <CheckCircle2 className="w-3 h-3" /> Active
+                          </>
+                        ) : user.status === "PENDING" ? (
+                          <>
+                            <Clock className="w-3 h-3" /> Pending
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="w-3 h-3" /> Inactive
+                          </>
+                        )}
                       </button>
                     </td>
 
                     {/* Row Actions */}
                     <td className="py-3.5 px-4 text-right">
                       <button
-                          type="button"
-                          disabled={isPending}
-                          onClick={() =>
-                            runAction(
-                              user.id,
-                              deleteUserAction,
-                              "User deleted successfully",
-                            )
-                          }
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50"
-                          title="Delete User"
-                        >
-                          {isPending && activeItemId === user.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
+                        type="button"
+                        disabled={isPending}
+                        onClick={() =>
+                          runAction(
+                            user.id,
+                            deleteUserAction,
+                            "User deleted successfully",
+                          )
+                        }
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50"
+                        title="Delete User"
+                      >
+                        {isPending && activeItemId === user.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
                       </button>
                     </td>
                   </tr>

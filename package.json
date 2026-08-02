@@ -9,6 +9,7 @@
     "postbuild": "npx prisma migrate deploy",
     "start": "next start",
     "lint": "eslint .",
+    "test": "npx tsc --noEmit",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -79,7 +80,7 @@
     "@types/react-dom": "19.2.3",
     "@types/react-transition-group": "^4.4.12",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "10.6.0",
+    "eslint": "9.15.0",
     "eslint-config-next": "16.2.10",
     "postcss": "^8.5.16",
     "prisma": "^7.8.0",

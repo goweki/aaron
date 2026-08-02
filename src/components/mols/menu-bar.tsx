@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Menu, Music2, Radio, RadioIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  Menu,
+  Music2,
+  Radio,
+  RadioIcon,
+  SignalHigh,
+  Activity,
+  Droplet,
+  Settings,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/mols/themeToggle";
@@ -33,6 +43,26 @@ export const routes = [
     label: "Detections",
     href: "/dashboard/detections",
     icon: RadioIcon,
+  },
+  {
+    label: "Broadcasters",
+    href: "/dashboard/broadcasters",
+    icon: SignalHigh,
+  },
+  {
+    label: "Monitor",
+    href: "/dashboard/monitor",
+    icon: Activity,
+  },
+  {
+    label: "Watermarks",
+    href: "/dashboard/watermarks",
+    icon: Droplet,
+  },
+  {
+    label: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings,
   },
 ];
 
