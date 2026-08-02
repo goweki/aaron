@@ -13,7 +13,7 @@ export default async function AssetsPage() {
 
   return (
     <ViewLayout
-      title="Audio Catalog & Asset Index"
+      title="Audio Catalog"
       description="Manage registered tracks, inspect acoustic fingerprint indices, monitor watermarks, and track playout history."
       actions={[
         {
