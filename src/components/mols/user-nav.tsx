@@ -42,8 +42,7 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/settings"></Link>
-              Settings
+              <Link href="/dashboard/settings">Settings</Link>
               {/* <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut> */}
             </DropdownMenuItem>
           </DropdownMenuGroup>
