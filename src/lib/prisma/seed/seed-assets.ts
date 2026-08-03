@@ -56,59 +56,60 @@ export async function seedAssets(
   // Seed assets
   // ------------------------------------------------------------------
 
-  await prisma.$transaction(async (tx) => {
-    for (let i = 0; i < fmaTracks.length; i++) {
-      const item = fmaTracks[i];
-      const owner = ownerPool[i % ownerPool.length];
+  for (let i = 0; i < fmaTracks.length; i++) {
+    const item = fmaTracks[i];
+    const owner = ownerPool[i % ownerPool.length];
 
-      // Resolve audio file relative to metadata directory.
-      // If the JSON already contains an absolute path, keep it.
-      const audioPath = path.isAbsolute(item.file)
-        ? item.file
-        : path.resolve(datasetDir, item.file);
+    // Normalize Windows paths for cross-platform compatibility
+    const relativePath = item.file.replace(/\\/g, path.sep);
 
-      const filename = path.basename(audioPath);
+    // Resolve audio file relative to the metadata directory.
+    // If the JSON already contains an absolute path, keep it.
+    const audioPath = path.isAbsolute(relativePath)
+      ? relativePath
+      : path.resolve(datasetDir, relativePath);
 
-      let fileSize: number | null = null;
-      let checksum: string | null = null;
+    const filename = path.basename(audioPath);
 
-      if (fs.existsSync(audioPath)) {
-        const buffer = fs.readFileSync(audioPath);
+    let fileSize: number | null = null;
+    let checksum: string | null = null;
 
-        fileSize = buffer.length;
+    if (fs.existsSync(audioPath)) {
+      const buffer = fs.readFileSync(audioPath);
 
-        checksum = crypto.createHash("sha256").update(buffer).digest("hex");
-      } else {
-        console.warn(`⚠ Missing audio file: ${audioPath}`);
-      }
+      fileSize = buffer.length;
 
-      const asset = await tx.asset.create({
-        data: {
-          title: item.title,
-          artist: item.artist ?? null,
-          album: item.album ?? null,
-          description: item.description ?? null,
-
-          file: audioPath,
-          filename,
-
-          fileSize,
-          checksum,
-
-          type:
-            item.type?.toUpperCase() === "VIDEO"
-              ? AssetType.VIDEO
-              : AssetType.MUSIC,
-
-          status: Status.ACTIVE,
-
-          ownerId: owner.id,
-        },
-      });
-
-      assets.push(asset);
+      checksum = crypto.createHash("sha256").update(buffer).digest("hex");
+    } else {
+      console.warn(`⚠ Missing audio file: ${audioPath}`);
     }
-  });
+
+    const asset = await prisma.asset.create({
+      data: {
+        title: item.title,
+        artist: item.artist ?? null,
+        album: item.album ?? null,
+        description: item.description ?? null,
+
+        file: audioPath,
+        filename,
+
+        fileSize,
+        checksum,
+
+        type:
+          item.type?.toUpperCase() === "VIDEO"
+            ? AssetType.VIDEO
+            : AssetType.MUSIC,
+
+        status: Status.ACTIVE,
+
+        ownerId: owner.id,
+      },
+    });
+
+    assets.push(asset);
+  }
 
   console.log(`✅ Successfully seeded ${assets.length} assets.`);
 
