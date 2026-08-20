@@ -29,8 +29,8 @@ async function main() {
   databaseUrl.searchParams.set("sslmode", "verify-full");
   databaseUrl.searchParams.set("sslrootcert", "system");
 
-  // Create dumps directory if it doesn't exist
-  const dumpDir = path.join(__dirname, "./dumps");
+  // Create dumps directory relative to project root
+  const dumpDir = path.join(process.cwd(), "dumps");
 
   fs.mkdirSync(dumpDir, {
     recursive: true,
