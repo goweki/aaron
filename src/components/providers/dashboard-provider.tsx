@@ -8,15 +8,17 @@ import {
   useTransition,
 } from "react";
 import { EdgeStoreProvider } from "@/lib/edgestore";
-import { fetchDashboardData } from "@/actions/dashboard-actions";
+import { fetchDashboardCounts } from "@/actions/dashboard-actions";
 import {
   AssetWithRelations,
   UserWithRelations,
 } from "@/actions/dashboard-actions/dashboard-types";
 
 export interface ClosedData {
-  users: UserWithRelations[];
-  assets: AssetWithRelations[];
+  userCount: number;
+  assetCount: number;
+  broadcasterCount: number;
+  detectionsCount: number;
 }
 
 interface DashboardContextType {
@@ -39,7 +41,7 @@ export function DashboardProvider({
 
   const refreshData = useCallback(async () => {
     startTransition(async () => {
-      const res = await fetchDashboardData();
+      const res = await fetchDashboardCounts();
       if (res.ok && res.data) {
         setData(res.data);
       }

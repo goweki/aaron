@@ -1,4 +1,4 @@
-import { fetchDashboardData } from "@/actions/dashboard-actions";
+import { fetchDashboardCounts } from "@/actions/dashboard-actions";
 import Navbar from "@/components/mols/menu-bar";
 import { DashboardProvider } from "@/components/providers";
 import ErrorView from "@/components/views/error-view";
@@ -8,7 +8,7 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const dashboardRes = await fetchDashboardData();
+  const dashboardRes = await fetchDashboardCounts();
 
   return (
     <>
