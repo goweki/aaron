@@ -19,6 +19,8 @@ export async function POST(req: NextRequest) {
     }
 
     const formData = await req.formData();
+    const id =
+      (formData.get("id") as string | null)?.trim() || crypto.randomUUID();
     const file = formData.get("file") as File | null;
     const title = (formData.get("title") as string | null)?.trim() || null;
 
@@ -71,6 +73,7 @@ export async function POST(req: NextRequest) {
       // Create the Asset record
       const asset = await tx.asset.create({
         data: {
+          id,
           title,
           artist,
           album,

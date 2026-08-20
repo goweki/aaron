@@ -1,8 +1,9 @@
-import { PrismaClient, Asset } from "../generated";
+import { AssetWithArtist } from ".";
+import { PrismaClient } from "../generated";
 
 export async function seedWatermarks(
   prisma: PrismaClient,
-  assets: Asset[],
+  assets: AssetWithArtist[],
 ): Promise<void> {
   console.log("➡️ Seeding Watermarks...");
 
@@ -11,7 +12,7 @@ export async function seedWatermarks(
       data: {
         assetId: asset.id,
         algorithm: "spread-spectrum",
-        payload: `WM_OWNER_${asset.ownerId}_ISRC_${asset.isrc || "UNKNOWN"}`,
+        payload: asset.owner.id,
       },
     });
   }

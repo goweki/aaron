@@ -12,10 +12,10 @@ CREATE TYPE "DetectionStatus" AS ENUM ('PENDING', 'VERIFIED', 'REJECTED');
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "passwordHash" TEXT,
     "voiceSign" TEXT,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
@@ -32,9 +32,9 @@ CREATE TABLE "users" (
 
 -- CreateTable
 CREATE TABLE "assets" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "artist" TEXT,
     "album" TEXT,
     "isrc" TEXT,
@@ -49,7 +49,7 @@ CREATE TABLE "assets" (
     "channels" INTEGER,
     "fileSize" INTEGER,
     "checksum" TEXT,
-    "ownerId" UUID NOT NULL,
+    "ownerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -58,30 +58,40 @@ CREATE TABLE "assets" (
 
 -- CreateTable
 CREATE TABLE "audio_fingerprints" (
-    "id" UUID NOT NULL,
-    "algorithm" TEXT NOT NULL,
-    "version" TEXT NOT NULL,
-    "fingerprint" JSONB NOT NULL,
+    "id" TEXT NOT NULL,
+    "algorithm" TEXT NOT NULL DEFAULT 'landmark',
+    "version" TEXT NOT NULL DEFAULT '1.0.4',
     "generatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "assetId" UUID NOT NULL,
+    "assetId" TEXT NOT NULL,
 
     CONSTRAINT "audio_fingerprints_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
+CREATE TABLE "fingerprint_hashes" (
+    "id" BIGSERIAL NOT NULL,
+    "hash" BIGINT NOT NULL,
+    "offsetMs" INTEGER NOT NULL,
+    "audioFingerprintId" TEXT NOT NULL,
+    "assetId" TEXT NOT NULL,
+
+    CONSTRAINT "fingerprint_hashes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "watermarks" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "algorithm" TEXT NOT NULL,
     "payload" TEXT NOT NULL,
     "embeddedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "assetId" UUID NOT NULL,
+    "assetId" TEXT NOT NULL,
 
     CONSTRAINT "watermarks_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "broadcasters" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "website" TEXT,
@@ -97,8 +107,9 @@ CREATE TABLE "broadcasters" (
 
 -- CreateTable
 CREATE TABLE "monitoring_sessions" (
-    "id" UUID NOT NULL,
-    "broadcasterId" UUID NOT NULL,
+    "id" TEXT NOT NULL,
+    "broadcasterId" TEXT NOT NULL,
+    "audioLink" TEXT,
     "startedAt" TIMESTAMP(3) NOT NULL,
     "endedAt" TIMESTAMP(3),
     "status" "Status" NOT NULL DEFAULT 'ACTIVE',
@@ -109,10 +120,10 @@ CREATE TABLE "monitoring_sessions" (
 
 -- CreateTable
 CREATE TABLE "detections" (
-    "id" UUID NOT NULL,
-    "assetId" UUID NOT NULL,
-    "broadcasterId" UUID NOT NULL,
-    "sessionId" UUID,
+    "id" TEXT NOT NULL,
+    "assetId" TEXT NOT NULL,
+    "broadcasterId" TEXT NOT NULL,
+    "sessionId" TEXT,
     "broadcastAt" TIMESTAMP(3) NOT NULL,
     "detectedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "confidence" DOUBLE PRECISION NOT NULL,
@@ -152,6 +163,12 @@ CREATE INDEX "assets_type_idx" ON "assets"("type");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "audio_fingerprints_assetId_key" ON "audio_fingerprints"("assetId");
+
+-- CreateIndex
+CREATE INDEX "fingerprint_hashes_hash_assetId_offsetMs_idx" ON "fingerprint_hashes"("hash", "assetId", "offsetMs");
+
+-- CreateIndex
+CREATE INDEX "fingerprint_hashes_assetId_idx" ON "fingerprint_hashes"("assetId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "watermarks_assetId_key" ON "watermarks"("assetId");
@@ -203,6 +220,12 @@ ALTER TABLE "assets" ADD CONSTRAINT "assets_ownerId_fkey" FOREIGN KEY ("ownerId"
 
 -- AddForeignKey
 ALTER TABLE "audio_fingerprints" ADD CONSTRAINT "audio_fingerprints_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "assets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fingerprint_hashes" ADD CONSTRAINT "fingerprint_hashes_audioFingerprintId_fkey" FOREIGN KEY ("audioFingerprintId") REFERENCES "audio_fingerprints"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fingerprint_hashes" ADD CONSTRAINT "fingerprint_hashes_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "assets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "watermarks" ADD CONSTRAINT "watermarks_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "assets"("id") ON DELETE CASCADE ON UPDATE CASCADE;

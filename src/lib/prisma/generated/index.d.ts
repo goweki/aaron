@@ -11471,7 +11471,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: UuidFilter<"User"> | string
+    id?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
@@ -11551,7 +11551,7 @@ export namespace Prisma {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"User"> | string
+    id?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringWithAggregatesFilter<"User"> | string
@@ -11571,7 +11571,7 @@ export namespace Prisma {
     AND?: AssetWhereInput | AssetWhereInput[]
     OR?: AssetWhereInput[]
     NOT?: AssetWhereInput | AssetWhereInput[]
-    id?: UuidFilter<"Asset"> | string
+    id?: StringFilter<"Asset"> | string
     title?: StringFilter<"Asset"> | string
     description?: StringNullableFilter<"Asset"> | string | null
     artist?: StringNullableFilter<"Asset"> | string | null
@@ -11588,7 +11588,7 @@ export namespace Prisma {
     channels?: IntNullableFilter<"Asset"> | number | null
     fileSize?: IntNullableFilter<"Asset"> | number | null
     checksum?: StringNullableFilter<"Asset"> | string | null
-    ownerId?: UuidFilter<"Asset"> | string
+    ownerId?: StringFilter<"Asset"> | string
     createdAt?: DateTimeFilter<"Asset"> | Date | string
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11647,7 +11647,7 @@ export namespace Prisma {
     bitRate?: IntNullableFilter<"Asset"> | number | null
     channels?: IntNullableFilter<"Asset"> | number | null
     fileSize?: IntNullableFilter<"Asset"> | number | null
-    ownerId?: UuidFilter<"Asset"> | string
+    ownerId?: StringFilter<"Asset"> | string
     createdAt?: DateTimeFilter<"Asset"> | Date | string
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11689,7 +11689,7 @@ export namespace Prisma {
     AND?: AssetScalarWhereWithAggregatesInput | AssetScalarWhereWithAggregatesInput[]
     OR?: AssetScalarWhereWithAggregatesInput[]
     NOT?: AssetScalarWhereWithAggregatesInput | AssetScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Asset"> | string
+    id?: StringWithAggregatesFilter<"Asset"> | string
     title?: StringWithAggregatesFilter<"Asset"> | string
     description?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     artist?: StringNullableWithAggregatesFilter<"Asset"> | string | null
@@ -11706,7 +11706,7 @@ export namespace Prisma {
     channels?: IntNullableWithAggregatesFilter<"Asset"> | number | null
     fileSize?: IntNullableWithAggregatesFilter<"Asset"> | number | null
     checksum?: StringNullableWithAggregatesFilter<"Asset"> | string | null
-    ownerId?: UuidWithAggregatesFilter<"Asset"> | string
+    ownerId?: StringWithAggregatesFilter<"Asset"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Asset"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Asset"> | Date | string
   }
@@ -11715,11 +11715,11 @@ export namespace Prisma {
     AND?: AudioFingerprintWhereInput | AudioFingerprintWhereInput[]
     OR?: AudioFingerprintWhereInput[]
     NOT?: AudioFingerprintWhereInput | AudioFingerprintWhereInput[]
-    id?: UuidFilter<"AudioFingerprint"> | string
+    id?: StringFilter<"AudioFingerprint"> | string
     algorithm?: StringFilter<"AudioFingerprint"> | string
     version?: StringFilter<"AudioFingerprint"> | string
     generatedAt?: DateTimeFilter<"AudioFingerprint"> | Date | string
-    assetId?: UuidFilter<"AudioFingerprint"> | string
+    assetId?: StringFilter<"AudioFingerprint"> | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     hashes?: FingerprintHashListRelationFilter
   }
@@ -11762,11 +11762,11 @@ export namespace Prisma {
     AND?: AudioFingerprintScalarWhereWithAggregatesInput | AudioFingerprintScalarWhereWithAggregatesInput[]
     OR?: AudioFingerprintScalarWhereWithAggregatesInput[]
     NOT?: AudioFingerprintScalarWhereWithAggregatesInput | AudioFingerprintScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"AudioFingerprint"> | string
+    id?: StringWithAggregatesFilter<"AudioFingerprint"> | string
     algorithm?: StringWithAggregatesFilter<"AudioFingerprint"> | string
     version?: StringWithAggregatesFilter<"AudioFingerprint"> | string
     generatedAt?: DateTimeWithAggregatesFilter<"AudioFingerprint"> | Date | string
-    assetId?: UuidWithAggregatesFilter<"AudioFingerprint"> | string
+    assetId?: StringWithAggregatesFilter<"AudioFingerprint"> | string
   }
 
   export type FingerprintHashWhereInput = {
@@ -11776,8 +11776,8 @@ export namespace Prisma {
     id?: BigIntFilter<"FingerprintHash"> | bigint | number
     hash?: BigIntFilter<"FingerprintHash"> | bigint | number
     offsetMs?: IntFilter<"FingerprintHash"> | number
-    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
-    assetId?: UuidFilter<"FingerprintHash"> | string
+    audioFingerprintId?: StringFilter<"FingerprintHash"> | string
+    assetId?: StringFilter<"FingerprintHash"> | string
     audioFingerprint?: XOR<AudioFingerprintScalarRelationFilter, AudioFingerprintWhereInput>
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
   }
@@ -11799,8 +11799,8 @@ export namespace Prisma {
     NOT?: FingerprintHashWhereInput | FingerprintHashWhereInput[]
     hash?: BigIntFilter<"FingerprintHash"> | bigint | number
     offsetMs?: IntFilter<"FingerprintHash"> | number
-    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
-    assetId?: UuidFilter<"FingerprintHash"> | string
+    audioFingerprintId?: StringFilter<"FingerprintHash"> | string
+    assetId?: StringFilter<"FingerprintHash"> | string
     audioFingerprint?: XOR<AudioFingerprintScalarRelationFilter, AudioFingerprintWhereInput>
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
   }, "id">
@@ -11825,19 +11825,19 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"FingerprintHash"> | bigint | number
     hash?: BigIntWithAggregatesFilter<"FingerprintHash"> | bigint | number
     offsetMs?: IntWithAggregatesFilter<"FingerprintHash"> | number
-    audioFingerprintId?: UuidWithAggregatesFilter<"FingerprintHash"> | string
-    assetId?: UuidWithAggregatesFilter<"FingerprintHash"> | string
+    audioFingerprintId?: StringWithAggregatesFilter<"FingerprintHash"> | string
+    assetId?: StringWithAggregatesFilter<"FingerprintHash"> | string
   }
 
   export type WatermarkWhereInput = {
     AND?: WatermarkWhereInput | WatermarkWhereInput[]
     OR?: WatermarkWhereInput[]
     NOT?: WatermarkWhereInput | WatermarkWhereInput[]
-    id?: UuidFilter<"Watermark"> | string
+    id?: StringFilter<"Watermark"> | string
     algorithm?: StringFilter<"Watermark"> | string
     payload?: StringFilter<"Watermark"> | string
     embeddedAt?: DateTimeFilter<"Watermark"> | Date | string
-    assetId?: UuidFilter<"Watermark"> | string
+    assetId?: StringFilter<"Watermark"> | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
   }
 
@@ -11877,18 +11877,18 @@ export namespace Prisma {
     AND?: WatermarkScalarWhereWithAggregatesInput | WatermarkScalarWhereWithAggregatesInput[]
     OR?: WatermarkScalarWhereWithAggregatesInput[]
     NOT?: WatermarkScalarWhereWithAggregatesInput | WatermarkScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Watermark"> | string
+    id?: StringWithAggregatesFilter<"Watermark"> | string
     algorithm?: StringWithAggregatesFilter<"Watermark"> | string
     payload?: StringWithAggregatesFilter<"Watermark"> | string
     embeddedAt?: DateTimeWithAggregatesFilter<"Watermark"> | Date | string
-    assetId?: UuidWithAggregatesFilter<"Watermark"> | string
+    assetId?: StringWithAggregatesFilter<"Watermark"> | string
   }
 
   export type BroadcasterWhereInput = {
     AND?: BroadcasterWhereInput | BroadcasterWhereInput[]
     OR?: BroadcasterWhereInput[]
     NOT?: BroadcasterWhereInput | BroadcasterWhereInput[]
-    id?: UuidFilter<"Broadcaster"> | string
+    id?: StringFilter<"Broadcaster"> | string
     name?: StringFilter<"Broadcaster"> | string
     description?: StringNullableFilter<"Broadcaster"> | string | null
     website?: StringNullableFilter<"Broadcaster"> | string | null
@@ -11955,7 +11955,7 @@ export namespace Prisma {
     AND?: BroadcasterScalarWhereWithAggregatesInput | BroadcasterScalarWhereWithAggregatesInput[]
     OR?: BroadcasterScalarWhereWithAggregatesInput[]
     NOT?: BroadcasterScalarWhereWithAggregatesInput | BroadcasterScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Broadcaster"> | string
+    id?: StringWithAggregatesFilter<"Broadcaster"> | string
     name?: StringWithAggregatesFilter<"Broadcaster"> | string
     description?: StringNullableWithAggregatesFilter<"Broadcaster"> | string | null
     website?: StringNullableWithAggregatesFilter<"Broadcaster"> | string | null
@@ -11971,8 +11971,8 @@ export namespace Prisma {
     AND?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
     OR?: MonitoringSessionWhereInput[]
     NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    id?: UuidFilter<"MonitoringSession"> | string
-    broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    id?: StringFilter<"MonitoringSession"> | string
+    broadcasterId?: StringFilter<"MonitoringSession"> | string
     audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
@@ -12000,7 +12000,7 @@ export namespace Prisma {
     AND?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
     OR?: MonitoringSessionWhereInput[]
     NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    broadcasterId?: StringFilter<"MonitoringSession"> | string
     audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
@@ -12027,8 +12027,8 @@ export namespace Prisma {
     AND?: MonitoringSessionScalarWhereWithAggregatesInput | MonitoringSessionScalarWhereWithAggregatesInput[]
     OR?: MonitoringSessionScalarWhereWithAggregatesInput[]
     NOT?: MonitoringSessionScalarWhereWithAggregatesInput | MonitoringSessionScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"MonitoringSession"> | string
-    broadcasterId?: UuidWithAggregatesFilter<"MonitoringSession"> | string
+    id?: StringWithAggregatesFilter<"MonitoringSession"> | string
+    broadcasterId?: StringWithAggregatesFilter<"MonitoringSession"> | string
     audioLink?: StringNullableWithAggregatesFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeWithAggregatesFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableWithAggregatesFilter<"MonitoringSession"> | Date | string | null
@@ -12040,10 +12040,10 @@ export namespace Prisma {
     AND?: DetectionWhereInput | DetectionWhereInput[]
     OR?: DetectionWhereInput[]
     NOT?: DetectionWhereInput | DetectionWhereInput[]
-    id?: UuidFilter<"Detection"> | string
-    assetId?: UuidFilter<"Detection"> | string
-    broadcasterId?: UuidFilter<"Detection"> | string
-    sessionId?: UuidNullableFilter<"Detection"> | string | null
+    id?: StringFilter<"Detection"> | string
+    assetId?: StringFilter<"Detection"> | string
+    broadcasterId?: StringFilter<"Detection"> | string
+    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -12083,9 +12083,9 @@ export namespace Prisma {
     AND?: DetectionWhereInput | DetectionWhereInput[]
     OR?: DetectionWhereInput[]
     NOT?: DetectionWhereInput | DetectionWhereInput[]
-    assetId?: UuidFilter<"Detection"> | string
-    broadcasterId?: UuidFilter<"Detection"> | string
-    sessionId?: UuidNullableFilter<"Detection"> | string | null
+    assetId?: StringFilter<"Detection"> | string
+    broadcasterId?: StringFilter<"Detection"> | string
+    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -12125,10 +12125,10 @@ export namespace Prisma {
     AND?: DetectionScalarWhereWithAggregatesInput | DetectionScalarWhereWithAggregatesInput[]
     OR?: DetectionScalarWhereWithAggregatesInput[]
     NOT?: DetectionScalarWhereWithAggregatesInput | DetectionScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Detection"> | string
-    assetId?: UuidWithAggregatesFilter<"Detection"> | string
-    broadcasterId?: UuidWithAggregatesFilter<"Detection"> | string
-    sessionId?: UuidNullableWithAggregatesFilter<"Detection"> | string | null
+    id?: StringWithAggregatesFilter<"Detection"> | string
+    assetId?: StringWithAggregatesFilter<"Detection"> | string
+    broadcasterId?: StringWithAggregatesFilter<"Detection"> | string
+    sessionId?: StringNullableWithAggregatesFilter<"Detection"> | string | null
     broadcastAt?: DateTimeWithAggregatesFilter<"Detection"> | Date | string
     detectedAt?: DateTimeWithAggregatesFilter<"Detection"> | Date | string
     confidence?: FloatWithAggregatesFilter<"Detection"> | number
@@ -12141,7 +12141,7 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    id?: string
+    id: string
     name: string
     phone?: string | null
     email: string
@@ -12159,7 +12159,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: string
+    id: string
     name: string
     phone?: string | null
     email: string
@@ -12213,7 +12213,7 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id?: string
+    id: string
     name: string
     phone?: string | null
     email: string
@@ -12264,7 +12264,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -12291,7 +12291,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -12372,7 +12372,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateManyInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -12888,18 +12888,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UuidFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidFilter<$PrismaModel> | string
-  }
-
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -13030,21 +13018,6 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -13559,18 +13532,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -13660,21 +13621,6 @@ export namespace Prisma {
     startOffset?: SortOrder
     endOffset?: SortOrder
     duration?: SortOrder
-  }
-
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -14261,17 +14207,6 @@ export namespace Prisma {
     update?: XOR<XOR<MonitoringSessionUpdateToOneWithWhereWithoutDetectionsInput, MonitoringSessionUpdateWithoutDetectionsInput>, MonitoringSessionUncheckedUpdateWithoutDetectionsInput>
   }
 
-  export type NestedUuidFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidFilter<$PrismaModel> | string
-  }
-
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14336,31 +14271,6 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14376,6 +14286,17 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14568,36 +14489,11 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedEnumDetectionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.DetectionStatus | EnumDetectionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DetectionStatus[] | ListEnumDetectionStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.DetectionStatus[] | ListEnumDetectionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumDetectionStatusFilter<$PrismaModel> | $Enums.DetectionStatus
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -14627,7 +14523,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateWithoutOwnerInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -14653,7 +14549,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateWithoutOwnerInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -14708,7 +14604,7 @@ export namespace Prisma {
     AND?: AssetScalarWhereInput | AssetScalarWhereInput[]
     OR?: AssetScalarWhereInput[]
     NOT?: AssetScalarWhereInput | AssetScalarWhereInput[]
-    id?: UuidFilter<"Asset"> | string
+    id?: StringFilter<"Asset"> | string
     title?: StringFilter<"Asset"> | string
     description?: StringNullableFilter<"Asset"> | string | null
     artist?: StringNullableFilter<"Asset"> | string | null
@@ -14725,13 +14621,13 @@ export namespace Prisma {
     channels?: IntNullableFilter<"Asset"> | number | null
     fileSize?: IntNullableFilter<"Asset"> | number | null
     checksum?: StringNullableFilter<"Asset"> | string | null
-    ownerId?: UuidFilter<"Asset"> | string
+    ownerId?: StringFilter<"Asset"> | string
     createdAt?: DateTimeFilter<"Asset"> | Date | string
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
   }
 
   export type UserCreateWithoutAssetsInput = {
-    id?: string
+    id: string
     name: string
     phone?: string | null
     email: string
@@ -14748,7 +14644,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAssetsInput = {
-    id?: string
+    id: string
     name: string
     phone?: string | null
     email: string
@@ -14968,8 +14864,8 @@ export namespace Prisma {
     id?: BigIntFilter<"FingerprintHash"> | bigint | number
     hash?: BigIntFilter<"FingerprintHash"> | bigint | number
     offsetMs?: IntFilter<"FingerprintHash"> | number
-    audioFingerprintId?: UuidFilter<"FingerprintHash"> | string
-    assetId?: UuidFilter<"FingerprintHash"> | string
+    audioFingerprintId?: StringFilter<"FingerprintHash"> | string
+    assetId?: StringFilter<"FingerprintHash"> | string
   }
 
   export type WatermarkUpsertWithoutAssetInput = {
@@ -15017,10 +14913,10 @@ export namespace Prisma {
     AND?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
     OR?: DetectionScalarWhereInput[]
     NOT?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
-    id?: UuidFilter<"Detection"> | string
-    assetId?: UuidFilter<"Detection"> | string
-    broadcasterId?: UuidFilter<"Detection"> | string
-    sessionId?: UuidNullableFilter<"Detection"> | string | null
+    id?: StringFilter<"Detection"> | string
+    assetId?: StringFilter<"Detection"> | string
+    broadcasterId?: StringFilter<"Detection"> | string
+    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -15033,7 +14929,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateWithoutFingerprintInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15059,7 +14955,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateWithoutFingerprintInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15214,7 +15110,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateWithoutHashesInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15240,7 +15136,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateWithoutHashesInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15361,7 +15257,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateWithoutWatermarkInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15387,7 +15283,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateWithoutWatermarkInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15570,8 +15466,8 @@ export namespace Prisma {
     AND?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
     OR?: MonitoringSessionScalarWhereInput[]
     NOT?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
-    id?: UuidFilter<"MonitoringSession"> | string
-    broadcasterId?: UuidFilter<"MonitoringSession"> | string
+    id?: StringFilter<"MonitoringSession"> | string
+    broadcasterId?: StringFilter<"MonitoringSession"> | string
     audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
     startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
     endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
@@ -15724,7 +15620,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateWithoutDetectionsInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15750,7 +15646,7 @@ export namespace Prisma {
   }
 
   export type AssetUncheckedCreateWithoutDetectionsInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null
@@ -15972,7 +15868,7 @@ export namespace Prisma {
   }
 
   export type AssetCreateManyOwnerInput = {
-    id?: string
+    id: string
     title: string
     description?: string | null
     artist?: string | null

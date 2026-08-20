@@ -3,14 +3,18 @@ import path from "node:path";
 import fs from "node:fs";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { AssetWithArtist } from ".";
 
 interface FmaMetadata {
+  custom_track_id: string;
   file: string;
   title: string;
-  artist?: string;
-  album?: string;
-  description?: string;
-  type?: string;
+  artist: string;
+  album: string;
+  description: string;
+  custom_artist_name: string;
+  custom_artist_id: string;
+  type: string;
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +23,7 @@ const __dirname = path.dirname(__filename);
 export async function seedAssets(
   prisma: PrismaClient,
   users: User[],
-): Promise<Asset[]> {
+): Promise<AssetWithArtist[]> {
   console.log("➡️ Seeding Assets from JSON dataset...");
 
   if (users.length === 0) {
@@ -30,8 +34,10 @@ export async function seedAssets(
   // Resolve metadata file
   // ------------------------------------------------------------------
 
-  const datasetDir = path.join(__dirname, "local");
-  const jsonPath = path.join(datasetDir, "metadata1000.json");
+  const localDir = path.join(__dirname, "local");
+  const jsonPath = path.join(localDir, "metadata1000.json");
+
+  const audioFilesDir = path.join(localDir, "fma_audio_files");
 
   if (!fs.existsSync(jsonPath)) {
     throw new Error(`Metadata file not found:\n${jsonPath}`);
@@ -46,11 +52,8 @@ export async function seedAssets(
   // Choose owners
   // ------------------------------------------------------------------
 
-  const regularUsers = users.filter((u) => u.role === "USER");
-
-  const ownerPool = regularUsers.length > 0 ? regularUsers : users;
-
-  const assets: Asset[] = [];
+  const artists = users.filter((u) => u.role === "USER");
+  const assets: AssetWithArtist[] = [];
 
   // ------------------------------------------------------------------
   // Seed assets
@@ -58,16 +61,20 @@ export async function seedAssets(
 
   for (let i = 0; i < fmaTracks.length; i++) {
     const item = fmaTracks[i];
-    const owner = ownerPool[i % ownerPool.length];
+
+    // Find the user associated with this specific track
+    const owner = artists.find((artist) => artist.id === item.custom_artist_id);
+
+    if (!owner) {
+      console.warn(`⚠ No user found for track ${item.custom_track_id}`);
+      continue;
+    }
 
     // Normalize Windows paths for cross-platform compatibility
     const relativePath = item.file.replace(/\\/g, path.sep);
 
-    // Resolve audio file relative to the metadata directory.
-    // If the JSON already contains an absolute path, keep it.
-    const audioPath = path.isAbsolute(relativePath)
-      ? relativePath
-      : path.resolve(datasetDir, relativePath);
+    // Resolve audio file relative to the audioFilesDir directory.
+    const audioPath = path.resolve(audioFilesDir, relativePath);
 
     const filename = path.basename(audioPath);
 
@@ -78,7 +85,6 @@ export async function seedAssets(
       const buffer = fs.readFileSync(audioPath);
 
       fileSize = buffer.length;
-
       checksum = crypto.createHash("sha256").update(buffer).digest("hex");
     } else {
       console.warn(`⚠ Missing audio file: ${audioPath}`);
@@ -86,6 +92,7 @@ export async function seedAssets(
 
     const asset = await prisma.asset.create({
       data: {
+        id: item.custom_track_id,
         title: item.title,
         artist: item.artist ?? null,
         album: item.album ?? null,
@@ -105,6 +112,9 @@ export async function seedAssets(
         status: Status.ACTIVE,
 
         ownerId: owner.id,
+      },
+      include: {
+        owner: true,
       },
     });
 

@@ -32,7 +32,7 @@ enum DetectionStatus {
 }
 
 model User {
-    id               String    @id @default(uuid()) @db.Uuid
+    id               String    @id
     name             String
     phone            String?   @unique
     email            String    @unique
@@ -55,7 +55,7 @@ model User {
 }
 
 model Asset {
-    id          String  @id @default(uuid()) @db.Uuid
+    id          String  @id
     title       String
     description String?
     artist      String?
@@ -77,7 +77,7 @@ model Asset {
     fileSize   Int?
     checksum   String? @unique
 
-    ownerId String @db.Uuid
+    ownerId String
     owner   User   @relation("owner", fields: [ownerId], references: [id])
 
     fingerprint AudioFingerprint?
@@ -95,14 +95,14 @@ model Asset {
 }
 
 model AudioFingerprint {
-    id String @id @default(uuid()) @db.Uuid
+    id String @id @default(uuid())
 
     algorithm String @default("landmark")
     version   String @default("1.0.4")
 
     generatedAt DateTime @default(now())
 
-    assetId String @unique @db.Uuid
+    assetId String @unique
     asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
     hashes FingerprintHash[]
@@ -117,10 +117,10 @@ model FingerprintHash {
     hash     BigInt // Landmark hash (hcode)
     offsetMs Int // Relative time offset in milliseconds (tcode)
 
-    audioFingerprintId String           @db.Uuid
+    audioFingerprintId String
     audioFingerprint   AudioFingerprint @relation(fields: [audioFingerprintId], references: [id], onDelete: Cascade)
 
-    assetId String @db.Uuid
+    assetId String
     asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
     // COVERING INDEX: Enables PostgreSQL Index-Only Scans entirely in RAM
@@ -130,22 +130,21 @@ model FingerprintHash {
 }
 
 model Watermark {
-    id String @id @default(uuid()) @db.Uuid
+    id String @id @default(uuid())
 
     algorithm String
     payload   String
 
     embeddedAt DateTime @default(now())
 
-    assetId String @unique @db.Uuid
+    assetId String @unique
     asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
     @@map("watermarks")
 }
 
 model Broadcaster {
-    id String @id @default(uuid()) @db.Uuid
-
+    id          String  @id @default(uuid())
     name        String  @unique
     description String?
 
@@ -166,9 +165,9 @@ model Broadcaster {
 }
 
 model MonitoringSession {
-    id String @id @default(uuid()) @db.Uuid
+    id String @id @default(uuid())
 
-    broadcasterId String      @db.Uuid
+    broadcasterId String
     broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id], onDelete: Cascade)
 
     audioLink String?
@@ -188,15 +187,15 @@ model MonitoringSession {
 }
 
 model Detection {
-    id String @id @default(uuid()) @db.Uuid
+    id String @id @default(uuid())
 
-    assetId String @db.Uuid
+    assetId String
     asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
-    broadcasterId String      @db.Uuid
+    broadcasterId String
     broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id])
 
-    sessionId String?            @db.Uuid
+    sessionId String?
     session   MonitoringSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
     broadcastAt DateTime

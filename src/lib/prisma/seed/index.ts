@@ -6,6 +6,7 @@ import {
   Broadcaster,
   MonitoringSession,
   Detection,
+  Prisma,
 } from "../generated";
 
 import { clearData } from "./clear-data";
@@ -16,6 +17,10 @@ import { seedWatermarks } from "./seed-watermarks";
 import { seedBroadcasters } from "./seed-broadcasters";
 import { seedMonitoringSessions } from "./seed-monitoring-sessions";
 import { seedDetections } from "./seed-detections";
+
+export type AssetWithArtist = Prisma.AssetGetPayload<{
+  include: { owner: true };
+}>;
 
 async function main() {
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -30,7 +35,7 @@ async function main() {
     const users: User[] = await seedUsers(prisma);
 
     // 2️⃣ Assets
-    const assets: Asset[] = await seedAssets(prisma, users);
+    const assets: AssetWithArtist[] = await seedAssets(prisma, users);
 
     // 3️⃣ Audio Fingerprints & Hashes
     const totalHashes = await seedFingerprints(prisma, assets);
