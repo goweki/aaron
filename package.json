@@ -7,7 +7,6 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "setup": "npm install && npm run db:reset",
     "dev": "npx prisma migrate dev && prisma generate && next dev",
     "build": "NODE_ENV=production next build",
     "postbuild": "npx prisma migrate deploy",
@@ -17,11 +16,14 @@
     "format": "prettier --write .",
     "test": "npx tsc --noEmit",
     "postinstall": "prisma generate",
-    "db:seed": "tsx src/lib/prisma/seed",
     "db:reset": "npx prisma migrate reset --force",
     "db:studio": "npx prisma studio",
     "db:push": "npx prisma db push",
-    "clean": "rm -rf .next node_modules"
+    "clean": "rm -rf .next node_modules",
+    "setup": "npm install && npm run db:reset",
+    "db:seed": "tsx src/lib/prisma/seed",
+    "db:dump": "tsx src/lib/prisma/dump/create",
+    "db:populate": "tsx src/lib/prisma/dump/upload"
   },
   "dependencies": {
     "@edgestore/react": "^0.7.0",
