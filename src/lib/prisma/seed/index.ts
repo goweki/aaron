@@ -1,13 +1,6 @@
 import prisma from "..";
 
-import {
-  User,
-  Asset,
-  Broadcaster,
-  MonitoringSession,
-  Detection,
-  Prisma,
-} from "../generated";
+import { User, Asset, Broadcaster, Detection, Prisma } from "../generated";
 
 import { clearData } from "./clear-data";
 import { seedUsers } from "./seed-users";
@@ -15,7 +8,6 @@ import { seedAssets } from "./seed-assets";
 import { seedFingerprints } from "./seed-fingerprints";
 import { seedWatermarks } from "./seed-watermarks";
 import { seedBroadcasters } from "./seed-broadcasters";
-import { seedMonitoringSessions } from "./seed-monitoring-sessions";
 import { seedDetections } from "./seed-detections";
 
 export type AssetWithArtist = Prisma.AssetGetPayload<{
@@ -47,17 +39,12 @@ async function main() {
     const broadcasters: Broadcaster[] = await seedBroadcasters(prisma);
 
     // 6️⃣ Monitoring Sessions
-    const sessions: MonitoringSession[] = await seedMonitoringSessions(
-      prisma,
-      broadcasters,
-    );
 
     // 7️⃣ Detections
     const detections: Detection[] = await seedDetections(
       prisma,
       assets,
       broadcasters,
-      sessions,
     );
 
     console.log("");
@@ -68,7 +55,6 @@ async function main() {
     console.log(`🎵 Assets:              ${assets.length}`);
     console.log(`🔊 Fingerprint Hashes:  ${totalHashes.toLocaleString()}`);
     console.log(`📡 Broadcasters:        ${broadcasters.length}`);
-    console.log(`📺 Monitoring Sessions: ${sessions.length}`);
     console.log(`🎯 Detections:         ${detections.length}`);
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     console.log("🎉 Database seeding complete!");
