@@ -4,7 +4,7 @@ import { promisify } from "util";
 import path from "path";
 import fs from "fs";
 
-dotenv.config({ path: ".env.production" });
+dotenv.config({ path: ".env.local" });
 
 const execFileAsync = promisify(execFile);
 
