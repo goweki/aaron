@@ -14,7 +14,7 @@ export async function getAssetByIdAction(assetId: string): Promise<
         fingerprint: true;
         hashes: true;
         watermark: true;
-        detections: { include: { broadcaster: true; session: true } };
+        detections: { include: { broadcaster: true } };
       };
     }>
   >
@@ -29,7 +29,7 @@ export async function getAssetByIdAction(assetId: string): Promise<
         fingerprint: true,
         hashes: true,
         watermark: true,
-        detections: { include: { broadcaster: true, session: true } },
+        detections: { include: { broadcaster: true } },
       },
     });
 
@@ -55,9 +55,8 @@ export async function getDetectionByIdAction(detectionId: string): Promise<
   ActionResult<
     Prisma.DetectionGetPayload<{
       include: {
-        asset: { include: { owner: true; fingerprint: true; watermark: true } };
         broadcaster: true;
-        session: true;
+        asset: { include: { owner: true; fingerprint: true; watermark: true } };
       };
     }>
   >
@@ -68,9 +67,8 @@ export async function getDetectionByIdAction(detectionId: string): Promise<
     const detection = await prisma.detection.findUnique({
       where: { id: detectionId },
       include: {
-        asset: { include: { owner: true, fingerprint: true, watermark: true } },
         broadcaster: true,
-        session: true,
+        asset: { include: { owner: true, fingerprint: true, watermark: true } },
       },
     });
 

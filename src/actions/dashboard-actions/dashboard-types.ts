@@ -29,7 +29,6 @@ export type AssetWithRelations = Prisma.AssetGetPayload<{
 export const broadcasterIncludes =
   Prisma.validator<Prisma.BroadcasterInclude>()({
     detections: true,
-    monitoringSessions: true,
   });
 
 export type BroadcasterWithRelations = Prisma.BroadcasterGetPayload<{
@@ -41,7 +40,6 @@ export type BroadcasterWithRelations = Prisma.BroadcasterGetPayload<{
 export const detectionIncludes = Prisma.validator<Prisma.DetectionInclude>()({
   asset: { include: { owner: true, fingerprint: true, watermark: true } },
   broadcaster: true,
-  session: true,
 });
 
 export type DetectionWithRelations = Prisma.DetectionGetPayload<{

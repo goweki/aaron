@@ -155,35 +155,12 @@ model Broadcaster {
 
     status Status @default(ACTIVE)
 
-    monitoringSessions MonitoringSession[]
-    detections         Detection[]
+    detections Detection[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@map("broadcasters")
-}
-
-model MonitoringSession {
-    id String @id @default(uuid())
-
-    broadcasterId String
-    broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id], onDelete: Cascade)
-
-    audioLink String?
-    startedAt DateTime
-    endedAt   DateTime?
-
-    status Status @default(ACTIVE)
-
-    detections Detection[]
-
-    createdAt DateTime @default(now())
-
-    @@unique([broadcasterId, startedAt])
-    @@index([broadcasterId])
-    @@index([startedAt])
-    @@map("monitoring_sessions")
 }
 
 model Detection {
@@ -194,9 +171,6 @@ model Detection {
 
     broadcasterId String
     broadcaster   Broadcaster @relation(fields: [broadcasterId], references: [id])
-
-    sessionId String?
-    session   MonitoringSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
     broadcastAt DateTime
     detectedAt  DateTime @default(now())
@@ -218,7 +192,6 @@ model Detection {
     @@index([status])
     @@index([assetId])
     @@index([broadcasterId])
-    @@index([sessionId])
     @@index([broadcastAt])
     @@index([assetId, broadcastAt])
     @@index([broadcasterId, broadcastAt])

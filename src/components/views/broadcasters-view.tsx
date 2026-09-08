@@ -117,7 +117,6 @@ export default function BroadcastersView({
               <tr>
                 <th className="px-4 py-3">Broadcaster</th>
                 <th className="px-4 py-3">Stream URL</th>
-                <th className="px-4 py-3">Sessions</th>
                 <th className="px-4 py-3">Detections</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3 text-right">Actions</th>
@@ -137,9 +136,6 @@ export default function BroadcastersView({
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400 break-all">
                     {broadcaster.streamUrl || "—"}
-                  </td>
-                  <td className="px-4 py-3">
-                    {broadcaster.monitoringSessions.length}
                   </td>
                   <td className="px-4 py-3">{broadcaster.detections.length}</td>
                   <td className="px-4 py-3">{broadcaster.status}</td>

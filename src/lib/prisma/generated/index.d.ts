@@ -44,11 +44,6 @@ export type Watermark = $Result.DefaultSelection<Prisma.$WatermarkPayload>
  */
 export type Broadcaster = $Result.DefaultSelection<Prisma.$BroadcasterPayload>
 /**
- * Model MonitoringSession
- * 
- */
-export type MonitoringSession = $Result.DefaultSelection<Prisma.$MonitoringSessionPayload>
-/**
  * Model Detection
  * 
  */
@@ -293,16 +288,6 @@ export class PrismaClient<
   get broadcaster(): Prisma.BroadcasterDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.monitoringSession`: Exposes CRUD operations for the **MonitoringSession** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more MonitoringSessions
-    * const monitoringSessions = await prisma.monitoringSession.findMany()
-    * ```
-    */
-  get monitoringSession(): Prisma.MonitoringSessionDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.detection`: Exposes CRUD operations for the **Detection** model.
     * Example usage:
     * ```ts
@@ -361,8 +346,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.9.1
-   * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
+   * Prisma Client JS version: 7.10.0
+   * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
    */
   export type PrismaVersion = {
     client: string
@@ -764,7 +749,6 @@ export namespace Prisma {
     FingerprintHash: 'FingerprintHash',
     Watermark: 'Watermark',
     Broadcaster: 'Broadcaster',
-    MonitoringSession: 'MonitoringSession',
     Detection: 'Detection'
   };
 
@@ -781,7 +765,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "asset" | "audioFingerprint" | "fingerprintHash" | "watermark" | "broadcaster" | "monitoringSession" | "detection"
+      modelProps: "user" | "asset" | "audioFingerprint" | "fingerprintHash" | "watermark" | "broadcaster" | "detection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1229,80 +1213,6 @@ export namespace Prisma {
           }
         }
       }
-      MonitoringSession: {
-        payload: Prisma.$MonitoringSessionPayload<ExtArgs>
-        fields: Prisma.MonitoringSessionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MonitoringSessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MonitoringSessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          findFirst: {
-            args: Prisma.MonitoringSessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MonitoringSessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          findMany: {
-            args: Prisma.MonitoringSessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>[]
-          }
-          create: {
-            args: Prisma.MonitoringSessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          createMany: {
-            args: Prisma.MonitoringSessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MonitoringSessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>[]
-          }
-          delete: {
-            args: Prisma.MonitoringSessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          update: {
-            args: Prisma.MonitoringSessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          deleteMany: {
-            args: Prisma.MonitoringSessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MonitoringSessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.MonitoringSessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>[]
-          }
-          upsert: {
-            args: Prisma.MonitoringSessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MonitoringSessionPayload>
-          }
-          aggregate: {
-            args: Prisma.MonitoringSessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateMonitoringSession>
-          }
-          groupBy: {
-            args: Prisma.MonitoringSessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<MonitoringSessionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MonitoringSessionCountArgs<ExtArgs>
-            result: $Utils.Optional<MonitoringSessionCountAggregateOutputType> | number
-          }
-        }
-      }
       Detection: {
         payload: Prisma.$DetectionPayload<ExtArgs>
         fields: Prisma.DetectionFieldRefs
@@ -1506,7 +1416,6 @@ export namespace Prisma {
     fingerprintHash?: FingerprintHashOmit
     watermark?: WatermarkOmit
     broadcaster?: BroadcasterOmit
-    monitoringSession?: MonitoringSessionOmit
     detection?: DetectionOmit
   }
 
@@ -1690,12 +1599,10 @@ export namespace Prisma {
    */
 
   export type BroadcasterCountOutputType = {
-    monitoringSessions: number
     detections: number
   }
 
   export type BroadcasterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    monitoringSessions?: boolean | BroadcasterCountOutputTypeCountMonitoringSessionsArgs
     detections?: boolean | BroadcasterCountOutputTypeCountDetectionsArgs
   }
 
@@ -1713,45 +1620,7 @@ export namespace Prisma {
   /**
    * BroadcasterCountOutputType without action
    */
-  export type BroadcasterCountOutputTypeCountMonitoringSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MonitoringSessionWhereInput
-  }
-
-  /**
-   * BroadcasterCountOutputType without action
-   */
   export type BroadcasterCountOutputTypeCountDetectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DetectionWhereInput
-  }
-
-
-  /**
-   * Count Type MonitoringSessionCountOutputType
-   */
-
-  export type MonitoringSessionCountOutputType = {
-    detections: number
-  }
-
-  export type MonitoringSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    detections?: boolean | MonitoringSessionCountOutputTypeCountDetectionsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * MonitoringSessionCountOutputType without action
-   */
-  export type MonitoringSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSessionCountOutputType
-     */
-    select?: MonitoringSessionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * MonitoringSessionCountOutputType without action
-   */
-  export type MonitoringSessionCountOutputTypeCountDetectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DetectionWhereInput
   }
 
@@ -7837,7 +7706,6 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    monitoringSessions?: boolean | Broadcaster$monitoringSessionsArgs<ExtArgs>
     detections?: boolean | Broadcaster$detectionsArgs<ExtArgs>
     _count?: boolean | BroadcasterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["broadcaster"]>
@@ -7883,7 +7751,6 @@ export namespace Prisma {
 
   export type BroadcasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "website" | "streamUrl" | "country" | "frequency" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["broadcaster"]>
   export type BroadcasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    monitoringSessions?: boolean | Broadcaster$monitoringSessionsArgs<ExtArgs>
     detections?: boolean | Broadcaster$detectionsArgs<ExtArgs>
     _count?: boolean | BroadcasterCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -7893,7 +7760,6 @@ export namespace Prisma {
   export type $BroadcasterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Broadcaster"
     objects: {
-      monitoringSessions: Prisma.$MonitoringSessionPayload<ExtArgs>[]
       detections: Prisma.$DetectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -8301,7 +8167,6 @@ export namespace Prisma {
    */
   export interface Prisma__BroadcasterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    monitoringSessions<T extends Broadcaster$monitoringSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Broadcaster$monitoringSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     detections<T extends Broadcaster$detectionsArgs<ExtArgs> = {}>(args?: Subset<T, Broadcaster$detectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DetectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8735,30 +8600,6 @@ export namespace Prisma {
   }
 
   /**
-   * Broadcaster.monitoringSessions
-   */
-  export type Broadcaster$monitoringSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    where?: MonitoringSessionWhereInput
-    orderBy?: MonitoringSessionOrderByWithRelationInput | MonitoringSessionOrderByWithRelationInput[]
-    cursor?: MonitoringSessionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MonitoringSessionScalarFieldEnum | MonitoringSessionScalarFieldEnum[]
-  }
-
-  /**
    * Broadcaster.detections
    */
   export type Broadcaster$detectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8802,1125 +8643,6 @@ export namespace Prisma {
 
 
   /**
-   * Model MonitoringSession
-   */
-
-  export type AggregateMonitoringSession = {
-    _count: MonitoringSessionCountAggregateOutputType | null
-    _min: MonitoringSessionMinAggregateOutputType | null
-    _max: MonitoringSessionMaxAggregateOutputType | null
-  }
-
-  export type MonitoringSessionMinAggregateOutputType = {
-    id: string | null
-    broadcasterId: string | null
-    audioLink: string | null
-    startedAt: Date | null
-    endedAt: Date | null
-    status: $Enums.Status | null
-    createdAt: Date | null
-  }
-
-  export type MonitoringSessionMaxAggregateOutputType = {
-    id: string | null
-    broadcasterId: string | null
-    audioLink: string | null
-    startedAt: Date | null
-    endedAt: Date | null
-    status: $Enums.Status | null
-    createdAt: Date | null
-  }
-
-  export type MonitoringSessionCountAggregateOutputType = {
-    id: number
-    broadcasterId: number
-    audioLink: number
-    startedAt: number
-    endedAt: number
-    status: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type MonitoringSessionMinAggregateInputType = {
-    id?: true
-    broadcasterId?: true
-    audioLink?: true
-    startedAt?: true
-    endedAt?: true
-    status?: true
-    createdAt?: true
-  }
-
-  export type MonitoringSessionMaxAggregateInputType = {
-    id?: true
-    broadcasterId?: true
-    audioLink?: true
-    startedAt?: true
-    endedAt?: true
-    status?: true
-    createdAt?: true
-  }
-
-  export type MonitoringSessionCountAggregateInputType = {
-    id?: true
-    broadcasterId?: true
-    audioLink?: true
-    startedAt?: true
-    endedAt?: true
-    status?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type MonitoringSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MonitoringSession to aggregate.
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MonitoringSessions to fetch.
-     */
-    orderBy?: MonitoringSessionOrderByWithRelationInput | MonitoringSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MonitoringSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MonitoringSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MonitoringSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned MonitoringSessions
-    **/
-    _count?: true | MonitoringSessionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MonitoringSessionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MonitoringSessionMaxAggregateInputType
-  }
-
-  export type GetMonitoringSessionAggregateType<T extends MonitoringSessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateMonitoringSession]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMonitoringSession[P]>
-      : GetScalarType<T[P], AggregateMonitoringSession[P]>
-  }
-
-
-
-
-  export type MonitoringSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MonitoringSessionWhereInput
-    orderBy?: MonitoringSessionOrderByWithAggregationInput | MonitoringSessionOrderByWithAggregationInput[]
-    by: MonitoringSessionScalarFieldEnum[] | MonitoringSessionScalarFieldEnum
-    having?: MonitoringSessionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MonitoringSessionCountAggregateInputType | true
-    _min?: MonitoringSessionMinAggregateInputType
-    _max?: MonitoringSessionMaxAggregateInputType
-  }
-
-  export type MonitoringSessionGroupByOutputType = {
-    id: string
-    broadcasterId: string
-    audioLink: string | null
-    startedAt: Date
-    endedAt: Date | null
-    status: $Enums.Status
-    createdAt: Date
-    _count: MonitoringSessionCountAggregateOutputType | null
-    _min: MonitoringSessionMinAggregateOutputType | null
-    _max: MonitoringSessionMaxAggregateOutputType | null
-  }
-
-  type GetMonitoringSessionGroupByPayload<T extends MonitoringSessionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MonitoringSessionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MonitoringSessionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MonitoringSessionGroupByOutputType[P]>
-            : GetScalarType<T[P], MonitoringSessionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MonitoringSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    broadcasterId?: boolean
-    audioLink?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-    status?: boolean
-    createdAt?: boolean
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    detections?: boolean | MonitoringSession$detectionsArgs<ExtArgs>
-    _count?: boolean | MonitoringSessionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["monitoringSession"]>
-
-  export type MonitoringSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    broadcasterId?: boolean
-    audioLink?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-    status?: boolean
-    createdAt?: boolean
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["monitoringSession"]>
-
-  export type MonitoringSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    broadcasterId?: boolean
-    audioLink?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-    status?: boolean
-    createdAt?: boolean
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["monitoringSession"]>
-
-  export type MonitoringSessionSelectScalar = {
-    id?: boolean
-    broadcasterId?: boolean
-    audioLink?: boolean
-    startedAt?: boolean
-    endedAt?: boolean
-    status?: boolean
-    createdAt?: boolean
-  }
-
-  export type MonitoringSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "broadcasterId" | "audioLink" | "startedAt" | "endedAt" | "status" | "createdAt", ExtArgs["result"]["monitoringSession"]>
-  export type MonitoringSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    detections?: boolean | MonitoringSession$detectionsArgs<ExtArgs>
-    _count?: boolean | MonitoringSessionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type MonitoringSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-  }
-  export type MonitoringSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-  }
-
-  export type $MonitoringSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "MonitoringSession"
-    objects: {
-      broadcaster: Prisma.$BroadcasterPayload<ExtArgs>
-      detections: Prisma.$DetectionPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      broadcasterId: string
-      audioLink: string | null
-      startedAt: Date
-      endedAt: Date | null
-      status: $Enums.Status
-      createdAt: Date
-    }, ExtArgs["result"]["monitoringSession"]>
-    composites: {}
-  }
-
-  type MonitoringSessionGetPayload<S extends boolean | null | undefined | MonitoringSessionDefaultArgs> = $Result.GetResult<Prisma.$MonitoringSessionPayload, S>
-
-  type MonitoringSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<MonitoringSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: MonitoringSessionCountAggregateInputType | true
-    }
-
-  export interface MonitoringSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MonitoringSession'], meta: { name: 'MonitoringSession' } }
-    /**
-     * Find zero or one MonitoringSession that matches the filter.
-     * @param {MonitoringSessionFindUniqueArgs} args - Arguments to find a MonitoringSession
-     * @example
-     * // Get one MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends MonitoringSessionFindUniqueArgs>(args: SelectSubset<T, MonitoringSessionFindUniqueArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one MonitoringSession that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {MonitoringSessionFindUniqueOrThrowArgs} args - Arguments to find a MonitoringSession
-     * @example
-     * // Get one MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends MonitoringSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, MonitoringSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MonitoringSession that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionFindFirstArgs} args - Arguments to find a MonitoringSession
-     * @example
-     * // Get one MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends MonitoringSessionFindFirstArgs>(args?: SelectSubset<T, MonitoringSessionFindFirstArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MonitoringSession that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionFindFirstOrThrowArgs} args - Arguments to find a MonitoringSession
-     * @example
-     * // Get one MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends MonitoringSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, MonitoringSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more MonitoringSessions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all MonitoringSessions
-     * const monitoringSessions = await prisma.monitoringSession.findMany()
-     * 
-     * // Get first 10 MonitoringSessions
-     * const monitoringSessions = await prisma.monitoringSession.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const monitoringSessionWithIdOnly = await prisma.monitoringSession.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends MonitoringSessionFindManyArgs>(args?: SelectSubset<T, MonitoringSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a MonitoringSession.
-     * @param {MonitoringSessionCreateArgs} args - Arguments to create a MonitoringSession.
-     * @example
-     * // Create one MonitoringSession
-     * const MonitoringSession = await prisma.monitoringSession.create({
-     *   data: {
-     *     // ... data to create a MonitoringSession
-     *   }
-     * })
-     * 
-     */
-    create<T extends MonitoringSessionCreateArgs>(args: SelectSubset<T, MonitoringSessionCreateArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many MonitoringSessions.
-     * @param {MonitoringSessionCreateManyArgs} args - Arguments to create many MonitoringSessions.
-     * @example
-     * // Create many MonitoringSessions
-     * const monitoringSession = await prisma.monitoringSession.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends MonitoringSessionCreateManyArgs>(args?: SelectSubset<T, MonitoringSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many MonitoringSessions and returns the data saved in the database.
-     * @param {MonitoringSessionCreateManyAndReturnArgs} args - Arguments to create many MonitoringSessions.
-     * @example
-     * // Create many MonitoringSessions
-     * const monitoringSession = await prisma.monitoringSession.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many MonitoringSessions and only return the `id`
-     * const monitoringSessionWithIdOnly = await prisma.monitoringSession.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends MonitoringSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, MonitoringSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a MonitoringSession.
-     * @param {MonitoringSessionDeleteArgs} args - Arguments to delete one MonitoringSession.
-     * @example
-     * // Delete one MonitoringSession
-     * const MonitoringSession = await prisma.monitoringSession.delete({
-     *   where: {
-     *     // ... filter to delete one MonitoringSession
-     *   }
-     * })
-     * 
-     */
-    delete<T extends MonitoringSessionDeleteArgs>(args: SelectSubset<T, MonitoringSessionDeleteArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one MonitoringSession.
-     * @param {MonitoringSessionUpdateArgs} args - Arguments to update one MonitoringSession.
-     * @example
-     * // Update one MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends MonitoringSessionUpdateArgs>(args: SelectSubset<T, MonitoringSessionUpdateArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more MonitoringSessions.
-     * @param {MonitoringSessionDeleteManyArgs} args - Arguments to filter MonitoringSessions to delete.
-     * @example
-     * // Delete a few MonitoringSessions
-     * const { count } = await prisma.monitoringSession.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends MonitoringSessionDeleteManyArgs>(args?: SelectSubset<T, MonitoringSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MonitoringSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many MonitoringSessions
-     * const monitoringSession = await prisma.monitoringSession.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends MonitoringSessionUpdateManyArgs>(args: SelectSubset<T, MonitoringSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MonitoringSessions and returns the data updated in the database.
-     * @param {MonitoringSessionUpdateManyAndReturnArgs} args - Arguments to update many MonitoringSessions.
-     * @example
-     * // Update many MonitoringSessions
-     * const monitoringSession = await prisma.monitoringSession.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more MonitoringSessions and only return the `id`
-     * const monitoringSessionWithIdOnly = await prisma.monitoringSession.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends MonitoringSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, MonitoringSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one MonitoringSession.
-     * @param {MonitoringSessionUpsertArgs} args - Arguments to update or create a MonitoringSession.
-     * @example
-     * // Update or create a MonitoringSession
-     * const monitoringSession = await prisma.monitoringSession.upsert({
-     *   create: {
-     *     // ... data to create a MonitoringSession
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the MonitoringSession we want to update
-     *   }
-     * })
-     */
-    upsert<T extends MonitoringSessionUpsertArgs>(args: SelectSubset<T, MonitoringSessionUpsertArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of MonitoringSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionCountArgs} args - Arguments to filter MonitoringSessions to count.
-     * @example
-     * // Count the number of MonitoringSessions
-     * const count = await prisma.monitoringSession.count({
-     *   where: {
-     *     // ... the filter for the MonitoringSessions we want to count
-     *   }
-     * })
-    **/
-    count<T extends MonitoringSessionCountArgs>(
-      args?: Subset<T, MonitoringSessionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MonitoringSessionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a MonitoringSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MonitoringSessionAggregateArgs>(args: Subset<T, MonitoringSessionAggregateArgs>): Prisma.PrismaPromise<GetMonitoringSessionAggregateType<T>>
-
-    /**
-     * Group by MonitoringSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MonitoringSessionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MonitoringSessionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MonitoringSessionGroupByArgs['orderBy'] }
-        : { orderBy?: MonitoringSessionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MonitoringSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMonitoringSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the MonitoringSession model
-   */
-  readonly fields: MonitoringSessionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for MonitoringSession.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MonitoringSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    broadcaster<T extends BroadcasterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BroadcasterDefaultArgs<ExtArgs>>): Prisma__BroadcasterClient<$Result.GetResult<Prisma.$BroadcasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    detections<T extends MonitoringSession$detectionsArgs<ExtArgs> = {}>(args?: Subset<T, MonitoringSession$detectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DetectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the MonitoringSession model
-   */
-  interface MonitoringSessionFieldRefs {
-    readonly id: FieldRef<"MonitoringSession", 'String'>
-    readonly broadcasterId: FieldRef<"MonitoringSession", 'String'>
-    readonly audioLink: FieldRef<"MonitoringSession", 'String'>
-    readonly startedAt: FieldRef<"MonitoringSession", 'DateTime'>
-    readonly endedAt: FieldRef<"MonitoringSession", 'DateTime'>
-    readonly status: FieldRef<"MonitoringSession", 'Status'>
-    readonly createdAt: FieldRef<"MonitoringSession", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * MonitoringSession findUnique
-   */
-  export type MonitoringSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which MonitoringSession to fetch.
-     */
-    where: MonitoringSessionWhereUniqueInput
-  }
-
-  /**
-   * MonitoringSession findUniqueOrThrow
-   */
-  export type MonitoringSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which MonitoringSession to fetch.
-     */
-    where: MonitoringSessionWhereUniqueInput
-  }
-
-  /**
-   * MonitoringSession findFirst
-   */
-  export type MonitoringSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which MonitoringSession to fetch.
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MonitoringSessions to fetch.
-     */
-    orderBy?: MonitoringSessionOrderByWithRelationInput | MonitoringSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MonitoringSessions.
-     */
-    cursor?: MonitoringSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MonitoringSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MonitoringSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MonitoringSessions.
-     */
-    distinct?: MonitoringSessionScalarFieldEnum | MonitoringSessionScalarFieldEnum[]
-  }
-
-  /**
-   * MonitoringSession findFirstOrThrow
-   */
-  export type MonitoringSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which MonitoringSession to fetch.
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MonitoringSessions to fetch.
-     */
-    orderBy?: MonitoringSessionOrderByWithRelationInput | MonitoringSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MonitoringSessions.
-     */
-    cursor?: MonitoringSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MonitoringSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MonitoringSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MonitoringSessions.
-     */
-    distinct?: MonitoringSessionScalarFieldEnum | MonitoringSessionScalarFieldEnum[]
-  }
-
-  /**
-   * MonitoringSession findMany
-   */
-  export type MonitoringSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which MonitoringSessions to fetch.
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MonitoringSessions to fetch.
-     */
-    orderBy?: MonitoringSessionOrderByWithRelationInput | MonitoringSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing MonitoringSessions.
-     */
-    cursor?: MonitoringSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MonitoringSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MonitoringSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MonitoringSessions.
-     */
-    distinct?: MonitoringSessionScalarFieldEnum | MonitoringSessionScalarFieldEnum[]
-  }
-
-  /**
-   * MonitoringSession create
-   */
-  export type MonitoringSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a MonitoringSession.
-     */
-    data: XOR<MonitoringSessionCreateInput, MonitoringSessionUncheckedCreateInput>
-  }
-
-  /**
-   * MonitoringSession createMany
-   */
-  export type MonitoringSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many MonitoringSessions.
-     */
-    data: MonitoringSessionCreateManyInput | MonitoringSessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * MonitoringSession createManyAndReturn
-   */
-  export type MonitoringSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * The data used to create many MonitoringSessions.
-     */
-    data: MonitoringSessionCreateManyInput | MonitoringSessionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MonitoringSession update
-   */
-  export type MonitoringSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a MonitoringSession.
-     */
-    data: XOR<MonitoringSessionUpdateInput, MonitoringSessionUncheckedUpdateInput>
-    /**
-     * Choose, which MonitoringSession to update.
-     */
-    where: MonitoringSessionWhereUniqueInput
-  }
-
-  /**
-   * MonitoringSession updateMany
-   */
-  export type MonitoringSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update MonitoringSessions.
-     */
-    data: XOR<MonitoringSessionUpdateManyMutationInput, MonitoringSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which MonitoringSessions to update
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * Limit how many MonitoringSessions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * MonitoringSession updateManyAndReturn
-   */
-  export type MonitoringSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * The data used to update MonitoringSessions.
-     */
-    data: XOR<MonitoringSessionUpdateManyMutationInput, MonitoringSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which MonitoringSessions to update
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * Limit how many MonitoringSessions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MonitoringSession upsert
-   */
-  export type MonitoringSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the MonitoringSession to update in case it exists.
-     */
-    where: MonitoringSessionWhereUniqueInput
-    /**
-     * In case the MonitoringSession found by the `where` argument doesn't exist, create a new MonitoringSession with this data.
-     */
-    create: XOR<MonitoringSessionCreateInput, MonitoringSessionUncheckedCreateInput>
-    /**
-     * In case the MonitoringSession was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MonitoringSessionUpdateInput, MonitoringSessionUncheckedUpdateInput>
-  }
-
-  /**
-   * MonitoringSession delete
-   */
-  export type MonitoringSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    /**
-     * Filter which MonitoringSession to delete.
-     */
-    where: MonitoringSessionWhereUniqueInput
-  }
-
-  /**
-   * MonitoringSession deleteMany
-   */
-  export type MonitoringSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MonitoringSessions to delete
-     */
-    where?: MonitoringSessionWhereInput
-    /**
-     * Limit how many MonitoringSessions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * MonitoringSession.detections
-   */
-  export type MonitoringSession$detectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Detection
-     */
-    select?: DetectionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Detection
-     */
-    omit?: DetectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DetectionInclude<ExtArgs> | null
-    where?: DetectionWhereInput
-    orderBy?: DetectionOrderByWithRelationInput | DetectionOrderByWithRelationInput[]
-    cursor?: DetectionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DetectionScalarFieldEnum | DetectionScalarFieldEnum[]
-  }
-
-  /**
-   * MonitoringSession without action
-   */
-  export type MonitoringSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Detection
    */
 
@@ -9950,7 +8672,6 @@ export namespace Prisma {
     id: string | null
     assetId: string | null
     broadcasterId: string | null
-    sessionId: string | null
     broadcastAt: Date | null
     detectedAt: Date | null
     confidence: number | null
@@ -9966,7 +8687,6 @@ export namespace Prisma {
     id: string | null
     assetId: string | null
     broadcasterId: string | null
-    sessionId: string | null
     broadcastAt: Date | null
     detectedAt: Date | null
     confidence: number | null
@@ -9982,7 +8702,6 @@ export namespace Prisma {
     id: number
     assetId: number
     broadcasterId: number
-    sessionId: number
     broadcastAt: number
     detectedAt: number
     confidence: number
@@ -10014,7 +8733,6 @@ export namespace Prisma {
     id?: true
     assetId?: true
     broadcasterId?: true
-    sessionId?: true
     broadcastAt?: true
     detectedAt?: true
     confidence?: true
@@ -10030,7 +8748,6 @@ export namespace Prisma {
     id?: true
     assetId?: true
     broadcasterId?: true
-    sessionId?: true
     broadcastAt?: true
     detectedAt?: true
     confidence?: true
@@ -10046,7 +8763,6 @@ export namespace Prisma {
     id?: true
     assetId?: true
     broadcasterId?: true
-    sessionId?: true
     broadcastAt?: true
     detectedAt?: true
     confidence?: true
@@ -10149,7 +8865,6 @@ export namespace Prisma {
     id: string
     assetId: string
     broadcasterId: string
-    sessionId: string | null
     broadcastAt: Date
     detectedAt: Date
     confidence: number
@@ -10184,7 +8899,6 @@ export namespace Prisma {
     id?: boolean
     assetId?: boolean
     broadcasterId?: boolean
-    sessionId?: boolean
     broadcastAt?: boolean
     detectedAt?: boolean
     confidence?: boolean
@@ -10196,14 +8910,12 @@ export namespace Prisma {
     createdAt?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }, ExtArgs["result"]["detection"]>
 
   export type DetectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     assetId?: boolean
     broadcasterId?: boolean
-    sessionId?: boolean
     broadcastAt?: boolean
     detectedAt?: boolean
     confidence?: boolean
@@ -10215,14 +8927,12 @@ export namespace Prisma {
     createdAt?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }, ExtArgs["result"]["detection"]>
 
   export type DetectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     assetId?: boolean
     broadcasterId?: boolean
-    sessionId?: boolean
     broadcastAt?: boolean
     detectedAt?: boolean
     confidence?: boolean
@@ -10234,14 +8944,12 @@ export namespace Prisma {
     createdAt?: boolean
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }, ExtArgs["result"]["detection"]>
 
   export type DetectionSelectScalar = {
     id?: boolean
     assetId?: boolean
     broadcasterId?: boolean
-    sessionId?: boolean
     broadcastAt?: boolean
     detectedAt?: boolean
     confidence?: boolean
@@ -10253,21 +8961,18 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type DetectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "assetId" | "broadcasterId" | "sessionId" | "broadcastAt" | "detectedAt" | "confidence" | "startOffset" | "endOffset" | "duration" | "engineVersion" | "status" | "createdAt", ExtArgs["result"]["detection"]>
+  export type DetectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "assetId" | "broadcasterId" | "broadcastAt" | "detectedAt" | "confidence" | "startOffset" | "endOffset" | "duration" | "engineVersion" | "status" | "createdAt", ExtArgs["result"]["detection"]>
   export type DetectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }
   export type DetectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }
   export type DetectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asset?: boolean | AssetDefaultArgs<ExtArgs>
     broadcaster?: boolean | BroadcasterDefaultArgs<ExtArgs>
-    session?: boolean | Detection$sessionArgs<ExtArgs>
   }
 
   export type $DetectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10275,13 +8980,11 @@ export namespace Prisma {
     objects: {
       asset: Prisma.$AssetPayload<ExtArgs>
       broadcaster: Prisma.$BroadcasterPayload<ExtArgs>
-      session: Prisma.$MonitoringSessionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       assetId: string
       broadcasterId: string
-      sessionId: string | null
       broadcastAt: Date
       detectedAt: Date
       confidence: number
@@ -10687,7 +9390,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     asset<T extends AssetDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AssetDefaultArgs<ExtArgs>>): Prisma__AssetClient<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     broadcaster<T extends BroadcasterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BroadcasterDefaultArgs<ExtArgs>>): Prisma__BroadcasterClient<$Result.GetResult<Prisma.$BroadcasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    session<T extends Detection$sessionArgs<ExtArgs> = {}>(args?: Subset<T, Detection$sessionArgs<ExtArgs>>): Prisma__MonitoringSessionClient<$Result.GetResult<Prisma.$MonitoringSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10720,7 +9422,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Detection", 'String'>
     readonly assetId: FieldRef<"Detection", 'String'>
     readonly broadcasterId: FieldRef<"Detection", 'String'>
-    readonly sessionId: FieldRef<"Detection", 'String'>
     readonly broadcastAt: FieldRef<"Detection", 'DateTime'>
     readonly detectedAt: FieldRef<"Detection", 'DateTime'>
     readonly confidence: FieldRef<"Detection", 'Float'>
@@ -11131,25 +9832,6 @@ export namespace Prisma {
   }
 
   /**
-   * Detection.session
-   */
-  export type Detection$sessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MonitoringSession
-     */
-    select?: MonitoringSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MonitoringSession
-     */
-    omit?: MonitoringSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MonitoringSessionInclude<ExtArgs> | null
-    where?: MonitoringSessionWhereInput
-  }
-
-  /**
    * Detection without action
    */
   export type DetectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11277,24 +9959,10 @@ export namespace Prisma {
   export type BroadcasterScalarFieldEnum = (typeof BroadcasterScalarFieldEnum)[keyof typeof BroadcasterScalarFieldEnum]
 
 
-  export const MonitoringSessionScalarFieldEnum: {
-    id: 'id',
-    broadcasterId: 'broadcasterId',
-    audioLink: 'audioLink',
-    startedAt: 'startedAt',
-    endedAt: 'endedAt',
-    status: 'status',
-    createdAt: 'createdAt'
-  };
-
-  export type MonitoringSessionScalarFieldEnum = (typeof MonitoringSessionScalarFieldEnum)[keyof typeof MonitoringSessionScalarFieldEnum]
-
-
   export const DetectionScalarFieldEnum: {
     id: 'id',
     assetId: 'assetId',
     broadcasterId: 'broadcasterId',
-    sessionId: 'sessionId',
     broadcastAt: 'broadcastAt',
     detectedAt: 'detectedAt',
     confidence: 'confidence',
@@ -11898,7 +10566,6 @@ export namespace Prisma {
     status?: EnumStatusFilter<"Broadcaster"> | $Enums.Status
     createdAt?: DateTimeFilter<"Broadcaster"> | Date | string
     updatedAt?: DateTimeFilter<"Broadcaster"> | Date | string
-    monitoringSessions?: MonitoringSessionListRelationFilter
     detections?: DetectionListRelationFilter
   }
 
@@ -11913,7 +10580,6 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    monitoringSessions?: MonitoringSessionOrderByRelationAggregateInput
     detections?: DetectionOrderByRelationAggregateInput
   }
 
@@ -11931,7 +10597,6 @@ export namespace Prisma {
     status?: EnumStatusFilter<"Broadcaster"> | $Enums.Status
     createdAt?: DateTimeFilter<"Broadcaster"> | Date | string
     updatedAt?: DateTimeFilter<"Broadcaster"> | Date | string
-    monitoringSessions?: MonitoringSessionListRelationFilter
     detections?: DetectionListRelationFilter
   }, "id" | "name" | "streamUrl">
 
@@ -11967,75 +10632,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Broadcaster"> | Date | string
   }
 
-  export type MonitoringSessionWhereInput = {
-    AND?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    OR?: MonitoringSessionWhereInput[]
-    NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    id?: StringFilter<"MonitoringSession"> | string
-    broadcasterId?: StringFilter<"MonitoringSession"> | string
-    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
-    startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-    endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
-    status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
-    createdAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-    broadcaster?: XOR<BroadcasterScalarRelationFilter, BroadcasterWhereInput>
-    detections?: DetectionListRelationFilter
-  }
-
-  export type MonitoringSessionOrderByWithRelationInput = {
-    id?: SortOrder
-    broadcasterId?: SortOrder
-    audioLink?: SortOrderInput | SortOrder
-    startedAt?: SortOrder
-    endedAt?: SortOrderInput | SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
-    broadcaster?: BroadcasterOrderByWithRelationInput
-    detections?: DetectionOrderByRelationAggregateInput
-  }
-
-  export type MonitoringSessionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    broadcasterId_startedAt?: MonitoringSessionBroadcasterIdStartedAtCompoundUniqueInput
-    AND?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    OR?: MonitoringSessionWhereInput[]
-    NOT?: MonitoringSessionWhereInput | MonitoringSessionWhereInput[]
-    broadcasterId?: StringFilter<"MonitoringSession"> | string
-    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
-    startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-    endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
-    status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
-    createdAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-    broadcaster?: XOR<BroadcasterScalarRelationFilter, BroadcasterWhereInput>
-    detections?: DetectionListRelationFilter
-  }, "id" | "broadcasterId_startedAt">
-
-  export type MonitoringSessionOrderByWithAggregationInput = {
-    id?: SortOrder
-    broadcasterId?: SortOrder
-    audioLink?: SortOrderInput | SortOrder
-    startedAt?: SortOrder
-    endedAt?: SortOrderInput | SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
-    _count?: MonitoringSessionCountOrderByAggregateInput
-    _max?: MonitoringSessionMaxOrderByAggregateInput
-    _min?: MonitoringSessionMinOrderByAggregateInput
-  }
-
-  export type MonitoringSessionScalarWhereWithAggregatesInput = {
-    AND?: MonitoringSessionScalarWhereWithAggregatesInput | MonitoringSessionScalarWhereWithAggregatesInput[]
-    OR?: MonitoringSessionScalarWhereWithAggregatesInput[]
-    NOT?: MonitoringSessionScalarWhereWithAggregatesInput | MonitoringSessionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"MonitoringSession"> | string
-    broadcasterId?: StringWithAggregatesFilter<"MonitoringSession"> | string
-    audioLink?: StringNullableWithAggregatesFilter<"MonitoringSession"> | string | null
-    startedAt?: DateTimeWithAggregatesFilter<"MonitoringSession"> | Date | string
-    endedAt?: DateTimeNullableWithAggregatesFilter<"MonitoringSession"> | Date | string | null
-    status?: EnumStatusWithAggregatesFilter<"MonitoringSession"> | $Enums.Status
-    createdAt?: DateTimeWithAggregatesFilter<"MonitoringSession"> | Date | string
-  }
-
   export type DetectionWhereInput = {
     AND?: DetectionWhereInput | DetectionWhereInput[]
     OR?: DetectionWhereInput[]
@@ -12043,7 +10639,6 @@ export namespace Prisma {
     id?: StringFilter<"Detection"> | string
     assetId?: StringFilter<"Detection"> | string
     broadcasterId?: StringFilter<"Detection"> | string
-    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -12055,14 +10650,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Detection"> | Date | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     broadcaster?: XOR<BroadcasterScalarRelationFilter, BroadcasterWhereInput>
-    session?: XOR<MonitoringSessionNullableScalarRelationFilter, MonitoringSessionWhereInput> | null
   }
 
   export type DetectionOrderByWithRelationInput = {
     id?: SortOrder
     assetId?: SortOrder
     broadcasterId?: SortOrder
-    sessionId?: SortOrderInput | SortOrder
     broadcastAt?: SortOrder
     detectedAt?: SortOrder
     confidence?: SortOrder
@@ -12074,7 +10667,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     asset?: AssetOrderByWithRelationInput
     broadcaster?: BroadcasterOrderByWithRelationInput
-    session?: MonitoringSessionOrderByWithRelationInput
   }
 
   export type DetectionWhereUniqueInput = Prisma.AtLeast<{
@@ -12085,7 +10677,6 @@ export namespace Prisma {
     NOT?: DetectionWhereInput | DetectionWhereInput[]
     assetId?: StringFilter<"Detection"> | string
     broadcasterId?: StringFilter<"Detection"> | string
-    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -12097,14 +10688,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Detection"> | Date | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     broadcaster?: XOR<BroadcasterScalarRelationFilter, BroadcasterWhereInput>
-    session?: XOR<MonitoringSessionNullableScalarRelationFilter, MonitoringSessionWhereInput> | null
   }, "id" | "assetId_broadcasterId_broadcastAt">
 
   export type DetectionOrderByWithAggregationInput = {
     id?: SortOrder
     assetId?: SortOrder
     broadcasterId?: SortOrder
-    sessionId?: SortOrderInput | SortOrder
     broadcastAt?: SortOrder
     detectedAt?: SortOrder
     confidence?: SortOrder
@@ -12128,7 +10717,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Detection"> | string
     assetId?: StringWithAggregatesFilter<"Detection"> | string
     broadcasterId?: StringWithAggregatesFilter<"Detection"> | string
-    sessionId?: StringNullableWithAggregatesFilter<"Detection"> | string | null
     broadcastAt?: DateTimeWithAggregatesFilter<"Detection"> | Date | string
     detectedAt?: DateTimeWithAggregatesFilter<"Detection"> | Date | string
     confidence?: FloatWithAggregatesFilter<"Detection"> | number
@@ -12618,7 +11206,6 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    monitoringSessions?: MonitoringSessionCreateNestedManyWithoutBroadcasterInput
     detections?: DetectionCreateNestedManyWithoutBroadcasterInput
   }
 
@@ -12633,7 +11220,6 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    monitoringSessions?: MonitoringSessionUncheckedCreateNestedManyWithoutBroadcasterInput
     detections?: DetectionUncheckedCreateNestedManyWithoutBroadcasterInput
   }
 
@@ -12648,7 +11234,6 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    monitoringSessions?: MonitoringSessionUpdateManyWithoutBroadcasterNestedInput
     detections?: DetectionUpdateManyWithoutBroadcasterNestedInput
   }
 
@@ -12663,7 +11248,6 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    monitoringSessions?: MonitoringSessionUncheckedUpdateManyWithoutBroadcasterNestedInput
     detections?: DetectionUncheckedUpdateManyWithoutBroadcasterNestedInput
   }
 
@@ -12706,79 +11290,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MonitoringSessionCreateInput = {
-    id?: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    broadcaster: BroadcasterCreateNestedOneWithoutMonitoringSessionsInput
-    detections?: DetectionCreateNestedManyWithoutSessionInput
-  }
-
-  export type MonitoringSessionUncheckedCreateInput = {
-    id?: string
-    broadcasterId: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    detections?: DetectionUncheckedCreateNestedManyWithoutSessionInput
-  }
-
-  export type MonitoringSessionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    broadcaster?: BroadcasterUpdateOneRequiredWithoutMonitoringSessionsNestedInput
-    detections?: DetectionUpdateManyWithoutSessionNestedInput
-  }
-
-  export type MonitoringSessionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    broadcasterId?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detections?: DetectionUncheckedUpdateManyWithoutSessionNestedInput
-  }
-
-  export type MonitoringSessionCreateManyInput = {
-    id?: string
-    broadcasterId: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-  }
-
-  export type MonitoringSessionUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MonitoringSessionUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    broadcasterId?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type DetectionCreateInput = {
     id?: string
     broadcastAt: Date | string
@@ -12792,14 +11303,12 @@ export namespace Prisma {
     createdAt?: Date | string
     asset: AssetCreateNestedOneWithoutDetectionsInput
     broadcaster: BroadcasterCreateNestedOneWithoutDetectionsInput
-    session?: MonitoringSessionCreateNestedOneWithoutDetectionsInput
   }
 
   export type DetectionUncheckedCreateInput = {
     id?: string
     assetId: string
     broadcasterId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -12824,14 +11333,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     asset?: AssetUpdateOneRequiredWithoutDetectionsNestedInput
     broadcaster?: BroadcasterUpdateOneRequiredWithoutDetectionsNestedInput
-    session?: MonitoringSessionUpdateOneWithoutDetectionsNestedInput
   }
 
   export type DetectionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number
@@ -12847,7 +11354,6 @@ export namespace Prisma {
     id?: string
     assetId: string
     broadcasterId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -12876,7 +11382,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number
@@ -13443,16 +11948,6 @@ export namespace Prisma {
     assetId?: SortOrder
   }
 
-  export type MonitoringSessionListRelationFilter = {
-    every?: MonitoringSessionWhereInput
-    some?: MonitoringSessionWhereInput
-    none?: MonitoringSessionWhereInput
-  }
-
-  export type MonitoringSessionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type BroadcasterCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -13492,46 +11987,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type BroadcasterScalarRelationFilter = {
-    is?: BroadcasterWhereInput
-    isNot?: BroadcasterWhereInput
-  }
-
-  export type MonitoringSessionBroadcasterIdStartedAtCompoundUniqueInput = {
-    broadcasterId: string
-    startedAt: Date | string
-  }
-
-  export type MonitoringSessionCountOrderByAggregateInput = {
-    id?: SortOrder
-    broadcasterId?: SortOrder
-    audioLink?: SortOrder
-    startedAt?: SortOrder
-    endedAt?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type MonitoringSessionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    broadcasterId?: SortOrder
-    audioLink?: SortOrder
-    startedAt?: SortOrder
-    endedAt?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type MonitoringSessionMinOrderByAggregateInput = {
-    id?: SortOrder
-    broadcasterId?: SortOrder
-    audioLink?: SortOrder
-    startedAt?: SortOrder
-    endedAt?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
-  }
-
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -13550,9 +12005,9 @@ export namespace Prisma {
     not?: NestedEnumDetectionStatusFilter<$PrismaModel> | $Enums.DetectionStatus
   }
 
-  export type MonitoringSessionNullableScalarRelationFilter = {
-    is?: MonitoringSessionWhereInput | null
-    isNot?: MonitoringSessionWhereInput | null
+  export type BroadcasterScalarRelationFilter = {
+    is?: BroadcasterWhereInput
+    isNot?: BroadcasterWhereInput
   }
 
   export type DetectionAssetIdBroadcasterIdBroadcastAtCompoundUniqueInput = {
@@ -13565,7 +12020,6 @@ export namespace Prisma {
     id?: SortOrder
     assetId?: SortOrder
     broadcasterId?: SortOrder
-    sessionId?: SortOrder
     broadcastAt?: SortOrder
     detectedAt?: SortOrder
     confidence?: SortOrder
@@ -13588,7 +12042,6 @@ export namespace Prisma {
     id?: SortOrder
     assetId?: SortOrder
     broadcasterId?: SortOrder
-    sessionId?: SortOrder
     broadcastAt?: SortOrder
     detectedAt?: SortOrder
     confidence?: SortOrder
@@ -13604,7 +12057,6 @@ export namespace Prisma {
     id?: SortOrder
     assetId?: SortOrder
     broadcasterId?: SortOrder
-    sessionId?: SortOrder
     broadcastAt?: SortOrder
     detectedAt?: SortOrder
     confidence?: SortOrder
@@ -14011,13 +12463,6 @@ export namespace Prisma {
     update?: XOR<XOR<AssetUpdateToOneWithWhereWithoutWatermarkInput, AssetUpdateWithoutWatermarkInput>, AssetUncheckedUpdateWithoutWatermarkInput>
   }
 
-  export type MonitoringSessionCreateNestedManyWithoutBroadcasterInput = {
-    create?: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput> | MonitoringSessionCreateWithoutBroadcasterInput[] | MonitoringSessionUncheckedCreateWithoutBroadcasterInput[]
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutBroadcasterInput | MonitoringSessionCreateOrConnectWithoutBroadcasterInput[]
-    createMany?: MonitoringSessionCreateManyBroadcasterInputEnvelope
-    connect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-  }
-
   export type DetectionCreateNestedManyWithoutBroadcasterInput = {
     create?: XOR<DetectionCreateWithoutBroadcasterInput, DetectionUncheckedCreateWithoutBroadcasterInput> | DetectionCreateWithoutBroadcasterInput[] | DetectionUncheckedCreateWithoutBroadcasterInput[]
     connectOrCreate?: DetectionCreateOrConnectWithoutBroadcasterInput | DetectionCreateOrConnectWithoutBroadcasterInput[]
@@ -14025,32 +12470,11 @@ export namespace Prisma {
     connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
   }
 
-  export type MonitoringSessionUncheckedCreateNestedManyWithoutBroadcasterInput = {
-    create?: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput> | MonitoringSessionCreateWithoutBroadcasterInput[] | MonitoringSessionUncheckedCreateWithoutBroadcasterInput[]
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutBroadcasterInput | MonitoringSessionCreateOrConnectWithoutBroadcasterInput[]
-    createMany?: MonitoringSessionCreateManyBroadcasterInputEnvelope
-    connect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-  }
-
   export type DetectionUncheckedCreateNestedManyWithoutBroadcasterInput = {
     create?: XOR<DetectionCreateWithoutBroadcasterInput, DetectionUncheckedCreateWithoutBroadcasterInput> | DetectionCreateWithoutBroadcasterInput[] | DetectionUncheckedCreateWithoutBroadcasterInput[]
     connectOrCreate?: DetectionCreateOrConnectWithoutBroadcasterInput | DetectionCreateOrConnectWithoutBroadcasterInput[]
     createMany?: DetectionCreateManyBroadcasterInputEnvelope
     connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-  }
-
-  export type MonitoringSessionUpdateManyWithoutBroadcasterNestedInput = {
-    create?: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput> | MonitoringSessionCreateWithoutBroadcasterInput[] | MonitoringSessionUncheckedCreateWithoutBroadcasterInput[]
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutBroadcasterInput | MonitoringSessionCreateOrConnectWithoutBroadcasterInput[]
-    upsert?: MonitoringSessionUpsertWithWhereUniqueWithoutBroadcasterInput | MonitoringSessionUpsertWithWhereUniqueWithoutBroadcasterInput[]
-    createMany?: MonitoringSessionCreateManyBroadcasterInputEnvelope
-    set?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    disconnect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    delete?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    connect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    update?: MonitoringSessionUpdateWithWhereUniqueWithoutBroadcasterInput | MonitoringSessionUpdateWithWhereUniqueWithoutBroadcasterInput[]
-    updateMany?: MonitoringSessionUpdateManyWithWhereWithoutBroadcasterInput | MonitoringSessionUpdateManyWithWhereWithoutBroadcasterInput[]
-    deleteMany?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
   }
 
   export type DetectionUpdateManyWithoutBroadcasterNestedInput = {
@@ -14067,20 +12491,6 @@ export namespace Prisma {
     deleteMany?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
   }
 
-  export type MonitoringSessionUncheckedUpdateManyWithoutBroadcasterNestedInput = {
-    create?: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput> | MonitoringSessionCreateWithoutBroadcasterInput[] | MonitoringSessionUncheckedCreateWithoutBroadcasterInput[]
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutBroadcasterInput | MonitoringSessionCreateOrConnectWithoutBroadcasterInput[]
-    upsert?: MonitoringSessionUpsertWithWhereUniqueWithoutBroadcasterInput | MonitoringSessionUpsertWithWhereUniqueWithoutBroadcasterInput[]
-    createMany?: MonitoringSessionCreateManyBroadcasterInputEnvelope
-    set?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    disconnect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    delete?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    connect?: MonitoringSessionWhereUniqueInput | MonitoringSessionWhereUniqueInput[]
-    update?: MonitoringSessionUpdateWithWhereUniqueWithoutBroadcasterInput | MonitoringSessionUpdateWithWhereUniqueWithoutBroadcasterInput[]
-    updateMany?: MonitoringSessionUpdateManyWithWhereWithoutBroadcasterInput | MonitoringSessionUpdateManyWithWhereWithoutBroadcasterInput[]
-    deleteMany?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
-  }
-
   export type DetectionUncheckedUpdateManyWithoutBroadcasterNestedInput = {
     create?: XOR<DetectionCreateWithoutBroadcasterInput, DetectionUncheckedCreateWithoutBroadcasterInput> | DetectionCreateWithoutBroadcasterInput[] | DetectionUncheckedCreateWithoutBroadcasterInput[]
     connectOrCreate?: DetectionCreateOrConnectWithoutBroadcasterInput | DetectionCreateOrConnectWithoutBroadcasterInput[]
@@ -14095,62 +12505,6 @@ export namespace Prisma {
     deleteMany?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
   }
 
-  export type BroadcasterCreateNestedOneWithoutMonitoringSessionsInput = {
-    create?: XOR<BroadcasterCreateWithoutMonitoringSessionsInput, BroadcasterUncheckedCreateWithoutMonitoringSessionsInput>
-    connectOrCreate?: BroadcasterCreateOrConnectWithoutMonitoringSessionsInput
-    connect?: BroadcasterWhereUniqueInput
-  }
-
-  export type DetectionCreateNestedManyWithoutSessionInput = {
-    create?: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput> | DetectionCreateWithoutSessionInput[] | DetectionUncheckedCreateWithoutSessionInput[]
-    connectOrCreate?: DetectionCreateOrConnectWithoutSessionInput | DetectionCreateOrConnectWithoutSessionInput[]
-    createMany?: DetectionCreateManySessionInputEnvelope
-    connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-  }
-
-  export type DetectionUncheckedCreateNestedManyWithoutSessionInput = {
-    create?: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput> | DetectionCreateWithoutSessionInput[] | DetectionUncheckedCreateWithoutSessionInput[]
-    connectOrCreate?: DetectionCreateOrConnectWithoutSessionInput | DetectionCreateOrConnectWithoutSessionInput[]
-    createMany?: DetectionCreateManySessionInputEnvelope
-    connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-  }
-
-  export type BroadcasterUpdateOneRequiredWithoutMonitoringSessionsNestedInput = {
-    create?: XOR<BroadcasterCreateWithoutMonitoringSessionsInput, BroadcasterUncheckedCreateWithoutMonitoringSessionsInput>
-    connectOrCreate?: BroadcasterCreateOrConnectWithoutMonitoringSessionsInput
-    upsert?: BroadcasterUpsertWithoutMonitoringSessionsInput
-    connect?: BroadcasterWhereUniqueInput
-    update?: XOR<XOR<BroadcasterUpdateToOneWithWhereWithoutMonitoringSessionsInput, BroadcasterUpdateWithoutMonitoringSessionsInput>, BroadcasterUncheckedUpdateWithoutMonitoringSessionsInput>
-  }
-
-  export type DetectionUpdateManyWithoutSessionNestedInput = {
-    create?: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput> | DetectionCreateWithoutSessionInput[] | DetectionUncheckedCreateWithoutSessionInput[]
-    connectOrCreate?: DetectionCreateOrConnectWithoutSessionInput | DetectionCreateOrConnectWithoutSessionInput[]
-    upsert?: DetectionUpsertWithWhereUniqueWithoutSessionInput | DetectionUpsertWithWhereUniqueWithoutSessionInput[]
-    createMany?: DetectionCreateManySessionInputEnvelope
-    set?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    disconnect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    delete?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    update?: DetectionUpdateWithWhereUniqueWithoutSessionInput | DetectionUpdateWithWhereUniqueWithoutSessionInput[]
-    updateMany?: DetectionUpdateManyWithWhereWithoutSessionInput | DetectionUpdateManyWithWhereWithoutSessionInput[]
-    deleteMany?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
-  }
-
-  export type DetectionUncheckedUpdateManyWithoutSessionNestedInput = {
-    create?: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput> | DetectionCreateWithoutSessionInput[] | DetectionUncheckedCreateWithoutSessionInput[]
-    connectOrCreate?: DetectionCreateOrConnectWithoutSessionInput | DetectionCreateOrConnectWithoutSessionInput[]
-    upsert?: DetectionUpsertWithWhereUniqueWithoutSessionInput | DetectionUpsertWithWhereUniqueWithoutSessionInput[]
-    createMany?: DetectionCreateManySessionInputEnvelope
-    set?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    disconnect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    delete?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    connect?: DetectionWhereUniqueInput | DetectionWhereUniqueInput[]
-    update?: DetectionUpdateWithWhereUniqueWithoutSessionInput | DetectionUpdateWithWhereUniqueWithoutSessionInput[]
-    updateMany?: DetectionUpdateManyWithWhereWithoutSessionInput | DetectionUpdateManyWithWhereWithoutSessionInput[]
-    deleteMany?: DetectionScalarWhereInput | DetectionScalarWhereInput[]
-  }
-
   export type AssetCreateNestedOneWithoutDetectionsInput = {
     create?: XOR<AssetCreateWithoutDetectionsInput, AssetUncheckedCreateWithoutDetectionsInput>
     connectOrCreate?: AssetCreateOrConnectWithoutDetectionsInput
@@ -14161,12 +12515,6 @@ export namespace Prisma {
     create?: XOR<BroadcasterCreateWithoutDetectionsInput, BroadcasterUncheckedCreateWithoutDetectionsInput>
     connectOrCreate?: BroadcasterCreateOrConnectWithoutDetectionsInput
     connect?: BroadcasterWhereUniqueInput
-  }
-
-  export type MonitoringSessionCreateNestedOneWithoutDetectionsInput = {
-    create?: XOR<MonitoringSessionCreateWithoutDetectionsInput, MonitoringSessionUncheckedCreateWithoutDetectionsInput>
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutDetectionsInput
-    connect?: MonitoringSessionWhereUniqueInput
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -14195,16 +12543,6 @@ export namespace Prisma {
     upsert?: BroadcasterUpsertWithoutDetectionsInput
     connect?: BroadcasterWhereUniqueInput
     update?: XOR<XOR<BroadcasterUpdateToOneWithWhereWithoutDetectionsInput, BroadcasterUpdateWithoutDetectionsInput>, BroadcasterUncheckedUpdateWithoutDetectionsInput>
-  }
-
-  export type MonitoringSessionUpdateOneWithoutDetectionsNestedInput = {
-    create?: XOR<MonitoringSessionCreateWithoutDetectionsInput, MonitoringSessionUncheckedCreateWithoutDetectionsInput>
-    connectOrCreate?: MonitoringSessionCreateOrConnectWithoutDetectionsInput
-    upsert?: MonitoringSessionUpsertWithoutDetectionsInput
-    disconnect?: MonitoringSessionWhereInput | boolean
-    delete?: MonitoringSessionWhereInput | boolean
-    connect?: MonitoringSessionWhereUniqueInput
-    update?: XOR<XOR<MonitoringSessionUpdateToOneWithWhereWithoutDetectionsInput, MonitoringSessionUpdateWithoutDetectionsInput>, MonitoringSessionUncheckedUpdateWithoutDetectionsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -14741,13 +13079,11 @@ export namespace Prisma {
     status?: $Enums.DetectionStatus
     createdAt?: Date | string
     broadcaster: BroadcasterCreateNestedOneWithoutDetectionsInput
-    session?: MonitoringSessionCreateNestedOneWithoutDetectionsInput
   }
 
   export type DetectionUncheckedCreateWithoutAssetInput = {
     id?: string
     broadcasterId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -14916,7 +13252,6 @@ export namespace Prisma {
     id?: StringFilter<"Detection"> | string
     assetId?: StringFilter<"Detection"> | string
     broadcasterId?: StringFilter<"Detection"> | string
-    sessionId?: StringNullableFilter<"Detection"> | string | null
     broadcastAt?: DateTimeFilter<"Detection"> | Date | string
     detectedAt?: DateTimeFilter<"Detection"> | Date | string
     confidence?: FloatFilter<"Detection"> | number
@@ -15376,36 +13711,6 @@ export namespace Prisma {
     detections?: DetectionUncheckedUpdateManyWithoutAssetNestedInput
   }
 
-  export type MonitoringSessionCreateWithoutBroadcasterInput = {
-    id?: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    detections?: DetectionCreateNestedManyWithoutSessionInput
-  }
-
-  export type MonitoringSessionUncheckedCreateWithoutBroadcasterInput = {
-    id?: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    detections?: DetectionUncheckedCreateNestedManyWithoutSessionInput
-  }
-
-  export type MonitoringSessionCreateOrConnectWithoutBroadcasterInput = {
-    where: MonitoringSessionWhereUniqueInput
-    create: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput>
-  }
-
-  export type MonitoringSessionCreateManyBroadcasterInputEnvelope = {
-    data: MonitoringSessionCreateManyBroadcasterInput | MonitoringSessionCreateManyBroadcasterInput[]
-    skipDuplicates?: boolean
-  }
-
   export type DetectionCreateWithoutBroadcasterInput = {
     id?: string
     broadcastAt: Date | string
@@ -15418,13 +13723,11 @@ export namespace Prisma {
     status?: $Enums.DetectionStatus
     createdAt?: Date | string
     asset: AssetCreateNestedOneWithoutDetectionsInput
-    session?: MonitoringSessionCreateNestedOneWithoutDetectionsInput
   }
 
   export type DetectionUncheckedCreateWithoutBroadcasterInput = {
     id?: string
     assetId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -15446,35 +13749,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MonitoringSessionUpsertWithWhereUniqueWithoutBroadcasterInput = {
-    where: MonitoringSessionWhereUniqueInput
-    update: XOR<MonitoringSessionUpdateWithoutBroadcasterInput, MonitoringSessionUncheckedUpdateWithoutBroadcasterInput>
-    create: XOR<MonitoringSessionCreateWithoutBroadcasterInput, MonitoringSessionUncheckedCreateWithoutBroadcasterInput>
-  }
-
-  export type MonitoringSessionUpdateWithWhereUniqueWithoutBroadcasterInput = {
-    where: MonitoringSessionWhereUniqueInput
-    data: XOR<MonitoringSessionUpdateWithoutBroadcasterInput, MonitoringSessionUncheckedUpdateWithoutBroadcasterInput>
-  }
-
-  export type MonitoringSessionUpdateManyWithWhereWithoutBroadcasterInput = {
-    where: MonitoringSessionScalarWhereInput
-    data: XOR<MonitoringSessionUpdateManyMutationInput, MonitoringSessionUncheckedUpdateManyWithoutBroadcasterInput>
-  }
-
-  export type MonitoringSessionScalarWhereInput = {
-    AND?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
-    OR?: MonitoringSessionScalarWhereInput[]
-    NOT?: MonitoringSessionScalarWhereInput | MonitoringSessionScalarWhereInput[]
-    id?: StringFilter<"MonitoringSession"> | string
-    broadcasterId?: StringFilter<"MonitoringSession"> | string
-    audioLink?: StringNullableFilter<"MonitoringSession"> | string | null
-    startedAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-    endedAt?: DateTimeNullableFilter<"MonitoringSession"> | Date | string | null
-    status?: EnumStatusFilter<"MonitoringSession"> | $Enums.Status
-    createdAt?: DateTimeFilter<"MonitoringSession"> | Date | string
-  }
-
   export type DetectionUpsertWithWhereUniqueWithoutBroadcasterInput = {
     where: DetectionWhereUniqueInput
     update: XOR<DetectionUpdateWithoutBroadcasterInput, DetectionUncheckedUpdateWithoutBroadcasterInput>
@@ -15489,134 +13763,6 @@ export namespace Prisma {
   export type DetectionUpdateManyWithWhereWithoutBroadcasterInput = {
     where: DetectionScalarWhereInput
     data: XOR<DetectionUpdateManyMutationInput, DetectionUncheckedUpdateManyWithoutBroadcasterInput>
-  }
-
-  export type BroadcasterCreateWithoutMonitoringSessionsInput = {
-    id?: string
-    name: string
-    description?: string | null
-    website?: string | null
-    streamUrl?: string | null
-    country?: string | null
-    frequency?: string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    detections?: DetectionCreateNestedManyWithoutBroadcasterInput
-  }
-
-  export type BroadcasterUncheckedCreateWithoutMonitoringSessionsInput = {
-    id?: string
-    name: string
-    description?: string | null
-    website?: string | null
-    streamUrl?: string | null
-    country?: string | null
-    frequency?: string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    detections?: DetectionUncheckedCreateNestedManyWithoutBroadcasterInput
-  }
-
-  export type BroadcasterCreateOrConnectWithoutMonitoringSessionsInput = {
-    where: BroadcasterWhereUniqueInput
-    create: XOR<BroadcasterCreateWithoutMonitoringSessionsInput, BroadcasterUncheckedCreateWithoutMonitoringSessionsInput>
-  }
-
-  export type DetectionCreateWithoutSessionInput = {
-    id?: string
-    broadcastAt: Date | string
-    detectedAt?: Date | string
-    confidence: number
-    startOffset?: number | null
-    endOffset?: number | null
-    duration?: number | null
-    engineVersion: string
-    status?: $Enums.DetectionStatus
-    createdAt?: Date | string
-    asset: AssetCreateNestedOneWithoutDetectionsInput
-    broadcaster: BroadcasterCreateNestedOneWithoutDetectionsInput
-  }
-
-  export type DetectionUncheckedCreateWithoutSessionInput = {
-    id?: string
-    assetId: string
-    broadcasterId: string
-    broadcastAt: Date | string
-    detectedAt?: Date | string
-    confidence: number
-    startOffset?: number | null
-    endOffset?: number | null
-    duration?: number | null
-    engineVersion: string
-    status?: $Enums.DetectionStatus
-    createdAt?: Date | string
-  }
-
-  export type DetectionCreateOrConnectWithoutSessionInput = {
-    where: DetectionWhereUniqueInput
-    create: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput>
-  }
-
-  export type DetectionCreateManySessionInputEnvelope = {
-    data: DetectionCreateManySessionInput | DetectionCreateManySessionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BroadcasterUpsertWithoutMonitoringSessionsInput = {
-    update: XOR<BroadcasterUpdateWithoutMonitoringSessionsInput, BroadcasterUncheckedUpdateWithoutMonitoringSessionsInput>
-    create: XOR<BroadcasterCreateWithoutMonitoringSessionsInput, BroadcasterUncheckedCreateWithoutMonitoringSessionsInput>
-    where?: BroadcasterWhereInput
-  }
-
-  export type BroadcasterUpdateToOneWithWhereWithoutMonitoringSessionsInput = {
-    where?: BroadcasterWhereInput
-    data: XOR<BroadcasterUpdateWithoutMonitoringSessionsInput, BroadcasterUncheckedUpdateWithoutMonitoringSessionsInput>
-  }
-
-  export type BroadcasterUpdateWithoutMonitoringSessionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    streamUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    frequency?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detections?: DetectionUpdateManyWithoutBroadcasterNestedInput
-  }
-
-  export type BroadcasterUncheckedUpdateWithoutMonitoringSessionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    streamUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    frequency?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detections?: DetectionUncheckedUpdateManyWithoutBroadcasterNestedInput
-  }
-
-  export type DetectionUpsertWithWhereUniqueWithoutSessionInput = {
-    where: DetectionWhereUniqueInput
-    update: XOR<DetectionUpdateWithoutSessionInput, DetectionUncheckedUpdateWithoutSessionInput>
-    create: XOR<DetectionCreateWithoutSessionInput, DetectionUncheckedCreateWithoutSessionInput>
-  }
-
-  export type DetectionUpdateWithWhereUniqueWithoutSessionInput = {
-    where: DetectionWhereUniqueInput
-    data: XOR<DetectionUpdateWithoutSessionInput, DetectionUncheckedUpdateWithoutSessionInput>
-  }
-
-  export type DetectionUpdateManyWithWhereWithoutSessionInput = {
-    where: DetectionScalarWhereInput
-    data: XOR<DetectionUpdateManyMutationInput, DetectionUncheckedUpdateManyWithoutSessionInput>
   }
 
   export type AssetCreateWithoutDetectionsInput = {
@@ -15687,7 +13833,6 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    monitoringSessions?: MonitoringSessionCreateNestedManyWithoutBroadcasterInput
   }
 
   export type BroadcasterUncheckedCreateWithoutDetectionsInput = {
@@ -15701,37 +13846,11 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    monitoringSessions?: MonitoringSessionUncheckedCreateNestedManyWithoutBroadcasterInput
   }
 
   export type BroadcasterCreateOrConnectWithoutDetectionsInput = {
     where: BroadcasterWhereUniqueInput
     create: XOR<BroadcasterCreateWithoutDetectionsInput, BroadcasterUncheckedCreateWithoutDetectionsInput>
-  }
-
-  export type MonitoringSessionCreateWithoutDetectionsInput = {
-    id?: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-    broadcaster: BroadcasterCreateNestedOneWithoutMonitoringSessionsInput
-  }
-
-  export type MonitoringSessionUncheckedCreateWithoutDetectionsInput = {
-    id?: string
-    broadcasterId: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-  }
-
-  export type MonitoringSessionCreateOrConnectWithoutDetectionsInput = {
-    where: MonitoringSessionWhereUniqueInput
-    create: XOR<MonitoringSessionCreateWithoutDetectionsInput, MonitoringSessionUncheckedCreateWithoutDetectionsInput>
   }
 
   export type AssetUpsertWithoutDetectionsInput = {
@@ -15819,7 +13938,6 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    monitoringSessions?: MonitoringSessionUpdateManyWithoutBroadcasterNestedInput
   }
 
   export type BroadcasterUncheckedUpdateWithoutDetectionsInput = {
@@ -15833,38 +13951,6 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    monitoringSessions?: MonitoringSessionUncheckedUpdateManyWithoutBroadcasterNestedInput
-  }
-
-  export type MonitoringSessionUpsertWithoutDetectionsInput = {
-    update: XOR<MonitoringSessionUpdateWithoutDetectionsInput, MonitoringSessionUncheckedUpdateWithoutDetectionsInput>
-    create: XOR<MonitoringSessionCreateWithoutDetectionsInput, MonitoringSessionUncheckedCreateWithoutDetectionsInput>
-    where?: MonitoringSessionWhereInput
-  }
-
-  export type MonitoringSessionUpdateToOneWithWhereWithoutDetectionsInput = {
-    where?: MonitoringSessionWhereInput
-    data: XOR<MonitoringSessionUpdateWithoutDetectionsInput, MonitoringSessionUncheckedUpdateWithoutDetectionsInput>
-  }
-
-  export type MonitoringSessionUpdateWithoutDetectionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    broadcaster?: BroadcasterUpdateOneRequiredWithoutMonitoringSessionsNestedInput
-  }
-
-  export type MonitoringSessionUncheckedUpdateWithoutDetectionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    broadcasterId?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AssetCreateManyOwnerInput = {
@@ -15973,7 +14059,6 @@ export namespace Prisma {
   export type DetectionCreateManyAssetInput = {
     id?: string
     broadcasterId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -16018,13 +14103,11 @@ export namespace Prisma {
     status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     broadcaster?: BroadcasterUpdateOneRequiredWithoutDetectionsNestedInput
-    session?: MonitoringSessionUpdateOneWithoutDetectionsNestedInput
   }
 
   export type DetectionUncheckedUpdateWithoutAssetInput = {
     id?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number
@@ -16039,7 +14122,6 @@ export namespace Prisma {
   export type DetectionUncheckedUpdateManyWithoutAssetInput = {
     id?: StringFieldUpdateOperationsInput | string
     broadcasterId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number
@@ -16079,19 +14161,9 @@ export namespace Prisma {
     assetId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type MonitoringSessionCreateManyBroadcasterInput = {
-    id?: string
-    audioLink?: string | null
-    startedAt: Date | string
-    endedAt?: Date | string | null
-    status?: $Enums.Status
-    createdAt?: Date | string
-  }
-
   export type DetectionCreateManyBroadcasterInput = {
     id?: string
     assetId: string
-    sessionId?: string | null
     broadcastAt: Date | string
     detectedAt?: Date | string
     confidence: number
@@ -16101,35 +14173,6 @@ export namespace Prisma {
     engineVersion: string
     status?: $Enums.DetectionStatus
     createdAt?: Date | string
-  }
-
-  export type MonitoringSessionUpdateWithoutBroadcasterInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detections?: DetectionUpdateManyWithoutSessionNestedInput
-  }
-
-  export type MonitoringSessionUncheckedUpdateWithoutBroadcasterInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detections?: DetectionUncheckedUpdateManyWithoutSessionNestedInput
-  }
-
-  export type MonitoringSessionUncheckedUpdateManyWithoutBroadcasterInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    audioLink?: NullableStringFieldUpdateOperationsInput | string | null
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DetectionUpdateWithoutBroadcasterInput = {
@@ -16144,13 +14187,11 @@ export namespace Prisma {
     status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     asset?: AssetUpdateOneRequiredWithoutDetectionsNestedInput
-    session?: MonitoringSessionUpdateOneWithoutDetectionsNestedInput
   }
 
   export type DetectionUncheckedUpdateWithoutBroadcasterInput = {
     id?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number
@@ -16165,67 +14206,6 @@ export namespace Prisma {
   export type DetectionUncheckedUpdateManyWithoutBroadcasterInput = {
     id?: StringFieldUpdateOperationsInput | string
     assetId?: StringFieldUpdateOperationsInput | string
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    confidence?: FloatFieldUpdateOperationsInput | number
-    startOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    endOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    duration?: NullableFloatFieldUpdateOperationsInput | number | null
-    engineVersion?: StringFieldUpdateOperationsInput | string
-    status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DetectionCreateManySessionInput = {
-    id?: string
-    assetId: string
-    broadcasterId: string
-    broadcastAt: Date | string
-    detectedAt?: Date | string
-    confidence: number
-    startOffset?: number | null
-    endOffset?: number | null
-    duration?: number | null
-    engineVersion: string
-    status?: $Enums.DetectionStatus
-    createdAt?: Date | string
-  }
-
-  export type DetectionUpdateWithoutSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    confidence?: FloatFieldUpdateOperationsInput | number
-    startOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    endOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    duration?: NullableFloatFieldUpdateOperationsInput | number | null
-    engineVersion?: StringFieldUpdateOperationsInput | string
-    status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    asset?: AssetUpdateOneRequiredWithoutDetectionsNestedInput
-    broadcaster?: BroadcasterUpdateOneRequiredWithoutDetectionsNestedInput
-  }
-
-  export type DetectionUncheckedUpdateWithoutSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    broadcasterId?: StringFieldUpdateOperationsInput | string
-    broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    confidence?: FloatFieldUpdateOperationsInput | number
-    startOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    endOffset?: NullableFloatFieldUpdateOperationsInput | number | null
-    duration?: NullableFloatFieldUpdateOperationsInput | number | null
-    engineVersion?: StringFieldUpdateOperationsInput | string
-    status?: EnumDetectionStatusFieldUpdateOperationsInput | $Enums.DetectionStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DetectionUncheckedUpdateManyWithoutSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    broadcasterId?: StringFieldUpdateOperationsInput | string
     broadcastAt?: DateTimeFieldUpdateOperationsInput | Date | string
     detectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     confidence?: FloatFieldUpdateOperationsInput | number

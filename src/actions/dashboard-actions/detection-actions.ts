@@ -145,7 +145,6 @@ export async function createDetectionAction(data: {
       data: {
         assetId: data.assetId,
         broadcasterId: data.broadcasterId,
-        sessionId: data.sessionId || null,
         broadcastAt: data.broadcastAt,
         confidence: data.confidence,
         duration: data.duration,

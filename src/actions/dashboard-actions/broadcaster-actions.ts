@@ -25,7 +25,7 @@ export async function getBroadcastersAction(): Promise<
         actor.role === UserRole.USER
           ? { status: { not: Status.DELETED } }
           : undefined,
-      include: { monitoringSessions: true, detections: true },
+      include: { detections: true },
       orderBy: { createdAt: "desc" },
     });
     return { ok: true, data: broadcasters };
@@ -42,7 +42,7 @@ export async function getBroadcasterByIdAction(
   try {
     const broadcaster = await prisma.broadcaster.findUnique({
       where: { id: broadcasterId },
-      include: { monitoringSessions: true, detections: true },
+      include: { detections: true },
     });
 
     return { ok: true, data: broadcaster };
