@@ -87,12 +87,6 @@ export const routes: RouteItem[] = [
     label: "Monitoring",
     icon: Activity,
     children: [
-      // {
-      //   label: "Live Monitor",
-      //   href: "/dashboard/monitor",
-      //   icon: Activity,
-      //   description: "Real-time spectrum monitoring and analysis.",
-      // },
       {
         label: "Detections",
         href: "/dashboard/detections",
