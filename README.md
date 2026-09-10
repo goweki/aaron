@@ -2,7 +2,15 @@
 
 **An Audio Fingerprinting and Watermarking Model**
 
-This repository contains the code for a Next.js application that implements a model for audio fingerprinting and watermarking. It can also be used to monitor and log broadcasts.
+This repository contains the code for a Next.js application that implements a visualization component of an autonomous broadcast monitoring tool.
+
+Live link: aaron-ar.vercel.app
+
+test credentials: 
+```
+username:adele@goweki.com
+password:pass1234
+```
 
 ## Table of Contents
 
