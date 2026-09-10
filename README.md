@@ -45,7 +45,7 @@ The goal of this project is to provide a model to test the efficacy of automated
 - Next.js 14: bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 - css: [`Tailwind`](https://tailwindcss.com/) v3.
 - Hosting: [`Vercel`](https://vercel.com/).
-- Mail: [`nodemailer`](https://nodemailer.com/).
+- Mail: [`Resend`](https://resend.com/).
 - Authentication: [`Next.js Auth`](https://next-auth.js.org).
 - HTML/css Components: [`shadcn/ui`](https://ui.shadcn.com/).
 
