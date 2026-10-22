@@ -52,7 +52,7 @@ The goal of this project is to provide a model to test the efficacy of automated
 ### Additional Technologies Used
 
 - **Prisma ORM**: An Object-Relational Mapping tool used for database management.
-- **MongoDB**: A NoSQL database for storing application data, including audio fingerprints.
+- **PostgreSQL**: SQL database.
 - **Web Audio API**: A JavaScript API for processing and synthesizing audio within the web browser.
 - **TypeScript**: A statically typed superset of JavaScript for improved code quality.
 
